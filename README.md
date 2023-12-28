@@ -48,5 +48,5 @@ Start the application
   node index.js
 ```
 
-## CONTRiBUTIONS
+## CONTRIBUTIONS
 Contributions are welcome! Feel free to submit pull requests or to open issues
