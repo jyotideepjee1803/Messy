@@ -32,4 +32,4 @@ userSchema.pre("save", async function (next) {
 
 const userModel = mongoose.model('user', userSchema);
 
-export default userModel;
+export default userModel;

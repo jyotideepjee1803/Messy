@@ -11,9 +11,13 @@ const dayObjSchema = new Schema({
 });
 
 const couponSchema = new Schema({
-    student_Email: String,
+    email : String,
     taken: Boolean,
-    week: dayObjSchema
+    week: [
+        [false, false, false, false, false, false, false], // Breakfast
+        [false, false, false, false, false, false, false], // Lunch
+        [false, false, false, false, false, false, false]  // Dinner
+    ]
 });
 
 const CouponModel = mongoose.model('Coupon', couponSchema);

@@ -20,7 +20,7 @@ const totalMealCount = async(req,res)=>{
     
     allCoupons.forEach(coupon => {
         for(let i=0;i<3;i++){
-            for(let j=0;j<3;j++){
+            for(let j=0;j<7;j++){
                 if(coupon.week[i][j] == true) toMake[i][j]++;
             }
         }
@@ -28,10 +28,15 @@ const totalMealCount = async(req,res)=>{
 
     const totalMeals = [];
     for(let j=0;j<7;j++){
-        const day = {breakfast: toMake[i][0], lunch: toMake[i][1], dinner: toMake[i][2]};
+        const day = {breakfast: toMake[0][j], lunch: toMake[1][j], dinner: toMake[2][j]};
         totalMeals.push(day);
     }
     res.send(totalMeals);
 }
 
-export {couponValidity,totalMealCount};
+const couponPurchase = async(req,res)=>{
+    const data = await CouponModel.updateOne({email : req.body.email}, {$set : {week : req.body.selected,taken : true}}, { upsert: true })
+    res.send(data);
+}
+
+export {couponValidity,totalMealCount,couponPurchase};
