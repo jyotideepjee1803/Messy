@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 const { Schema } =  mongoose;
 
 const userSchema = new Schema({
@@ -8,6 +9,6 @@ const userSchema = new Schema({
     isAdmin: {type: Boolean, required: true, default: false }
 })
 
-const userModel = mongoose.model('user', userSchema);
+const User = mongoose.model('user', userSchema);
 
-export default userModel;
+export default User;
