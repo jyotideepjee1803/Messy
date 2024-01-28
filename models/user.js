@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import bcrypt from "bcryptjs";
 
 const { Schema } =  mongoose;
 
@@ -31,23 +30,6 @@ userSchema.pre("save", async function (next) {
     next();
 });
 
-// Checking if entered password by user during login is authentic
-userSchema.methods.matchPasswords = async function (enteredPassword) {
-    const ans = await bcrypt.compare(enteredPassword, this.password);
-    return ans;
-};
+const userModel = mongoose.model('user', userSchema);
 
-userSchema.pre("save", async function (next) {
-    // Encrypt the password only if it's modified or created
-    if (this.isModified("password")) {
-      try {
-        const salt = await bcrypt.genSalt();
-        this.password = await bcrypt.hash(this.password, salt);
-        return;
-      } catch (error) {
-        next(error);
-      }
-    }
-    next();
-});
-
+export default userModel;
