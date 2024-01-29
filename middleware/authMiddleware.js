@@ -37,15 +37,17 @@ export const protect = asyncHandler (async(req ,res,next) => {
 });
 
 
-export const adminCheck = async (req, res, next) => {
-    try {
-    //   const {user} = req.user;
-    //   console.log(req.user);
-      if (req.user.isAdmin == false) {
-        res.status(401).json({ error: 'Permission denied' });
-      }
-      next();
-    } catch (error) {
-      res.status(401).json({ error: 'Internal Server Error' });
+export const adminCheck = asyncHandler(async (req, res, next) => {
+  try {
+  //   const {user} = req.user;
+  //   console.log(req.user);
+    if (req.user.isAdmin == false) {
+      res.status(401);
+      throw new Error("Authorized only for admin");
     }
-  };
+    next();
+  } catch (error) {
+    res.status(401);
+    throw new Error("Not authorized, token failed");
+  }
+});

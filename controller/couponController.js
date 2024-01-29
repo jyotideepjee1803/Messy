@@ -22,7 +22,6 @@ const totalMealCount = async(req,res)=>{
         ];
     
     allCoupons.forEach(coupon => {
-        console.log(coupon);
         for(let i=0;i<3;i++){
             for(let j=0;j<7;j++){
                 if(coupon.week[i][j] == true) toMake[i][j]++;
