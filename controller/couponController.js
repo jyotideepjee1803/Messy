@@ -2,12 +2,15 @@ import CouponModel from "../models/coupon.js";
 
 const couponValidity = async(req,res)=>{
     const {email, day, mealType} = req.body;
-    const student = CouponModel.findOne({email});
-    if(student == true && student.week[mealType][day]){
-        await CouponModel.updateOne({email},{[week[mealType][day]] : false})
-        return true;
-    }
-    return false;
+    const student = await CouponModel.findOne({email});
+    //console.log(student.week);
+    let fl = false;
+    if(student && student.week[mealType][day] == true){
+        console.log(student.week[mealType][day]);
+        fl = true;
+    }   
+    
+    res.send(fl);
 }
 
 const totalMealCount = async(req,res)=>{
@@ -19,6 +22,7 @@ const totalMealCount = async(req,res)=>{
         ];
     
     allCoupons.forEach(coupon => {
+        console.log(coupon);
         for(let i=0;i<3;i++){
             for(let j=0;j<7;j++){
                 if(coupon.week[i][j] == true) toMake[i][j]++;
