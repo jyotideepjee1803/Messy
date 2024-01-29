@@ -5,15 +5,17 @@ import Coupon from "../models/coupon.js";
 const setMealCostTime = async(req,res)=>{
     const data = req.body.mealData;
     await Meal.deleteMany({});
-    await Meal.insertMany(data);
-    res.send();
+    const response = await Meal.insertMany(data);
+    
+    res.send(response);
 }
 
 const setMenu = async(req,res)=>{
     const data = req.body.menuData;
     await Day.deleteMany({});
-    await Day.insertMany(data);
-    res.send();
+    const response = await Day.insertMany(data);
+    
+    res.send(response);
 }
 
 export {setMealCostTime, setMenu};

@@ -5,7 +5,7 @@ import { totalMealCount } from "../controller/couponController.js";
 
 const router = Router();
 
-router.post("/setmenu" , protect , setMenu);
-router.post("/setmeal" , protect , setMealCostTime);
-router.get("/totalmeal", totalMealCount);
+router.post("/setmenu" , protect, setMenu);
+router.post("/setmeal" , protect, setMealCostTime);
+router.get("/totalmeal", protect, totalMealCount);
 export default router;

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const {Schema} = mongoose;
 
 const mealSchema = new Schema({
-   dish : String,
+   mealName : String,
    time : String,
    cost : Number
 });
