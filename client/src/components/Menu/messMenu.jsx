@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios, { getAxiosConfig } from '../../utils/axios';
 
-const MessMenu = ({ route }) => {
+const MessMenu = ({count}) => {
   const [menuData, setMenuData] = useState([]);
 
   
@@ -38,14 +38,13 @@ const MessMenu = ({ route }) => {
             return <tr key={index}>
               <td>{menu.day}</td>
               <td>
-                    {menu.breakfast}
+                  {count[index]?.breakfast}{menu.breakfast}
               </td>
               <td>
-                    {menu.lunch}
+                  {count[index]?.lunch}{menu.lunch}
               </td>
               <td>
-                    {menu.dinner}
-  
+                {count[index]?.dinner}{menu.dinner}
               </td>
             </tr>
           })}

@@ -3,7 +3,7 @@ import axios from "axios";
 export const getAxiosConfig = (options)=>{
     if(!options) return;
     const {loggedInUser, formData, blob} = options;
-    console.log(loggedInUser.token);
+
     const config = {headers:{
         "Content-Type" : formData ? "multipart/form-data" : "application/json",
     }};

@@ -4,20 +4,23 @@ import { useNavigate } from 'react-router-dom';
 import axios, { getAxiosConfig } from '../utils/axios';
 
 const BuyCouponPage = () => {
-    const [menu, setMenu] = useState([]);
-    const [meals, setMeals] = useState([]);
-
+    
     const [menuData, setMenuData] = useState([]);
 
     const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2}
+    const sortIdx = {'monday' : 0, 'tuesday' : 1, 'wednesday' : 2, 'thursday' : 3, 'friday' : 4, 'saturday' : 5, 'sunday' : 6};
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const config = getAxiosConfig({ loggedInUser });
 
-    const fetchMenuData = async () => {
-        const loggedInUser = await JSON.parse(localStorage.getItem("loggedInUser"));
-        const config = getAxiosConfig({ loggedInUser });
-
+    const fetchMenuData = async () => {      
         try {
         const response = await axios.get('api/user/getmenu', config);
-        setMenuData(response.data);
+
+        //sort according to day name : 
+        let data = response.data;
+        data.sort((a,b)=>{return sortIdx[a.day] - sortIdx[b.day]})
+        setMenuData(data);
+
         } catch (error) {
         console.error('Error fetching menu data:', error);
         }
@@ -45,11 +48,13 @@ const BuyCouponPage = () => {
         let mealIndex = mp[meal];
         const newSelected = [...selectedItems];
         newSelected[mealIndex][dayIndex] = !newSelected[mealIndex][dayIndex];
-        console.log(newSelected);
         setSelectedItems(newSelected);
     }
     
-
+    const handleBuy = async()=>{
+        const response = await axios.post("/api/user/buyCoupon", {email : loggedInUser.email, selected : selectedItems}, config)
+        console.log(response);
+    }
     return (
         <div>
         <div>
@@ -116,9 +121,7 @@ const BuyCouponPage = () => {
         </div>
         <div>
         
-        <button onClick={()=>{
-            console.log(selectedItems);
-        }}>
+        <button onClick={handleBuy}>
             buy
         </button>
       </div>
