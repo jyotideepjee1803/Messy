@@ -6,6 +6,21 @@ import axios, { getAxiosConfig } from '../../utils/axios';
 const BuyCouponPage = () => {
     
     const [menuData, setMenuData] = useState([]);
+    const [coupon, setCoupon] = useState({});
+
+    var date = new Date();
+    var currentDateTime = date.toISOString(); 
+
+    const getDayDifference = (dateString1, dateString2) => {
+        const date1 = new Date(dateString1);
+        const date2 = new Date(dateString2);
+
+        const timeDifference = Math.abs(date2.getTime() - date1.getTime());
+
+        const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+    
+        return daysDifference;
+    }
 
     const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2}
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
@@ -15,11 +30,15 @@ const BuyCouponPage = () => {
     const fetchMenuData = async () => {      
         try {
         const response = await axios.get('api/user/getmenu', config);
+        const couponRes = await axios.post('api/user/getcoupon', {email : loggedInUser.email}, config);
 
         //sort according to day name : 
         let data = response.data;
         data.sort((a,b)=>{return sortIdx[a.day] - sortIdx[b.day]})
         setMenuData(data);
+        setCoupon(couponRes);
+
+        console.log(couponRes);
 
         } catch (error) {
         console.error('Error fetching menu data:', error);
@@ -57,6 +76,9 @@ const BuyCouponPage = () => {
     }
     return (
         <div>
+        {coupon && ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) > 7) || coupon.taken===false) ? 
+        (
+        <>
         <div>
             {/* Mess Menu */}
             <div>
@@ -119,11 +141,17 @@ const BuyCouponPage = () => {
             </div>
             <button onClick={logout}>Logout</button>
         </div>
-        <div>
-        
         <button onClick={handleBuy}>
             buy
         </button>
+        </>
+        ) : (
+            <div>
+                You've already bought coupon
+            </div>
+        )}
+
+        <div>
       </div>
       </div>
     );

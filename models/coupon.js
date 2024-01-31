@@ -18,7 +18,7 @@ const couponSchema = new Schema({
         [false, false, false, false, false, false, false], // Lunch
         [false, false, false, false, false, false, false]  // Dinner
     ]
-});
+},{timestamps: true});
 
 const CouponModel = mongoose.model('Coupon', couponSchema);
 

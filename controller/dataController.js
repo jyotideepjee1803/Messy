@@ -1,3 +1,4 @@
+import CouponModel from "../models/coupon.js";
 import { Day } from "../models/day.js";
 import { Meal } from "../models/meal.js";
 
@@ -12,4 +13,10 @@ const getMealData = async(req,res)=>{
     res.send(MealData);
 }
 
-export {getWeekMenu,getMealData};
+const getCouponData = async(req,res)=>{
+    const {email} = req.body;
+    const coupon = await CouponModel.findOne({email}).select({_id : 0});
+    res.send(coupon);
+}
+
+export {getWeekMenu,getMealData,getCouponData};
