@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import MessMenu from '../components/Menu/messMenu';
 
 const MessMenuPage = () => {
     const [menu,setMenu] = useState([]);
@@ -13,7 +14,8 @@ const MessMenuPage = () => {
 
     return (
         <div>
-            Mess Menu
+            {/* Mess Menu */}
+            <MessMenu route="/getmenu" />
             <button
                 onClick={logout}
             >

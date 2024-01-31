@@ -8,7 +8,7 @@ const router = Router();
 
 router.post("/register",registerUser);
 router.post("/login",authenticateUser);
-router.get("/getmenu" , protect, getWeekMenu);
+router.get("/getmenu" , protect ,  getWeekMenu);
 router.get("/getmeal" , protect, getMealData);
 router.post("/buyCoupon", protect, couponPurchase);
 router.post("/validCoupon", protect, couponValidity);
