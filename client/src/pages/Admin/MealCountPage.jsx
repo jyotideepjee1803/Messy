@@ -1,13 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import axios, {getAxiosConfig} from '../../utils/axios'
-import MessMenu from '../../components/Menu/messMenu';
+import Table from '../../components/Menu/Table';
 
 const MealCountPage = () => {
 
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
     const config = getAxiosConfig({ loggedInUser });
 
-    const [mealCount, setMealCount] = useState();
+    const [mealCount, setMealCount] = useState([]);
 
     const fetchMealCount = async () => {      
         try {
@@ -25,9 +26,10 @@ const MealCountPage = () => {
     return (
         <>
             {loggedInUser.isAdmin ? (
-                <>
-                    <MessMenu count={mealCount}/>
-                </>
+                // <>
+                //     <MessMenu count={mealCount}/>
+                // </>
+                <Table data={mealCount}/>
             ):( 
                 <div>You're not admin</div>
             )}

@@ -10,11 +10,17 @@ const HomePage = () => {
             localStorage.getItem("loggedInUser")
         )
         if(user && Date.now() < user.expiryTime) navigate("/mess");
-        else navigate("/login");
     },[]);  
 
     return (
+        <>
+        <button onClick={()=>{
+            navigate("/login")
+        }}>
+            Login
+        </button>
         <div>HomePage</div>
+        </>
     )
 }
 

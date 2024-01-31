@@ -2,12 +2,13 @@ import React from 'react'
 import {Routes, Route} from "react-router-dom";
 
 import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import MessMenuPage from './pages/MessMenuPage';
-import RegisterPage from './pages/RegisterPage';
-import BuyCouponPage from './pages/BuyCouponPage';
+import LoginPage from './pages/Auth/LoginPage';
+import MessMenuPage from './pages/User/MessMenuPage';
+import RegisterPage from './pages/Auth/RegisterPage';
+import BuyCouponPage from './pages/User/BuyCouponPage';
 import AdminTaskPage from './pages/Admin/AdminTaskPage';
 import MealCountPage from './pages/Admin/MealCountPage';
+
 
 const App = () => {
   return (

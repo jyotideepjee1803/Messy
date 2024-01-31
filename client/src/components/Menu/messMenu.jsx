@@ -38,13 +38,13 @@ const MessMenu = ({count}) => {
             return <tr key={index}>
               <td>{menu.day}</td>
               <td>
-                  {count[index]?.breakfast}{menu.breakfast}
+                  {count && (`Qty : ${count[index]?.breakfast}`)}{menu.breakfast}
               </td>
               <td>
-                  {count[index]?.lunch}{menu.lunch}
+                  {count && (`Qty : ${count[index]?.lunch}`)}{menu.lunch}
               </td>
               <td>
-                {count[index]?.dinner}{menu.dinner}
+                {count && (`Qty : ${count[index]?.dinner}`)}{menu.dinner}
               </td>
             </tr>
           })}

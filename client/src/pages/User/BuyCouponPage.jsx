@@ -1,14 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
-// import MessMenu from '../components/Menu/messMenu';
-import axios, { getAxiosConfig } from '../utils/axios';
+import axios, { getAxiosConfig } from '../../utils/axios';
 
 const BuyCouponPage = () => {
     
     const [menuData, setMenuData] = useState([]);
 
     const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2}
-    const sortIdx = {'monday' : 0, 'tuesday' : 1, 'wednesday' : 2, 'thursday' : 3, 'friday' : 4, 'saturday' : 5, 'sunday' : 6};
+    const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
     const config = getAxiosConfig({ loggedInUser });
 
