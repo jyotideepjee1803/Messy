@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios, { getAxiosConfig } from '../../utils/axios';
@@ -20,7 +21,6 @@ const MessMenuPage = () => {
         //sort according to day name : 
         let data = response.data;
         data.sort((a, b) => {return sortIdx[a.day] - sortIdx[b.day]})
-        console.log(data);
         setMenuData(data);
 
         } catch (error) {

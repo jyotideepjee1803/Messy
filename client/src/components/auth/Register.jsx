@@ -40,7 +40,6 @@ const Register = () => {
 
         try{
             const {data} = await axios.post("/api/user/register", {name,email,password,isAdmin}, config);
-            console.log(data);
             localStorage.setItem("loggedInUser",JSON.stringify(data));
             navigate("/mess");
         }catch(error){
