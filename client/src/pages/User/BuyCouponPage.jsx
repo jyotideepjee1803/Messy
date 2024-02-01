@@ -6,7 +6,8 @@ import axios, { getAxiosConfig } from '../../utils/axios';
 const BuyCouponPage = () => {
     
     const [menuData, setMenuData] = useState([]);
-    const [coupon, setCoupon] = useState({});
+    const [coupon, setCoupon] = useState();
+    // const [loading, setLoading] = useState(false);
 
     var date = new Date();
     var currentDateTime = date.toISOString(); 
@@ -30,26 +31,35 @@ const BuyCouponPage = () => {
     const fetchMenuData = async () => {      
         try {
         const response = await axios.get('api/user/getmenu', config);
-        const couponRes = await axios.post('api/user/getcoupon', {email : loggedInUser.email}, config);
-
+        
         //sort according to day name : 
         let data = response.data;
         data.sort((a,b)=>{return sortIdx[a.day] - sortIdx[b.day]})
         setMenuData(data);
-        setCoupon(couponRes);
-
-        console.log(couponRes);
-
+        
         } catch (error) {
         console.error('Error fetching menu data:', error);
         }
     };
 
+    const fetchCoupon = async()=>{
+        try{
+            const couponRes = await axios.post('api/user/getcoupon', {email : loggedInUser.email}, config);
+            setCoupon(couponRes.data);
+        }catch(error){
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    useEffect(()=>{
+        fetchCoupon();
+    },[])
+
     useEffect(() => {
         fetchMenuData();
     }, []);
 
-
+    
     const [selectedItems, setSelectedItems] = useState([
         [false, false, false, false, false, false, false], // Breakfast
         [false, false, false, false, false, false, false], // Lunch
@@ -76,84 +86,81 @@ const BuyCouponPage = () => {
     }
     return (
         <div>
-        {coupon && ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) > 7) || coupon.taken===false) ? 
-        (
-        <>
-        <div>
-            {/* Mess Menu */}
-            <div>
-            <h2>Mess Menu</h2>
-            <table>
-                <thead>
-                <tr>
-                    <th>Day</th>
-                    <th>Breakfast</th>
-                    <th>Lunch</th>
-                    <th>Dinner</th>
-                </tr>
-                </thead>
-                <tbody>
-                {menuData.map((menu, index) => {
-                    return <tr key={index}>
-                    <td>{menu.day}</td>
-                    <td>
-                        
-                        <label htmlFor={`breakfastCheck${index}`}>
-                            <input
-                            id={`breakfastCheck${index}`}
-                            type="checkbox"
-                            checked={selectedItems[mp['breakfast'][index]]}
-                            onChange={() => handleCheckboxChange('breakfast', index)}
-                            />
-                            {menu.breakfast}
-                        </label>
-                        
-                    </td>
-                    <td>
-                       
-                        <label htmlFor={`lunchCheck${index}`}>
-                            <input
-                            id={`lunchCheck${index}`}
-                            type="checkbox"
-                            checked={selectedItems[mp['lunch'][index]]}
-                            onChange={() => handleCheckboxChange('lunch', index)}
-                            />
-                            {menu.lunch}
-                        </label>
-                        
-                    </td>
-                    <td>
-                       
-                        <label htmlFor={`dinnerCheck${index}`}>
-                            <input
-                            id={`dinnerCheck${index}`}
-                            type="checkbox"
-                            checked={selectedItems[mp['dinner'][index]]}
-                            onChange={() => handleCheckboxChange('dinner', index)}
-                            />
-                            {menu.dinner}
-                        </label>
-                    </td>
-                    </tr>
-                })}
-                </tbody>
-            </table>
-            </div>
-            <button onClick={logout}>Logout</button>
+            {!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) > 7) || coupon.taken===false) ? 
+            (
+            <>
+                <div>
+                    {/* Mess Menu */}
+                    <div>
+                    <h2>Mess Menu</h2>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Breakfast</th>
+                            <th>Lunch</th>
+                            <th>Dinner</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {menuData.map((menu, index) => {
+                            return <tr key={index}>
+                            <td>{menu.day}</td>
+                            <td>
+                                
+                                <label htmlFor={`breakfastCheck${index}`}>
+                                    <input
+                                    id={`breakfastCheck${index}`}
+                                    type="checkbox"
+                                    checked={selectedItems[mp['breakfast'][index]]}
+                                    onChange={() => handleCheckboxChange('breakfast', index)}
+                                    />
+                                    {menu.breakfast}
+                                </label>
+                                
+                            </td>
+                            <td>
+                            
+                                <label htmlFor={`lunchCheck${index}`}>
+                                    <input
+                                    id={`lunchCheck${index}`}
+                                    type="checkbox"
+                                    checked={selectedItems[mp['lunch'][index]]}
+                                    onChange={() => handleCheckboxChange('lunch', index)}
+                                    />
+                                    {menu.lunch}
+                                </label>
+                                
+                            </td>
+                            <td>
+                            
+                                <label htmlFor={`dinnerCheck${index}`}>
+                                    <input
+                                    id={`dinnerCheck${index}`}
+                                    type="checkbox"
+                                    checked={selectedItems[mp['dinner'][index]]}
+                                    onChange={() => handleCheckboxChange('dinner', index)}
+                                    />
+                                    {menu.dinner}
+                                </label>
+                            </td>
+                            </tr>
+                        })}
+                        </tbody>
+                    </table>
+                    </div>
+                    <button onClick={logout}>Logout</button>
+                </div>
+                <button onClick={handleBuy}>
+                    buy
+                </button>
+            </>
+            ) : (
+                <div>
+                    You've already bought coupon
+                </div>
+            )}
         </div>
-        <button onClick={handleBuy}>
-            buy
-        </button>
-        </>
-        ) : (
-            <div>
-                You've already bought coupon
-            </div>
-        )}
-
-        <div>
-      </div>
-      </div>
     );
 };
 

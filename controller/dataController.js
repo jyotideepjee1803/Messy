@@ -16,7 +16,7 @@ const getMealData = async(req,res)=>{
 const getCouponData = async(req,res)=>{
     const {email} = req.body;
     const coupon = await CouponModel.findOne({email}).select({_id : 0});
-    res.send(coupon);
+    res.json(coupon);
 }
 
 export {getWeekMenu,getMealData,getCouponData};
