@@ -8,6 +8,8 @@ import RegisterPage from './pages/Auth/RegisterPage';
 import BuyCouponPage from './pages/User/BuyCouponPage';
 import AdminTaskPage from './pages/Admin/AdminTaskPage';
 import MealCountPage from './pages/Admin/MealCountPage';
+import { PaymentPage } from './pages/User/PaymentPage';
+
 import SideMenu from './components/Menu/SideMenu/SideMenu';
 
 const App = () => {
@@ -22,6 +24,7 @@ const App = () => {
          <Route path="/buycoupon" element={<BuyCouponPage/>}/>
          <Route path="/admin" element={<AdminTaskPage/>}/>
          <Route path="/admin/totalMeal" element={<MealCountPage/>}/>
+         <Route path="/pay" element={<PaymentPage/>}/>
     </Routes>
     </>
   )
