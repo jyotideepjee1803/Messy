@@ -93,11 +93,6 @@ const BuyCouponPage = () => {
 
     const navigate = useNavigate();
 
-    const logout = () => {
-        localStorage.removeItem("loggedInUser");
-        navigate("/");
-    };
-
     const handleCheckboxChange = (mealIndex, dayIndex)=>{
         const newSelected = [...selectedItems];
         newSelected[mealIndex][dayIndex] = !newSelected[mealIndex][dayIndex];
@@ -147,7 +142,7 @@ const BuyCouponPage = () => {
         >
             {!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) >=5) || coupon.taken===false) ? 
             (
-            <Box>
+            <Box sx={{backgroundColor:'white', borderRadius:1, padding:3, boxShadow:1}}>
                 <Box>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -188,14 +183,12 @@ const BuyCouponPage = () => {
                 </TableContainer>
                 </Box>
                 
-                <Box ml={2} mt={2} flexDirection={'row'} alignSelf={'right'} container>
-                    <Box><Typography variant='h6'>Selected meals cost: </Typography></Box>
-                    <Box>
-                        <Typography>{total}</Typography>
-                        <Button variant="contained" onClick={handleBuy}>
-                            <Typography mr={1}>Buy</Typography> <ShoppingCart/>
-                        </Button>
-                    </Box>
+                <Box ml={2} mt={2} textAlign="right" alignSelf={'right'}>
+                    <Box py={1} mb={1}><Typography variant='h6'>{`Total cost:  ₹${total}.00`}</Typography></Box>
+                    
+                    <Button variant="contained" onClick={handleBuy}>
+                        <Typography mr={1}>Buy</Typography> <ShoppingCart/>
+                    </Button>
                 </Box>
             </Box>
             ) : (

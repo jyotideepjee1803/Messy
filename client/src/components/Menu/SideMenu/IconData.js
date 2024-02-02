@@ -5,17 +5,20 @@ export const UserIcons = [
     {
         text : 'Home',
         icon : <Home/>,
-        path : "/mess"
+        path : "/mess",
+        tooltitle : 'Home'
     },
     {
         text : 'BuyCoupon',
         icon : <CurrencyRupee/>,
         path : "/buycoupon",
+        tooltitle : 'Buy Coupon'
     },
     {
         text : 'My Coupon',
         icon : <ConfirmationNumber/>,
-        path : "/mycoupon"
+        path : "/mycoupon",
+        tooltitle : 'My Coupons'
     }
 ]
 
@@ -23,11 +26,13 @@ export const AdminIcons = [
     {
         text : 'Admin Panel',
         icon : <AdminPanelSettings/>,
-        path : "/admin"
+        path : "/admin",
+        tooltitle : 'Admin Panel'
     },
     {
         text : 'Total Meals',
         icon : <Assignment/>,
         path : "/admin/totalMeal",
+        tooltitle : 'Total Meals'
     },
 ]
