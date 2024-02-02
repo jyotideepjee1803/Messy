@@ -10,12 +10,12 @@ export const UserIcons = [
     {
         text : 'BuyCoupon',
         icon : <CurrencyRupee/>,
-        path : "/buyCoupon",
+        path : "/buycoupon",
     },
     {
         text : 'My Coupon',
         icon : <ConfirmationNumber/>,
-        path : "/mess"
+        path : "/mycoupon"
     }
 ]
 

@@ -52,6 +52,7 @@ const BuyCouponPage = () => {
         try{
             const couponRes = await axios.post('api/user/getcoupon', {email : loggedInUser.email}, config);
             setCoupon(couponRes.data);
+            console.log(couponRes.data);
         }catch(error){
             console.error('Error fetching data:', error);
         }

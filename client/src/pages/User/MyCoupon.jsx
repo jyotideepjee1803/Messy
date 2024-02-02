@@ -4,13 +4,29 @@ import axios, { getAxiosConfig } from '../../utils/axios';
 import Table from '../../components/Menu/Table';
 import { Grid, Typography } from '@mui/material';
 
-const MessMenuPage = () => {
+const MyCoupon = () => {
 
     const [menuData, setMenuData] = useState([]);
+    const [coupon, setCoupon] = useState([]);
 
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
     const config = getAxiosConfig({ loggedInUser });
+
+    const fetchCoupon = async()=>{
+        try{
+            const couponRes = await axios.post('api/user/getcoupon', {email : loggedInUser.email}, config);
+            setCoupon(couponRes.data.week);
+            console.log(couponRes.data);
+        }catch(error){
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    useEffect(()=>{
+        fetchCoupon();
+    },[])
+
 
     const fetchMenuData = async () => {      
         try {
@@ -47,10 +63,10 @@ const MessMenuPage = () => {
             justifyContent="center"
             flexDirection="column"
         >
-            <Typography variant='h3'>Mess Menu</Typography>
-            <Table data={menuData}/>
+            <Typography variant='h3'>My Coupons</Typography>
+            <Table data={menuData} taken={coupon}/>
         </Grid>
     )
 }
 
-export default MessMenuPage
+export default MyCoupon;

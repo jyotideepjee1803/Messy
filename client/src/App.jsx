@@ -11,6 +11,7 @@ import MealCountPage from './pages/Admin/MealCountPage';
 import { PaymentPage } from './pages/User/PaymentPage';
 
 import SideMenu from './components/Menu/SideMenu/SideMenu';
+import MyCoupon from './pages/User/MyCoupon';
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
          <Route path="/register" element={<RegisterPage/>}/>
          <Route path="/mess" element={<MessMenuPage/>}/>
          <Route path="/buycoupon" element={<BuyCouponPage/>}/>
+         <Route path="/mycoupon" element={<MyCoupon/>}/>
          <Route path="/admin" element={<AdminTaskPage/>}/>
          <Route path="/admin/totalMeal" element={<MealCountPage/>}/>
          <Route path="/pay" element={<PaymentPage/>}/>

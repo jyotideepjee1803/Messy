@@ -2,6 +2,9 @@
 import React, {useState, useEffect} from 'react'
 import axios,{getAxiosConfig} from '../../utils/axios'
 
+import { DataGrid } from '@mui/x-data-grid';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Grid } from '@mui/material';
+
 const AdminTaskPage = () => {
     const [menuData, setMenuData] = useState([]);
     const [mealData, setMealData] = useState([]);
@@ -78,55 +81,75 @@ const AdminTaskPage = () => {
         fetchMealData();
     },[])
 
+    const [editRowsModel, setEditRowsModel] = useState({});
+
+    const handleCellEditCommit = ({ id, field, props }) => {
+        const updatedData = [...mealData];
+        const rowIndex = updatedData.findIndex((item) => item.id === id);
+        updatedData[rowIndex][field] = props.value;
+        console.log(updatedData);
+        setMealData(updatedData);
+    };
+
     return (
         <>
             {loggedInUser.isAdmin ? (
             <div>
-            <div>
+            <Grid justifyContent={'center'} alignItems={'center'}>
                 {/* Mess Meals */}
-                <h2>Meal Details</h2>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Meal</th>
-                        <th>Time</th>
-                        <th>Cost</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {mealData.map((item, index) => {
-                            return <tr key={index}>
-                            <td>{item.mealName}</td>
-                            <td>
-                                
-                                <label htmlFor={`time${index}`}>
-                                    <input
-                                    id={`time${index}`}
-                                    type="input"
-                                    value={item.time}
-                                    onChange={(event) => handleMealChange(event,index,'time')}
-                                    />
-                                </label>
-                                
-                            </td>
-                            <td>
-                            
-                                <label htmlFor={`cost${index}`}>
-                                    <input
-                                    id={`cost${index}`}
-                                    type="input"
-                                    value={item.cost}
-                                    onChange={(event) => handleMealChange(event,index,'cost')}
-                                    />
-                                </label>
-                                
-                            </td>
-                        </tr>
-                    })}
-                    </tbody>
-                </table>
-                <button onClick={updateMealData}>Save time</button>
-            </div>
+                <TableContainer>
+                    <Table>
+                    <TableHead>
+                        <TableRow>
+                        <TableCell>Meal</TableCell>
+                        <TableCell>Time</TableCell>
+                        <TableCell>Cost</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {mealData.map((item, index) => (
+                        <TableRow key={index}>
+                            <TableCell>{item.mealName}</TableCell>
+                            <TableCell>
+                            <TextField
+                                id={`time${index}`}
+                                type="input"
+                                value={item.time}
+                                onChange={(event) => handleMealChange(event, index, 'time')}
+                            />
+                            </TableCell>
+                            <TableCell>
+                            <TextField
+                                id={`cost${index}`}
+                                type="input"
+                                value={item.cost}
+                                onChange={(event) => handleMealChange(event, index, 'cost')}
+                            />
+                            </TableCell>
+                        </TableRow>
+                        ))}
+                    </TableBody>
+                    </Table>
+                </TableContainer>
+                {/* <DataGrid
+                    rows={mealData}
+                    getRowId={(row) => mp[row.mealName]}
+                    columns={[
+                    { field: 'mealName', headerName: 'Meal', flex: 1, editable: false },
+                    { field: 'time', headerName: 'Time', flex: 1, editable: true },
+                    { field: 'cost', headerName: 'Cost', flex: 1, editable: true },
+                    ]}
+                    editRowsModel={editRowsModel}
+                    onCellEditCommit={handleCellEditCommit}
+                    onEditRowsModelChange={(newModel) => setEditRowsModel(newModel)}
+                    pageSize={5}
+                    checkboxSelection
+                    disableSelectionOnClick
+                    hideFooter={true}
+                    hideFooterPagination={true}
+                /> */}
+                <Button variant="contained" onClick={updateMealData}>Save time</Button>
+            </Grid>
             <div>
                 {/* Mess Menu */}
                 <h2>Mess Menu</h2>
