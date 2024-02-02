@@ -49,16 +49,7 @@ const MyCoupon = () => {
         fetchMenuData();
     },[])
 
-    // const logout = () =>{
-    //     localStorage.removeItem("loggedInUser");
-    //     navigate("/");
-    // }
-
     return (
-        // <div>
-        //     {/* Mess Menu */}
-        //     <Table data={menuData}/>
-        // </div>
         <Grid 
             marginTop={5}
             container 
@@ -66,7 +57,7 @@ const MyCoupon = () => {
             justifyContent="center"
             flexDirection="column"
         >
-            <Typography variant='h3'>My Coupons</Typography>
+            <Typography variant='h4' sx={{alignSelf:'center' , marginBottom: '25px' , textAlign: 'center'}}>Mess Menu</Typography>
             <Table data={menuData} taken={coupon}/>
         </Grid>
     )

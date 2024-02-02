@@ -47,7 +47,7 @@ const MessMenuPage = () => {
             justifyContent="center"
             flexDirection="column"
         >
-            <Typography variant='h3'>Mess Menu</Typography>
+            <Typography variant='h4' sx={{alignSelf:'center' , marginBottom: '25px' , textAlign: 'center'}}>Mess Menu</Typography>
             <Table data={menuData}/>
         </Grid>
     )

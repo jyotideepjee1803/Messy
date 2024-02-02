@@ -95,16 +95,6 @@ const AdminTaskPage = () => {
         fetchMealData();
     },[])
 
-    const [editRowsModel, setEditRowsModel] = useState({});
-
-    const handleCellEditCommit = ({ id, field, props }) => {
-        const updatedData = [...mealData];
-        const rowIndex = updatedData.findIndex((item) => item.id === id);
-        updatedData[rowIndex][field] = props.value;
-        console.log(updatedData);
-        setMealData(updatedData);
-    };
-
     return (
         <Grid 
             marginTop={5}
@@ -154,13 +144,15 @@ const AdminTaskPage = () => {
                 </TableBody>
                 </Table> 
             </TableContainer>
-            <Button
-                variant="contained"
-                onClick={updateMealData}
-                className="MuiButton-root MuiButton-contained"
-                >
-                Save time
-            </Button>
+            <Box ml={2} mt={2} textAlign="right" alignSelf={'right'}>
+                <Button
+                    variant="contained"
+                    onClick={updateMealData}
+                    className="MuiButton-root MuiButton-contained"
+                    >
+                    Save time
+                </Button>
+            </Box>
             </Grid>
 
 
@@ -179,8 +171,7 @@ const AdminTaskPage = () => {
                 </TableHead>
                 <TableBody>
                   {menuData.map((menu, index) => (
-                    <React.Fragment key={index}>
-                      <TableRow>
+                      <TableRow key={index}>
                         <TableCell>{menu.day}</TableCell>
                         <TableCell>
                         <TextField
@@ -211,20 +202,20 @@ const AdminTaskPage = () => {
                         />
                         </TableCell>
                       </TableRow>
-                    </React.Fragment>
-
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
-            <Button
-              variant="contained"
-              onClick={updateMenuData}
-              className="MuiButton-root MuiButton-contained"
-              style={{ marginLeft: 'auto', marginTop: 2}}
-            >
-              Save Menu
-            </Button>
+            <Box ml={2} my={2} textAlign="right" alignSelf={'right'}>
+                <Button
+                variant="contained"
+                onClick={updateMenuData}
+                className="MuiButton-root MuiButton-contained"
+                style={{ marginLeft: 'auto', marginTop: 2}}
+                >
+                Save Menu
+                </Button>
+            </Box>
         </Box>
 
             </div>
