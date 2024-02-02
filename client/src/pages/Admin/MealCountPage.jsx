@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import axios, {getAxiosConfig} from '../../utils/axios'
 import Table from '../../components/Menu/Table';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 const MealCountPage = () => {
 
@@ -33,7 +33,10 @@ const MealCountPage = () => {
             flexDirection="column"
         >
             {loggedInUser.isAdmin ? (
+                <>
+                 <Typography variant='h4' sx={{alignSelf:'center' , textAlign: 'center' , marginBottom: '25px'}}>Total Meals</Typography>
                 <Table data={mealCount}/>
+                </>
             ):( 
                 <div>You're not admin</div>
             )}

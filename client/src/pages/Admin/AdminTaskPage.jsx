@@ -2,8 +2,22 @@
 import React, {useState, useEffect} from 'react'
 import axios,{getAxiosConfig} from '../../utils/axios'
 
-import { DataGrid } from '@mui/x-data-grid';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Button, Grid } from '@mui/material';
+import {   } from '@mui/system';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Button,
+  Grid,
+  Typography,
+  Paper,
+  Box,
+} from '@mui/material';
+    
 
 const AdminTaskPage = () => {
     const [menuData, setMenuData] = useState([]);
@@ -81,139 +95,135 @@ const AdminTaskPage = () => {
         fetchMealData();
     },[])
 
-    const [editRowsModel, setEditRowsModel] = useState({});
-
-    const handleCellEditCommit = ({ id, field, props }) => {
-        const updatedData = [...mealData];
-        const rowIndex = updatedData.findIndex((item) => item.id === id);
-        updatedData[rowIndex][field] = props.value;
-        console.log(updatedData);
-        setMealData(updatedData);
-    };
-
     return (
-        <>
-            {loggedInUser.isAdmin ? (
+        <Grid 
+            marginTop={5}
+            container 
+            alignItems="center"
+            justifyContent="center"
+            flexDirection="column"
+        >
+          {loggedInUser.isAdmin ? (
             <div>
+            <Typography variant='h4' sx={{alignSelf:'center' , textAlign: 'center' , marginBottom: '25px'}}>Mess Timing</Typography>
             <Grid justifyContent={'center'} alignItems={'center'}>
-                {/* Mess Meals */}
-                <TableContainer>
-                    <Table>
-                    <TableHead>
-                        <TableRow>
-                        <TableCell>Meal</TableCell>
-                        <TableCell>Time</TableCell>
-                        <TableCell>Cost</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {mealData.map((item, index) => (
-                        <TableRow key={index}>
-                            <TableCell>{item.mealName}</TableCell>
-                            <TableCell>
-                            <TextField
-                                id={`time${index}`}
-                                type="input"
-                                value={item.time}
-                                onChange={(event) => handleMealChange(event, index, 'time')}
-                            />
-                            </TableCell>
-                            <TableCell>
-                            <TextField
-                                id={`cost${index}`}
-                                type="input"
-                                value={item.cost}
-                                onChange={(event) => handleMealChange(event, index, 'cost')}
-                            />
-                            </TableCell>
-                        </TableRow>
-                        ))}
-                    </TableBody>
-                    </Table>
-                </TableContainer>
-                {/* <DataGrid
-                    rows={mealData}
-                    getRowId={(row) => mp[row.mealName]}
-                    columns={[
-                    { field: 'mealName', headerName: 'Meal', flex: 1, editable: false },
-                    { field: 'time', headerName: 'Time', flex: 1, editable: true },
-                    { field: 'cost', headerName: 'Cost', flex: 1, editable: true },
-                    ]}
-                    editRowsModel={editRowsModel}
-                    onCellEditCommit={handleCellEditCommit}
-                    onEditRowsModelChange={(newModel) => setEditRowsModel(newModel)}
-                    pageSize={5}
-                    checkboxSelection
-                    disableSelectionOnClick
-                    hideFooter={true}
-                    hideFooterPagination={true}
-                /> */}
-                <Button variant="contained" onClick={updateMealData}>Save time</Button>
+            {/* Mess Meals */}
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                    <TableRow sx={{backgroundColor: "lightgray", boxShadow: "1"}}>
+                    <TableCell>Meal</TableCell>
+                    <TableCell>Time</TableCell>
+                    <TableCell>Cost</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {mealData.map((item, index) => (
+                    < TableRow key={index}>
+                        < TableCell>{item.mealName}</ TableCell>
+                        < TableCell>
+                        <TextField
+                            id={`time${index}`}
+                            type="input"
+                            size="small" // Set the size to small
+                            value={item.time}
+                            onChange={(event) => handleMealChange(event, index, 'time')}
+                        />
+                        </ TableCell>
+                        < TableCell>
+                        <TextField
+                            id={`cost${index}`}
+                            type="input"
+                            size="small" // Set the size to small
+                            value={item.cost}
+                            onChange={(event) => handleMealChange(event, index, 'cost')}
+                        />
+                        </ TableCell>
+                    </ TableRow>
+                    ))}
+                </TableBody>
+                </Table> 
+            </TableContainer>
+            <Box ml={2} mt={2} textAlign="right" alignSelf={'right'}>
+                <Button
+                    variant="contained"
+                    onClick={updateMealData}
+                    className="MuiButton-root MuiButton-contained"
+                    >
+                    Save time
+                </Button>
+            </Box>
             </Grid>
-            <div>
-                {/* Mess Menu */}
-                <h2>Mess Menu</h2>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Day</th>
-                        <th>Breakfast</th>
-                        <th>Lunch</th>
-                        <th>Dinner</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {menuData.map((menu, index) => {
-                        return <tr key={index}>
-                        <td>{menu.day}</td>
-                        <td>
-                            
-                            <label htmlFor={`breakfastCheck${index}`}>
-                                <input
-                                id={`breakfastCheck${index}`}
-                                type="input"
-                                value={menu.breakfast}
-                                onChange={(event) => handleMenuInputChange(event,index,'breakfast')}
-                                />
-                            </label>
-                            
-                        </td>
-                        <td>
-                        
-                            <label htmlFor={`lunchCheck${index}`}>
-                                <input
-                                id={`lunchCheck${index}`}
-                                type="input"
-                                value={menu.lunch}
-                                onChange={(event) => handleMenuInputChange(event,index,'lunch')}
-                                />
-                            </label>
-                            
-                        </td>
-                        <td>
-                            <label htmlFor={`dinnerCheck${index}`}>
-                                <input
-                                id={`dinnerCheck${index}`}
-                                type="input"
-                                value={menu.dinner}
-                                onChange={(event) => handleMenuInputChange(event,index,'dinner')}
-                                />
-                            </label>
-                        </td>
-                        </tr>
-                    })}
-                    </tbody>
-                </table>
-                <button onClick={updateMenuData}>Save Menu</button>
+
+
+        <Box mt={2}>
+            {/* Mess Menu */}
+            <Typography variant='h4' sx={{alignSelf:'center' , marginBottom: '25px' , textAlign: 'center'}}>Mess Menu</Typography>
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow sx={{backgroundColor: "lightgray", boxShadow: "1"}}>
+                    <TableCell>Day</TableCell>
+                    <TableCell>Breakfast</TableCell>
+                    <TableCell>Lunch</TableCell>
+                    <TableCell>Dinner</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {menuData.map((menu, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{menu.day}</TableCell>
+                        <TableCell>
+                        <TextField
+                            id={`breakfastCheck${index}`}
+                            type="input"
+                            size="small" // Set the size to small
+                            value={menu.breakfast}
+                            onChange={(event) => handleMenuInputChange(event, index, 'breakfast')}
+                        />
+                         
+                        </TableCell>
+                        <TableCell>
+                        <TextField
+                            id={`lunchCheck${index}`}
+                            type="input"
+                            size="small" // Set the size to small
+                            value={menu.lunch}
+                            onChange={(event) => handleMenuInputChange(event, index, 'lunch')}
+                        />
+                        </TableCell>
+                        <TableCell>
+                        <TextField
+                            id={`dinnerCheck${index}`}
+                            type="input"
+                            size="small" // Set the size to small
+                            value={menu.dinner}
+                            onChange={(event) => handleMenuInputChange(event, index, 'dinner')}
+                        />
+                        </TableCell>
+                      </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Box ml={2} my={2} textAlign="right" alignSelf={'right'}>
+                <Button
+                variant="contained"
+                onClick={updateMenuData}
+                className="MuiButton-root MuiButton-contained"
+                style={{ marginLeft: 'auto', marginTop: 2}}
+                >
+                Save Menu
+                </Button>
+            </Box>
+        </Box>
+
             </div>
-            </div>
-            ) : (
-                <div>
-                    You're not admin
-                </div>
-            )}
-        </>
-    )
+          ) : (
+            <div>You're not admin</div>
+          )}
+        </Grid>
+      );
 }
 
 export default AdminTaskPage
