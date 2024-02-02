@@ -2,6 +2,8 @@
 import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios, { getAxiosConfig } from '../../utils/axios';
+import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import {ShoppingCart} from '@mui/icons-material/';
 
 const BuyCouponPage = () => {
     
@@ -13,7 +15,7 @@ const BuyCouponPage = () => {
         lunch: 0,
         dinner: 0
     });
-    const [total , setTotal] = useState();
+    const [total , setTotal] = useState(0);
 
     var date = new Date();
     var currentDateTime = date.toISOString(); 
@@ -58,6 +60,19 @@ const BuyCouponPage = () => {
         }
     }
 
+    const check = async()=>{
+        const response = await axios.get("api/user/getmeal" , config);
+        // console.log(res);
+        const breakfastCost = response.data.find(meal => meal.mealName === 'breakfast').cost;
+        const lunchCost = response.data.find(meal => meal.mealName === 'lunch').cost;
+        const dinnerCost = response.data.find(meal => meal.mealName === 'dinner').cost;
+        setMealCost({
+            breakfast: breakfastCost,
+            lunch: lunchCost,
+            dinner: dinnerCost
+        });
+    }
+
     useEffect(()=>{
         fetchCoupon();
     },[])
@@ -65,6 +80,10 @@ const BuyCouponPage = () => {
     useEffect(() => {
         fetchMenuData();
     }, []);
+
+    useEffect(()=>{
+        check();
+    },[])
 
     const [selectedItems, setSelectedItems] = useState([
         [false, false, false, false, false, false, false], // Breakfast
@@ -79,8 +98,7 @@ const BuyCouponPage = () => {
         navigate("/");
     };
 
-    const handleCheckboxChange = (meal, dayIndex)=>{
-        let mealIndex = mp[meal];
+    const handleCheckboxChange = (mealIndex, dayIndex)=>{
         const newSelected = [...selectedItems];
         newSelected[mealIndex][dayIndex] = !newSelected[mealIndex][dayIndex];
         setSelectedItems(newSelected);
@@ -94,22 +112,7 @@ const BuyCouponPage = () => {
         navigate('/pay', { state: { total } });
     }
 
-    const check = async()=>{
-        const response = await axios.get("api/user/getmeal" , config);
-        // console.log(res);
-        const breakfastCost = response.data.find(meal => meal.mealName === 'breakfast').cost;
-        const lunchCost = response.data.find(meal => meal.mealName === 'lunch').cost;
-        const dinnerCost = response.data.find(meal => meal.mealName === 'dinner').cost;
-        setMealCost({
-            breakfast: breakfastCost,
-            lunch: lunchCost,
-            dinner: dinnerCost
-        });
-    }
-
     const handleCost = () => {
-
-       check();
         
         let totalCost = 0;
 
@@ -135,91 +138,72 @@ const BuyCouponPage = () => {
     };
 
     return (
-        <div>
+        <Grid 
+            marginTop={5}
+            container 
+            alignItems="center"
+            justifyContent="center"
+            flexDirection="column"
+        >
             {!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) >=5) || coupon.taken===false) ? 
             (
-            <>
-                <div>
-                    {/* Mess Menu */}
-                    <div>
-                    <h2>Mess Menu</h2>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Day</th>
-                            <th>Breakfast</th>
-                            <th>Lunch</th>
-                            <th>Dinner</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {menuData.map((menu, index) => {
-                            return <tr key={index}>
-                            <td>{menu.day}</td>
-                            <td>
-                                
-                                <label htmlFor={`breakfastCheck${index}`}>
-                                    <input
-                                    id={`breakfastCheck${index}`}
-                                    type="checkbox"
-                                    checked={selectedItems[mp['breakfast'][index]]}
-                                    onChange={() => handleCheckboxChange('breakfast', index)}
-                                    />
-                                    {menu.breakfast}
-                                </label>
-                                
-                            </td>
-                            <td>
-                            
-                                <label htmlFor={`lunchCheck${index}`}>
-                                    <input
-                                    id={`lunchCheck${index}`}
-                                    type="checkbox"
-                                    checked={selectedItems[mp['lunch'][index]]}
-                                    onChange={() => handleCheckboxChange('lunch', index)}
-                                    />
-                                    {menu.lunch}
-                                </label>
-                                
-                            </td>
-                            <td>
-                            
-                                <label htmlFor={`dinnerCheck${index}`}>
-                                    <input
-                                    id={`dinnerCheck${index}`}
-                                    type="checkbox"
-                                    checked={selectedItems[mp['dinner'][index]]}
-                                    onChange={() => handleCheckboxChange('dinner', index)}
-                                    />
-                                    {menu.dinner}
-                                </label>
-                            </td>
-                            </tr>
-                        })}
-                        </tbody>
-                    </table>
-                    </div>
-                    <button onClick={logout}>Logout</button>
-                </div>
-                <button onClick={handleBuy}>
-                    buy
-                </button>
-
-                <div>
-            </div>
-            <div>
-                <p>Total Cost: ${total}</p>
-                <p>Breakfast: ${mealCost.breakfast}</p>
-                <p>Lunch: ${mealCost.lunch}</p>
-                <p>Dinner: ${mealCost.dinner}</p>
-            </div>
-            </>
+            <Box>
+                <Box>
+                <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                        <TableRow sx={{ backgroundColor: "lightgray", boxShadow: "1" }}>
+                        <TableCell>Day</TableCell>
+                        <TableCell>{`Breakfast (Rs. ${mealCost.breakfast})`}</TableCell>
+                        <TableCell>{`Lunch (Rs. ${mealCost.lunch})`}</TableCell>
+                        <TableCell>{`Dinner (Rs. ${mealCost.dinner})`}</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {menuData.map((rowData, index) => (
+                        <TableRow key={index}>
+                            <TableCell>{rowData.day}</TableCell>
+                            <TableCell
+                            sx={{ cursor: 'pointer', backgroundColor: selectedItems[0]?.[index] && "#ceface" }}
+                            onClick={() => handleCheckboxChange(0, index)}
+                            >
+                            {rowData.breakfast}
+                            </TableCell>
+                            <TableCell
+                            sx={{ cursor: 'pointer', backgroundColor: selectedItems[1]?.[index] && "#ceface" }}
+                            onClick={() => handleCheckboxChange(1, index)}
+                            >
+                            {rowData.lunch}
+                            </TableCell>
+                            <TableCell
+                            sx={{ cursor: 'pointer', backgroundColor: selectedItems[2]?.[index] && "#ceface" }}
+                            onClick={() => handleCheckboxChange(2, index)}
+                            >
+                            {rowData.dinner}
+                            </TableCell>
+                        </TableRow>
+                        ))}
+                    </TableBody>
+                    </Table>
+                </TableContainer>
+                </Box>
+                
+                <Box ml={2} mt={2} flexDirection={'row'} alignSelf={'right'} container>
+                    <Box><Typography variant='h6'>Selected meals cost: </Typography></Box>
+                    <Box>
+                        <Typography>{total}</Typography>
+                        <Button variant="contained" onClick={handleBuy}>
+                            <Typography mr={1}>Buy</Typography> <ShoppingCart/>
+                        </Button>
+                    </Box>
+                </Box>
+            </Box>
             ) : (
                 <div>
                     You've already bought coupon
                 </div>
             )}
-        </div>
+        </Grid>
     );
 };
 
