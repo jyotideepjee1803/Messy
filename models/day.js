@@ -6,7 +6,7 @@ const daySchema = new Schema({
     breakfast : String,
     lunch : String,
     dinner : String
-});
+},{versionKey: false});
 
 const Day = mongoose.model('Day', daySchema) 
 export {Day};
