@@ -18,6 +18,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useNavigate } from 'react-router-dom';
 import { AdminIcons, UserIcons } from './IconData';
+import { Tooltip } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -104,6 +105,7 @@ export default function SideMenu() {
       <CssBaseline />
       <AppBar position="fixed">
         <Toolbar>
+          <Tooltip title="Menu">
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -112,6 +114,7 @@ export default function SideMenu() {
           >
             <MenuIcon />
           </IconButton>
+          </Tooltip>
           <Typography variant="h6" noWrap component="div">
             Messy
           </Typography>
@@ -128,6 +131,7 @@ export default function SideMenu() {
             {
               UserIcons.map((item,index)=>(
                 <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
+                  <Tooltip title={item.tooltitle} placement='bottom'>
                   <ListItemButton
                     sx={{
                       minHeight: 48,
@@ -147,6 +151,7 @@ export default function SideMenu() {
                     </ListItemIcon>
                     <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
                   </ListItemButton>
+                  </Tooltip>
                 </ListItem>
               ))
             }
@@ -159,6 +164,7 @@ export default function SideMenu() {
             {
               AdminIcons.map((item,index)=>(
                 <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
+                  <Tooltip title={item.tooltitle} placement='bottom'>
                   <ListItemButton
                     sx={{
                       minHeight: 48,
@@ -178,6 +184,7 @@ export default function SideMenu() {
                     </ListItemIcon>
                     <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
                   </ListItemButton>
+                  </Tooltip>
                 </ListItem>
               ))
             }

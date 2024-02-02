@@ -7,7 +7,11 @@ import { Grid, Typography } from '@mui/material';
 const MyCoupon = () => {
 
     const [menuData, setMenuData] = useState([]);
-    const [coupon, setCoupon] = useState([]);
+    const [coupon, setCoupon] = useState([
+        [false, false, false, false, false, false, false], // Breakfast
+        [false, false, false, false, false, false, false], // Lunch
+        [false, false, false, false, false, false, false]  // Dinner
+    ]);
 
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
@@ -16,8 +20,7 @@ const MyCoupon = () => {
     const fetchCoupon = async()=>{
         try{
             const couponRes = await axios.post('api/user/getcoupon', {email : loggedInUser.email}, config);
-            setCoupon(couponRes.data.week);
-            console.log(couponRes.data);
+            if(couponRes != null) setCoupon(couponRes.data.week);
         }catch(error){
             console.error('Error fetching data:', error);
         }
