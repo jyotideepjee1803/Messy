@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios, { getAxiosConfig } from '../../utils/axios';
 import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
@@ -17,6 +17,7 @@ const BuyCouponPage = () => {
     });
     const [total , setTotal] = useState(0);
 
+  
     var date = new Date();
     var currentDateTime = date.toISOString(); 
 
@@ -104,7 +105,7 @@ const BuyCouponPage = () => {
     const handleBuy = async()=>{
         const response = await axios.post("/api/user/buyCoupon", {email : loggedInUser.email, selected : selectedItems}, config)
         // console.log(response);
-        navigate('/pay', { state: { total } });
+        navigate('/pay', { state: { total: total, selectedItems: selectedItems } });
     }
 
     const handleCost = () => {
@@ -140,7 +141,7 @@ const BuyCouponPage = () => {
             justifyContent="center"
             flexDirection="column"
         >
-            {!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) >=5) || coupon.taken===false) ? 
+            {!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) >=0) || coupon.taken===false) ? 
             (
             <Box sx={{backgroundColor:'white', borderRadius:1, padding:3, boxShadow:1}}>
                 <Box>

@@ -23,6 +23,7 @@ app.use(express.json());
 app.use("/api/user",userRoutes);
 app.use("/api/admin" ,adminRoutes);
 
+
 // Error middlewares 
 app.all('*', notFoundHandler);
 app.use(appErrorHandler);
