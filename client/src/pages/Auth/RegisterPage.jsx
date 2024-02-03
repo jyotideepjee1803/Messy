@@ -1,13 +1,13 @@
 import React from 'react'
 import Register from '../../components/auth/Register'
+import { Container, CssBaseline} from '@mui/material'
 
 const RegisterPage = () => {
     return (
-        <div>
-            <section>
-                <Register/>
-            </section>
-        </div>
+        <Container component="main" maxWidth="xs">
+            <CssBaseline/>
+            <Register/>
+        </Container>
     )
 }
 
