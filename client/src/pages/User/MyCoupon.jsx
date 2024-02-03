@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import axios, { getAxiosConfig } from '../../utils/axios';
 import Table from '../../components/Menu/Table';
-import { Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 
 const MyCoupon = () => {
 
@@ -57,8 +57,10 @@ const MyCoupon = () => {
             justifyContent="center"
             flexDirection="column"
         >
-            <Typography variant='h4' sx={{alignSelf:'center' , marginBottom: '25px' , textAlign: 'center'}}>Mess Menu</Typography>
-            <Table data={menuData} taken={coupon}/>
+            <Box sx={{backgroundColor:'white', borderRadius:1, padding:3, boxShadow:1}}>
+                <Typography variant='h4' sx={{alignSelf:'center' , marginBottom: '25px' , textAlign: 'center'}}>My Coupon</Typography>
+                <Table data={menuData} taken={coupon}/>
+            </Box>
         </Grid>
     )
 }

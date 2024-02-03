@@ -1,14 +1,13 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Box } from '@mui/material';
 
 const MessTable = ({ data, taken}) => {
-  console.log(taken);
   const dayIdx = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2}
 
   return (
     <Box>
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow sx={{backgroundColor: "lightgray", boxShadow: "1"}}>

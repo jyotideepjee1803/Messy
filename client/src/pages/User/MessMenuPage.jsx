@@ -5,7 +5,7 @@ import Table from '../../components/Menu/Table';
 import { Grid, Typography } from '@mui/material';
 
 const MessMenuPage = () => {
-
+ 
     const [menuData, setMenuData] = useState([]);
 
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
@@ -30,16 +30,7 @@ const MessMenuPage = () => {
         fetchMenuData();
     },[])
 
-    // const logout = () =>{
-    //     localStorage.removeItem("loggedInUser");
-    //     navigate("/");
-    // }
-
     return (
-        // <div>
-        //     {/* Mess Menu */}
-        //     <Table data={menuData}/>
-        // </div>
         <Grid 
             marginTop={5}
             container 

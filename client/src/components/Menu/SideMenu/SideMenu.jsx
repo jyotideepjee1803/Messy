@@ -12,13 +12,14 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useNavigate } from 'react-router-dom';
 import { AdminIcons, UserIcons } from './IconData';
-import { Tooltip } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -100,8 +101,13 @@ export default function SideMenu() {
     setOpen(false);
   };
 
-  return (
-    <Box sx={{ display: 'flex' }}>
+  const logout = () => {
+    localStorage.removeItem("loggedInUser");
+    navigate("/login");
+  }
+
+  return loggedInUser && (
+    <Box sx={{ display: 'flex', flexGrow:1}}>
       <CssBaseline />
       <AppBar position="fixed">
         <Toolbar>
@@ -115,10 +121,14 @@ export default function SideMenu() {
             <MenuIcon />
           </IconButton>
           </Tooltip>
-          <Typography variant="h6" noWrap component="div">
+          <Typography ml={2} variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Messy
           </Typography>
-        </Toolbar>
+            <Typography mr={1}>{loggedInUser.email}</Typography>
+            <Tooltip title={'Logout'} placement='bottom'>
+              <Button color='inherit' onClick={logout}><LogoutRoundedIcon/></Button>
+            </Tooltip>
+          </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
@@ -157,7 +167,7 @@ export default function SideMenu() {
             }
         </List>
         {
-        loggedInUser.isAdmin && (
+        loggedInUser?.isAdmin && (
         <>
         <Divider />
         <List>
