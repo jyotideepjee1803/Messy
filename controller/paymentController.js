@@ -26,7 +26,7 @@ const initiatePayment = async(req,res)=>{
     });
 
     const pay = await PaymentModel.create({orderId : order.id, selected});
-    console.log(pay);
+    // console.log(pay);
     res.send(order);
 
     // try{
@@ -55,9 +55,9 @@ const paymentStatus = async(req,res)=>{
     const pay = validatePaymentVerification({order_id:razorpay_order_id, payment_id:razorpay_payment_id}, razorpay_signature, process.env.RAZORPAY_SECRET_KEY);
     if(pay){
         const order = await PaymentModel.findOne({orderId : razorpay_order_id});
-        console.log(order);
+        // console.log(order);
         const d = await CouponModel.updateOne({email : req.user?.email}, {$set : {week : order.selected,taken : true}}, { upsert: true });
-        console.log(d);
+        // console.log(d);
     }
 
     res.json(pay)
