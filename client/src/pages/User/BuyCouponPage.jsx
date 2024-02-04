@@ -1,16 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect} from 'react';
 import axios, { getAxiosConfig } from '../../utils/axios';
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import {ShoppingCart} from '@mui/icons-material/';
-import Toast from '../../components/Menu/Toast';
-import {useNavigate } from 'react-router-dom';
+import Toast from '../../components/Toast';
 
-import PaymentImg from "../../assets/payment.png"
+import AlreadyBought from './PageComponent/AlreadyBought';
 
 const BuyCouponPage = () => {
-    const navigate = useNavigate();
-
+ 
     const [menuData, setMenuData] = useState([]);
     const [coupon, setCoupon] = useState();
     const [toastOpen, setToastOpen] = useState(false);
@@ -177,6 +175,9 @@ const BuyCouponPage = () => {
     };
 
     return (
+        <>
+        {!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) >=5) || coupon.taken===false) ? 
+        (
         <Grid 
             marginTop={5}
             container 
@@ -190,9 +191,6 @@ const BuyCouponPage = () => {
                 message={toastMessage}
                 onClose={handleToastClose}
             />
-
-            {!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) >=5) || coupon.taken===false) ? 
-            (
             <Box sx={{backgroundColor:'white', borderRadius:1, padding:3, boxShadow:1}}>
                 <Box>
                 <TableContainer component={Paper}>
@@ -242,33 +240,35 @@ const BuyCouponPage = () => {
                     </Button>
                 </Box>
             </Box>
+            </Grid>
             ) 
             : (
-                <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea>
-                    <CardMedia
-                    component="img"
-                    image={PaymentImg}
-                    alt="green iguana"
-                    />
-                    <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Already Bought
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        You have already bought coupon for this week. Visit the purchase page later to buy coupon for next week.
-                        You can visit the My Coupon section to see your coupons.
-                    </Typography>
-                    </CardContent>
-                </CardActionArea>
-                <CardActions>
-                    <Button size="small" color="primary" onClick={()=>{navigate('/mycoupon')}}>
-                        My Coupon
-                    </Button>
-                </CardActions>
-                </Card>
+                // <Card sx={{ maxWidth: 345 }}>
+                // <CardActionArea>
+                //     <CardMedia
+                //     component="img"
+                //     image={PaymentImg}
+                //     alt="green iguana"
+                //     />
+                //     <CardContent>
+                //     <Typography gutterBottom variant="h5" component="div">
+                //         Already Bought
+                //     </Typography>
+                //     <Typography variant="body2" color="text.secondary">
+                //         You have already bought coupon for this week. Visit the purchase page later to buy coupon for next week.
+                //         You can visit the My Coupon section to see your coupons.
+                //     </Typography>
+                //     </CardContent>
+                // </CardActionArea>
+                // <CardActions>
+                //     <Button size="small" color="primary" onClick={()=>{navigate('/mycoupon')}}>
+                //         My Coupon
+                //     </Button>
+                // </CardActions>
+                // </Card>
+                <AlreadyBought/>
             )}
-        </Grid>
+        </>
     );
 };
 

@@ -1,5 +1,4 @@
 import { Alert } from '@mui/material';
-import React from 'react'
 
 const Toast = ({ open, severity, message, onClose }) => {
     return( 
@@ -11,7 +10,6 @@ const Toast = ({ open, severity, message, onClose }) => {
         }
         </>
     )
-    
 }
 
-export default Toast
+export default Toast;

@@ -2,7 +2,6 @@
 import React, {useState, useEffect} from 'react'
 import axios,{getAxiosConfig} from '../../utils/axios'
 
-import {   } from '@mui/system';
 import {
   Table,
   TableBody,
@@ -14,10 +13,11 @@ import {
   Button,
   Grid,
   Typography,
-  Paper,
   Box,
+  Card,
+  Container,
 } from '@mui/material';
-import Toast from '../../components/Menu/Toast';
+import Toast from '../../components/Toast/index';
     
 const AdminTaskPage = () => {
     const [menuData, setMenuData] = useState([]);
@@ -110,22 +110,17 @@ const AdminTaskPage = () => {
     },[])
 
     return (
-        <Grid 
-            marginTop={5}
-            container 
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-        >
+        <Container maxWidth="xl">
         {loggedInUser.isAdmin ? (
-        <div>
+        <Box>
         <Toast
             open={toastOpen}
             severity={toastSeverity}
             message={toastMessage}
             onClose={handleToastClose}
         />
-        <Box sx={{backgroundColor:'white', borderRadius:1, padding:3, boxShadow:1}}>
+         <Grid item>
+         <Card sx={{ p: 3, pb: 1, mb:3}}>
             <Typography variant='h4' sx={{alignSelf:'center' , textAlign: 'center' , marginBottom: '25px'}}>Mess Timing</Typography>
             {/* Mess Meals */}
             <TableContainer >
@@ -174,9 +169,10 @@ const AdminTaskPage = () => {
                     Save time
                 </Button>
             </Box>
-        </Box>
-
-        <Box my={2} sx={{backgroundColor:'white', borderRadius:1, padding:3, boxShadow:1}}>
+        </Card>
+        </Grid>
+        <Grid item>
+        <Card sx={{ p: 3, pb: 1 }}>
             {/* Mess Menu */}
             <Typography variant='h4' sx={{alignSelf:'center' , marginBottom: '25px' , textAlign: 'center'}}>Mess Menu</Typography>
             <TableContainer>
@@ -236,13 +232,13 @@ const AdminTaskPage = () => {
                 Save Menu
                 </Button>
             </Box>
+        </Card>
+        </Grid>
         </Box>
-
-            </div>
           ) : (
             <div>You're not admin</div>
           )}
-        </Grid>
+        </Container>
       );
 }
 

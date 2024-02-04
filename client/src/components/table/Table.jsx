@@ -1,14 +1,16 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Box } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Box, Card, CardHeader } from '@mui/material';
 
-const MessTable = ({ data, taken}) => {
+const MessTable = ({ data, taken, title}) => {
   const dayIdx = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2}
 
   return (
-    <Box>
+    <Card>
+    <CardHeader title={title}/>
+    <Box sx={{ p: 3, pb: 1 }}>
       <TableContainer>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow sx={{backgroundColor: "lightgray", boxShadow: "1"}}>
               <TableCell>Day</TableCell>
@@ -30,6 +32,7 @@ const MessTable = ({ data, taken}) => {
         </Table>
       </TableContainer>
     </Box>
+    </Card>
   );
 }
 
