@@ -8,6 +8,7 @@ export const IndexPage = lazy(() => import('../pages/User/MessMenuPage'));
 export const BuyCoupon = lazy(() => import('../pages/User/BuyCouponPage'));
 export const MyCoupon = lazy(() => import('../pages/User/MyCoupon'));
 export const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
+export const RegisterPage = lazy(() => import('../pages/Auth/RegisterPage'));
 export const AdminPage = lazy(() => import('../pages/Admin/AdminTaskPage'));
 export const InventoryPage = lazy(() => import('../pages/Admin/MealCountPage'));
 export const Page404 = lazy(() => import('../pages/NotFoundPage'));
@@ -41,6 +42,10 @@ export default function Router() {
     {
       path: 'login',
       element: <LoginPage />,
+    },
+    {
+      path: 'register',
+      element: <RegisterPage/>
     },
     {
       path: '404',

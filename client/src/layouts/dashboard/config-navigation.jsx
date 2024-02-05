@@ -13,7 +13,7 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'BuyCoupon',
+    title: 'Buy Coupon',
     path: '/buycoupon',
     icon: icon('ic_cart'),
   },

@@ -37,6 +37,16 @@ const AdminTaskPage = () => {
         setToastOpen(false);
     };
 
+    const isMenuValid = () => {
+        // Check if any field is empty
+        return menuData.every(field => (field.breakfast  !== '' && field.lunch  !== '' && field.dinner  !== ''));
+    };
+
+    const isMealValid = () => {
+        // Check if any field is empty
+        return mealData.every(field => (field.time !== '' && field.cost  !== ''));
+    };
+
     const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2}
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
 
@@ -142,6 +152,8 @@ const AdminTaskPage = () => {
                             type="input"
                             size="small" // Set the size to small
                             value={item.time}
+                            error={item.time === ''}
+                            helperText={item.time === '' ? 'Field cannot be empty' : ''}
                             onChange={(event) => handleMealChange(event, index, 'time')}
                         />
                         </ TableCell>
@@ -152,6 +164,8 @@ const AdminTaskPage = () => {
                             type="input"
                             size="small" // Set the size to small
                             value={item.cost}
+                            error={item.cost === ''}
+                            helperText={item.cost === '' ? 'Field cannot be empty' : ''}
                             onChange={(event) => handleMealChange(event, index, 'cost')}
                         />
                         </ TableCell>
@@ -165,6 +179,7 @@ const AdminTaskPage = () => {
                     variant="contained"
                     onClick={updateMealData}
                     className="MuiButton-root MuiButton-contained"
+                    disabled={!isMealValid()}
                     >
                     Save time
                 </Button>
@@ -195,6 +210,8 @@ const AdminTaskPage = () => {
                             type="input"
                             size="small" // Set the size to small
                             value={menu.breakfast}
+                            error={menu.breakfast === ''}
+                            helperText={menu.breakfast === '' ? 'Field cannot be empty' : ''}
                             onChange={(event) => handleMenuInputChange(event, index, 'breakfast')}
                         />
                          
@@ -205,6 +222,8 @@ const AdminTaskPage = () => {
                             type="input"
                             size="small" // Set the size to small
                             value={menu.lunch}
+                            error={menu.lunch === ''}
+                            helperText={menu.lunch === '' ? 'Field cannot be empty' : ''}
                             onChange={(event) => handleMenuInputChange(event, index, 'lunch')}
                         />
                         </TableCell>
@@ -214,6 +233,8 @@ const AdminTaskPage = () => {
                             type="input"
                             size="small" // Set the size to small
                             value={menu.dinner}
+                            error={menu.dinner === ''}
+                            helperText={menu.dinner === '' ? 'Field cannot be empty' : ''}
                             onChange={(event) => handleMenuInputChange(event, index, 'dinner')}
                         />
                         </TableCell>
@@ -228,6 +249,7 @@ const AdminTaskPage = () => {
                 onClick={updateMenuData}
                 className="MuiButton-root MuiButton-contained"
                 style={{ marginLeft: 'auto', marginTop: 2}}
+                disabled={!isMenuValid()}
                 >
                 Save Menu
                 </Button>
