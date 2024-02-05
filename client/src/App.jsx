@@ -12,6 +12,7 @@ import { PaymentPage } from './pages/User/PaymentPage';
 
 import SideMenu from './components/Menu/SideMenu/SideMenu';
 import MyCoupon from './pages/User/MyCoupon';
+import { LandingPage } from './pages/Landing/LandingPage';
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
          <Route path="/admin" element={<AdminTaskPage/>}/>
          <Route path="/admin/totalMeal" element={<MealCountPage/>}/>
          <Route path="/pay" element={<PaymentPage/>}/>
+         <Route path="/land" element={<LandingPage/>}/>
     </Routes>
     </>
   )
