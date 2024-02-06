@@ -1,13 +1,13 @@
 import React from 'react'
 import Login from '../../components/auth/Login'
+import { CssBaseline, Grid } from '@mui/material'
 
 const LoginPage = () => {
     return (
-        <div>
-            <section>
-                <Login/>
-            </section>
-        </div>
+        <Grid container component="main" sx={{ height: '100vh' }}>
+            <CssBaseline />
+            <Login/>
+        </Grid>
     )
 }
 

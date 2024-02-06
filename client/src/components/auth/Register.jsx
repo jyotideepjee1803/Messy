@@ -2,41 +2,36 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import axios, { getAxiosConfig } from '../../utils/axios'
+import { Alert, Avatar, Box, Button, Grid, Link, TextField, Typography } from '@mui/material';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 const Register = () => {
     const navigate = useNavigate();
+    const [error, setError] = useState('');
 
-    const [userCredentials, setUserCredentials] = useState({
-        name : "",
-        email: "",
-        password : "",
-        confirmPassword: "",
-        isAdmin : false,
-    })
-    const {name,email,password,confirmPassword,isAdmin} = userCredentials;
-
-    const handleInputChange = (prop) => (event) =>{
-        setUserCredentials({
-            ...userCredentials,
-            [prop] : event.target.value,
-        });
-    };
-
-    const handleLogin = async(event)=>{
+    const handleSubmit = async(event)=>{
         event.preventDefault();
+
+        const config = getAxiosConfig({});
+
+        const data = new FormData(event.currentTarget);
+
+        const name = data.get('firstName')+" "+data.get('lastName');
+        const email = data.get('email');
+        const password = data.get('password');
+        const confirmPassword = data.get('confirmPassword')
+        const isAdmin = false;
 
         // Validate email
         if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-            alert("Please Enter a Valid Email ID");
+            setError("Please Enter a Valid Email ID");
             return;
         }
-    
+        
         if (password !== confirmPassword) {
-            alert("Passwords Do Not Match");
+            setError("Passwords Do Not Match");
             return;
         }
-
-        const config = getAxiosConfig({});
 
         try{
             const {data} = await axios.post("/api/user/register", {name,email,password,isAdmin}, config);
@@ -44,67 +39,101 @@ const Register = () => {
             navigate("/mess");
         }catch(error){
             console.log(error);
+            setError('Registration failed. Please try again.')
         }
     }
 
     return (
-        <div>
-            <form>
-                <label htmlFor='register_name'/>
-                <input
-                    type="text"
-                    value={name}
-                    onChange={handleInputChange("name")}
-                    required
-                    name="username"
-                    id="register_name"
-                    placeholder='Name'
+        <>
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoComplete="given-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
                 />
-
-                <label htmlFor='register_mail'/>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={handleInputChange("email")}
-                    required
-                    autoFocus
-                    name="email"
-                    id="register_mail"
-                    placeholder='Email'
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
                 />
-
-                <label htmlFor='register_password'/>
-                <input
-                    type="password"
-                    value={password}
-                    onChange={handleInputChange("password")}
-                    required
-                    name="password"
-                    id="register_password"
-                    placeholder='Password'
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
                 />
-
-                <label htmlFor='register_confirmPassword'/>
-                <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={handleInputChange("confirmPassword")}
-                    required
-                    name="confirmpassword"
-                    id="register_confirmPassword"
-                    placeholder='Confirm Password'
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
                 />
-
-                <button
-                    type="submit"
-                    name='submit_button'
-                    id="register_button"
-                    onClick={handleLogin}
-                >
-                    "Register"
-                </button>
-            </form>
-        </div>
+              </Grid>
+              <Grid item xs={12}>
+              <TextField
+                  required
+                  fullWidth
+                  name="confirmPassword"
+                  label="Confirm Password"
+                  type="password"
+                  id="confirmPassword"
+                  autoComplete="new-password"
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign Up
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="/login" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
+            {error && <Alert severity='error'>{error}</Alert>}
+          </Box>
+        </Box>
+        </>
     )  
 }
 

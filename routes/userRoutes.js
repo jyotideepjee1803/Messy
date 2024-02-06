@@ -3,8 +3,7 @@ import { registerUser, authenticateUser } from "../controller/userController.js"
 import { couponPurchase, couponValidity } from "../controller/couponController.js";
 import { getCouponData, getMealData, getWeekMenu } from "../controller/dataController.js";
 import { protect } from "../middleware/authMiddleware.js";
-import { payment , verify} from "../controller/payment.js";
-
+import { initiatePayment, paymentStatus } from "../controller/paymentController.js";
 
 const router = Router();
 
@@ -19,4 +18,6 @@ router.post("/pay", protect, payment);
 router.post("/pay/success", protect, verify);
 
 
+router.post("/initiatePayment",protect, initiatePayment);
+router.post("/paymentStatus", protect, paymentStatus);
 export default router;

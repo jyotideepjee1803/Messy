@@ -1,15 +1,30 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect} from 'react';
 import axios, { getAxiosConfig } from '../../utils/axios';
 import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import {ShoppingCart} from '@mui/icons-material/';
+import Toast from '../../components/Toast';
+
+import AlreadyBought from './PageComponent/AlreadyBought';
 
 const BuyCouponPage = () => {
-    
+ 
     const [menuData, setMenuData] = useState([]);
     const [coupon, setCoupon] = useState();
-    // const [loading, setLoading] = useState(false);
+    const [toastOpen, setToastOpen] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastSeverity, setToastSeverity] = useState('success');
+
+    const handleToastOpen = (message, severity) => {
+        setToastMessage(message);
+        setToastSeverity(severity);
+        setToastOpen(true);
+      };
+    
+    const handleToastClose = () => {
+        setToastOpen(false);
+    };
+
     const [mealCost, setMealCost] = useState({
         breakfast: 0,
         lunch: 0,
@@ -55,7 +70,6 @@ const BuyCouponPage = () => {
         try{
             const couponRes = await axios.post('api/user/getcoupon', {email : loggedInUser.email}, config);
             setCoupon(couponRes.data);
-            console.log(couponRes.data);
         }catch(error){
             console.error('Error fetching data:', error);
         }
@@ -92,8 +106,6 @@ const BuyCouponPage = () => {
         [false, false, false, false, false, false, false]  // Dinner
     ]);
 
-    const navigate = useNavigate();
-
     const handleCheckboxChange = (mealIndex, dayIndex)=>{
         const newSelected = [...selectedItems];
         newSelected[mealIndex][dayIndex] = !newSelected[mealIndex][dayIndex];
@@ -102,10 +114,40 @@ const BuyCouponPage = () => {
         handleCost();
     }
     
+    const paymentStatus = async(data)=>{
+        const resp = await axios.post('/api/user/paymentStatus', data, config);
+        if(resp.data){
+            handleToastOpen('Coupon Bought', 'success');
+        }
+        else{
+            handleToastOpen('Transaction Failed', 'error');
+        }
+    }    
+    const initPayment = (res)=>{
+        // const {data} = res.data;
+        const options = {
+            key: process.env.REACT_APP_RAZORPAY_ID_KEY,
+            amount: res.data.amount.toString(),
+            currency: res.data.currency,
+            order_id: res.data.id,
+            handler : async(res)=>{
+                await paymentStatus(res)
+            }
+        }
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+    };
+
     const handleBuy = async()=>{
-        const response = await axios.post("/api/user/buyCoupon", {email : loggedInUser.email, selected : selectedItems}, config)
-        // console.log(response);
-        navigate('/pay', { state: { total: total, selectedItems: selectedItems } });
+        // const response = await axios.post("/api/user/buyCoupon", {email : loggedInUser.email, selected : selectedItems}, config)
+        // navigate('/pay', { state: { total } });
+        try{
+            
+            const res = await axios.post('api/user/initiatePayment', {amount : total, selected : selectedItems}, config);
+            initPayment(res);
+        }catch(error){
+            handleToastOpen('Transaction Failed', 'error');
+        }
     }
 
     const handleCost = () => {
@@ -134,6 +176,9 @@ const BuyCouponPage = () => {
     };
 
     return (
+        <>
+        {!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) >=5) || coupon.taken===false) ? 
+        (
         <Grid 
             marginTop={5}
             container 
@@ -141,8 +186,12 @@ const BuyCouponPage = () => {
             justifyContent="center"
             flexDirection="column"
         >
-            {!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) >=0) || coupon.taken===false) ? 
-            (
+            <Toast
+                open={toastOpen}
+                severity={toastSeverity}
+                message={toastMessage}
+                onClose={handleToastClose}
+            />
             <Box sx={{backgroundColor:'white', borderRadius:1, padding:3, boxShadow:1}}>
                 <Box>
                 <TableContainer component={Paper}>
@@ -192,12 +241,35 @@ const BuyCouponPage = () => {
                     </Button>
                 </Box>
             </Box>
-            ) : (
-                <div>
-                    You've already bought coupon
-                </div>
+            </Grid>
+            ) 
+            : (
+                // <Card sx={{ maxWidth: 345 }}>
+                // <CardActionArea>
+                //     <CardMedia
+                //     component="img"
+                //     image={PaymentImg}
+                //     alt="green iguana"
+                //     />
+                //     <CardContent>
+                //     <Typography gutterBottom variant="h5" component="div">
+                //         Already Bought
+                //     </Typography>
+                //     <Typography variant="body2" color="text.secondary">
+                //         You have already bought coupon for this week. Visit the purchase page later to buy coupon for next week.
+                //         You can visit the My Coupon section to see your coupons.
+                //     </Typography>
+                //     </CardContent>
+                // </CardActionArea>
+                // <CardActions>
+                //     <Button size="small" color="primary" onClick={()=>{navigate('/mycoupon')}}>
+                //         My Coupon
+                //     </Button>
+                // </CardActions>
+                // </Card>
+                <AlreadyBought/>
             )}
-        </Grid>
+        </>
     );
 };
 
