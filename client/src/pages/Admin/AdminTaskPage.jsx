@@ -18,6 +18,7 @@ import {
   Container,
 } from '@mui/material';
 import Toast from '../../components/Toast/index';
+import NotAdmin from './PageComponent/NotAdmin';
     
 const AdminTaskPage = () => {
     const [menuData, setMenuData] = useState([]);
@@ -258,7 +259,7 @@ const AdminTaskPage = () => {
         </Grid>
         </Box>
           ) : (
-            <div>You're not admin</div>
+            <NotAdmin/>
           )}
         </Container>
       );

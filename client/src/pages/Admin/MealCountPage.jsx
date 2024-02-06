@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import axios, {getAxiosConfig} from '../../utils/axios'
 import Table from '../../components/table/Table';
+import NotAdmin from './PageComponent/NotAdmin';
 
 const MealCountPage = () => {
 
@@ -29,7 +30,7 @@ const MealCountPage = () => {
                 
                 <Table data={mealCount} title='Total Meals'/>
             ):( 
-                <div>You're not admin</div>
+                <NotAdmin/>
             )}
         </>
     )
