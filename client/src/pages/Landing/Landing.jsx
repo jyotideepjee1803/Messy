@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from "framer-motion";
 import { fadeIn } from './component/variant';
 import Contact from './component/Contact'; // Import the Contact component
@@ -10,18 +10,19 @@ import Feature from './component/Feature';
 
 export const LandingPage = () => {
     const navigate = useNavigate();
-    const scrollToContact = () => {
-        const contactSection = document.getElementById('contact');
-        console.log('Contact Section:', contactSection);
 
-        if (contactSection) {
-        window.scrollTo({
-            top: contactSection.offsetTop,
-            behavior: 'smooth'
-        });
-        } else {
-        console.log('Contact section not found!');
-        }
+    const targetRef = useRef(null);
+
+    useEffect(() => {
+        // localStorage persists data even after page refresh, unlike state
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (user && Date.now() < user.expiryTime) navigate("/mess");
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, []);
+
+    // Function to handle click event and scroll to target component
+    const handleClick = () => {
+        targetRef.current.scrollIntoView({ behavior: 'smooth' });
     };
 
     return (
@@ -51,10 +52,10 @@ export const LandingPage = () => {
                         alignSelf : 'flex-end'
                     }}
                 >
-                    <Button onClick={scrollToContact}>
+                    <Button  variant="contained" color="primary" onClick={handleClick}>
                         Contact
                     </Button>
-                    <Button onClick={()=>{navigate('/login')}}>
+                    <Button variant="contained" color="primary" sx={{mx:4}} onClick={()=>{navigate('/login')}}>
                         Login
                     </Button>
                 </Box>
@@ -70,8 +71,8 @@ export const LandingPage = () => {
                         className='middle'
                     >
                         <Box maxWidth={600}>
-                            <Typography variant='h2' paragraph >
-                                STREAMLINE YOUR MESS. EFFORTLESS MANAGEMENT, HAPPY TUMMIES!
+                            <Typography variant='h2' paragraph>
+                                STREAMLINE YOUR <Typography component='span' color='primary' variant='h2'> MESS. </Typography> EFFORTLESS MANAGEMENT, HAPPY TUMMIES!
                             </Typography>
                             <Button variant="contained" color="primary" sx={{maxWidth:200, height:50}} onClick={()=>navigate('/register')}> Get started</Button>
                         </Box>
@@ -91,7 +92,9 @@ export const LandingPage = () => {
                 </Box>
 
                 <Feature/>
-                <Contact/>
+                <div ref={targetRef}>
+                    <Contact/>
+                </div>
             </Box>
             <div className='yo'>
                  <p>&copy;2024 <span>| Developed by JYOTI and Mridul</span></p>

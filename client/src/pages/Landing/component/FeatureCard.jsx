@@ -1,4 +1,4 @@
-import { Card, Stack, Typography } from '@mui/material';
+import { Card, CardActionArea, CardMedia, Stack, Typography } from '@mui/material';
 import React from 'react'
 
 const FeatureCard = ({title, subtitle, sx, ...other}) => {
@@ -8,20 +8,25 @@ const FeatureCard = ({title, subtitle, sx, ...other}) => {
           spacing={3}
           direction="row"
           sx={{
-            px: 3,
-            py: 5,
             borderRadius: 2,
             ...sx,
           }}
           {...other}
         >
-          <Stack spacing={0.5}>
-            <Typography variant="h4">{title}</Typography>
-    
-            <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-              {subtitle}
-            </Typography>
-          </Stack>
+          <CardActionArea>
+            <CardMedia
+              component="img"
+              image="/assets/illustrations/illustration_payment.png"
+              alt="green iguana"
+            />
+            <Stack spacing={0.5}>
+              <Typography variant="h4">{title}</Typography>
+      
+              <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
+                {subtitle}
+              </Typography>
+            </Stack>
+          </CardActionArea>
         </Card>
       );
 }

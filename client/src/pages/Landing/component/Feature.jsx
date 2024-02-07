@@ -1,25 +1,33 @@
 import React from 'react'
+import { fadeIn } from './variant';
+import { motion } from "framer-motion";
 import { bgGradient } from '../../../theme/css'
-import { useTheme } from '@emotion/react'
-import { Box, Grid, alpha } from '@mui/material';
+import { Box, Grid, Typography, alpha } from '@mui/material';
 import FeatureCard from './FeatureCard';
 
 const Feature = () => {
-    const theme = useTheme();
 
     return (
         <Box
         sx={{
             ...bgGradient({
-            color: alpha(theme.palette.background.complement, 0.9),
+            color: alpha('#2fa8ff', 0.9),
             imgUrl: '/assets/background/overlay_4.jpg',
             }),
-            height:400,
             marginTop:20,
+            py: 4
         }}
+        textAlign='center'
         >
+            <motion.div
+              variants={fadeIn('down', 0.3)}
+              initial='hidden'
+              whileInView={'show'}
+              viewport={{ once: false, amount: 0.3 }}
+            >
+                <Typography color='white' variant='h2' mb={4}>Features</Typography>
+            </motion.div>
             <Grid container justifyContent="center" spacing={3} mb={3}>
-                
                 <Grid item xs={12} sm={6} md={3}>
                 <FeatureCard
                     title={'Meal planning'}
