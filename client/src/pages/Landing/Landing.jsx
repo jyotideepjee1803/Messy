@@ -5,7 +5,7 @@ import Contact from './component/Contact'; // Import the Contact component
 import "./Styles.css";
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../components/logo';
-import { Box, Button, Grid, Slide, Typography} from '@mui/material';
+import { Box, Button, Typography} from '@mui/material';
 import Feature from './component/Feature';
 
 export const LandingPage = () => {
