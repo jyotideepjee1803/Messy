@@ -3,6 +3,7 @@ import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 // import DashboardLayout from 'src/layouts/dashboard';
 import DashboardLayout from '../layouts/dashboard';
+import { LandingPage } from '../pages/Landing/Landing';
 
 export const IndexPage = lazy(() => import('../pages/User/MessMenuPage'));
 export const BuyCoupon = lazy(() => import('../pages/User/BuyCouponPage'));
@@ -38,6 +39,10 @@ export default function Router() {
           element: <InventoryPage />,
         },
       ],
+    },
+    {
+      path: '/',
+      element: <LandingPage/>
     },
     {
       path: 'login',
