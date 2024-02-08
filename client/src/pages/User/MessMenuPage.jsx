@@ -24,7 +24,6 @@ const MessMenuPage = () => {
         let data = response.data;
         data.sort((a, b) => {return sortIdx[a.day] - sortIdx[b.day]})
         setMenuData(data);
-
         } catch (error) {
             console.error('Error fetching menu data : ', error);
         }

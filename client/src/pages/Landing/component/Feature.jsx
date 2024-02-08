@@ -15,7 +15,7 @@ const Feature = () => {
             imgUrl: '/assets/background/overlay_4.jpg',
             }),
             marginTop:20,
-            py: 4
+            py: 4,
         }}
         textAlign='center'
         >

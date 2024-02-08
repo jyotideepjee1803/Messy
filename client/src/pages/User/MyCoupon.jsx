@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import axios, { getAxiosConfig } from '../../utils/axios';
 import Table from '../../components/table/Table';
+import { Grid } from '@mui/material';
 
 const MyCoupon = () => {
 
@@ -49,7 +50,13 @@ const MyCoupon = () => {
     },[])
 
     return (
-        <Table data={menuData} taken={coupon} title='My Coupon'/>
+        <Grid 
+            marginTop={2}
+            alignItems="center"
+            justifyContent="center"
+        >
+            <Table data={menuData} taken={coupon} title='My Coupon'/>
+        </Grid>
     )
 }
 

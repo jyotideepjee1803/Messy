@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios, {getAxiosConfig} from '../../utils/axios'
 import Table from '../../components/table/Table';
 import NotAdmin from './PageComponent/NotAdmin';
+import { Grid } from '@mui/material';
 
 const MealCountPage = () => {
 
@@ -27,8 +28,13 @@ const MealCountPage = () => {
     return (
         <>
             {loggedInUser.isAdmin ? (
-                
-                <Table data={mealCount} title='Total Meals'/>
+                <Grid 
+                marginTop={2}
+                alignItems="center"
+                justifyContent="center"
+                >
+                    <Table data={mealCount} title='Total Meals'/>
+                </Grid>
             ):( 
                 <NotAdmin/>
             )}
