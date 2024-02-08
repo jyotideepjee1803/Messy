@@ -1,139 +1,135 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import * as Yup from 'yup';
+import {useFormik} from 'formik';
+
 import axios, { getAxiosConfig } from '../../utils/axios'
-import { Alert, Avatar, Box, Button, Grid, Link, TextField, Typography } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import {Button, IconButton, InputAdornment, Stack, TextField,} from '@mui/material';
+import Iconify from '../iconify';
 
 const Register = () => {
     const navigate = useNavigate();
-    const [error, setError] = useState('');
 
-    const handleSubmit = async(event)=>{
-        event.preventDefault();
+    const [showPassword, setShowPassword] = useState(false);
+    const [showCnfPassword, setShowCnfPassword] = useState(false);
 
+    const formik = useFormik({
+      initialValues: {
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        isAdmin: false,
+      },
+      validationSchema: Yup.object({
+        name: Yup.string().required('Name is required'),
+        email: Yup.string().email('Invalid email address').required('Email is required'),
+        password: Yup.string().required('Password is required'),
+        confirmPassword: Yup.string()
+          .oneOf([Yup.ref('password'), null], 'Passwords must match')
+          .required('Confirm Password is required'),
+      }),
+      onSubmit: async (values, { setSubmitting, setErrors }) => {
         const config = getAxiosConfig({});
-
-        const data = new FormData(event.currentTarget);
-
-        const name = data.get('firstName')+" "+data.get('lastName');
-        const email = data.get('email');
-        const password = data.get('password');
-        const confirmPassword = data.get('confirmPassword')
-        const isAdmin = false;
-
-        // Validate email
-        if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-            setError("Please Enter a Valid Email ID");
-            return;
+  
+        try {
+          const { data } = await axios.post('/api/user/register', values, config);
+          localStorage.setItem('loggedInUser', JSON.stringify(data));
+          navigate('/mess');
+        } catch (error) {
+          console.error(error);
+          setErrors({ submit: 'Registration failed. Please try again.' });
+        } finally {
+          setSubmitting(false);
         }
-        
-        if (password !== confirmPassword) {
-            setError("Passwords Do Not Match");
-            return;
-        }
-
-        try{
-            const {data} = await axios.post("/api/user/register", {name,email,password,isAdmin}, config);
-            localStorage.setItem("loggedInUser",JSON.stringify(data));
-            navigate("/mess");
-        }catch(error){
-            console.log(error);
-            setError('Registration failed. Please try again.')
-        }
-    }
+      },
+    });
 
     return (
-        <>
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-              <TextField
-                  required
-                  fullWidth
-                  name="confirmPassword"
-                  label="Confirm Password"
-                  type="password"
-                  id="confirmPassword"
-                  autoComplete="new-password"
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/login" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
-            {error && <Alert severity='error'>{error}</Alert>}
-          </Box>
-        </Box>
-        </>
+      <>
+        
+        <form onSubmit={formik.handleSubmit}>
+        <Stack spacing={3}>
+          <TextField
+            id="name"
+            name="name"
+            label="Name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
+          />
+
+          <TextField
+            id="email"
+            name="email"
+            label="Email address"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+          />
+
+          <TextField
+            id="password"
+            name="password"
+            label="Password"
+            value={formik.values.password}
+            type={showPassword ? 'text' : 'password'}
+            onChange={formik.handleChange}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <TextField
+            id="confirmPassword"
+            name="confirmPassword"
+            label="Confirm Password"
+            value={formik.values.confirmPassword}
+            type={showCnfPassword ? 'text' : 'password'}
+            onChange={formik.handleChange}
+            error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+            helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowCnfPassword(!showCnfPassword)}
+                    edge="end"
+                  >
+                    <Iconify icon={showCnfPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Button
+            sx={{ mt: 4 }}
+            fullWidth
+            type="submit"
+            variant="contained"
+            color="inherit"
+            disabled={formik.isSubmitting}
+          >
+            Sign Up
+          </Button>
+          </Stack>
+        </form>
+    </>
     )  
 }
 

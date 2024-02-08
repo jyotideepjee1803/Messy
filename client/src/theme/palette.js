@@ -112,6 +112,7 @@ export function palette() {
     },
     background: {
       paper: '#FFFFFF',
+      complement : '#ACDBF6',
       default: grey[100],
       neutral: grey[200],
     },
