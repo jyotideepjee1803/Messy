@@ -2,7 +2,6 @@
 import React, {useState, useEffect} from 'react'
 import axios,{getAxiosConfig} from '../../utils/axios'
 
-import {   } from '@mui/system';
 import {
   Table,
   TableBody,
@@ -14,14 +13,40 @@ import {
   Button,
   Grid,
   Typography,
-  Paper,
   Box,
+  Card,
+  Container,
 } from '@mui/material';
+import Toast from '../../components/Toast/index';
+import NotAdmin from './PageComponent/NotAdmin';
     
-
 const AdminTaskPage = () => {
     const [menuData, setMenuData] = useState([]);
     const [mealData, setMealData] = useState([]);
+    
+    const [toastOpen, setToastOpen] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastSeverity, setToastSeverity] = useState('success');
+
+    const handleToastOpen = (message, severity) => {
+        setToastMessage(message);
+        setToastSeverity(severity);
+        setToastOpen(true);
+      };
+    
+    const handleToastClose = () => {
+        setToastOpen(false);
+    };
+
+    const isMenuValid = () => {
+        // Check if any field is empty
+        return menuData.every(field => (field.breakfast  !== '' && field.lunch  !== '' && field.dinner  !== ''));
+    };
+
+    const isMealValid = () => {
+        // Check if any field is empty
+        return mealData.every(field => (field.time !== '' && field.cost  !== ''));
+    };
 
     const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2}
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
@@ -53,9 +78,9 @@ const AdminTaskPage = () => {
     const updateMenuData = async() => {
         try{
             await axios.post('api/admin/setmenu', {menuData}, config);
-            alert('Menu changes saved')
+            handleToastOpen('Menu changes saved', 'success');
         }catch(error){
-            console.error('Error while saving changes : ',error);
+            handleToastOpen('Error saving changes. Please try again.', 'error');
         }
         // console.log({menuData});
     }
@@ -85,9 +110,9 @@ const AdminTaskPage = () => {
     const updateMealData = async() => {
         try{
             await axios.post('api/admin/setmeal', {mealData}, config);
-            alert('Meal changes saved')
+            handleToastOpen('Meal changes saved', 'success');
         }catch(error){
-            console.error('Error while saving changes : ',error);
+            handleToastOpen('Error saving changes. Please try again.', 'error');
         }
     }
 
@@ -96,19 +121,20 @@ const AdminTaskPage = () => {
     },[])
 
     return (
-        <Grid 
-            marginTop={5}
-            container 
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-        >
-          {loggedInUser.isAdmin ? (
-            <div>
+        <Container maxWidth="xl">
+        {loggedInUser.isAdmin ? (
+        <Box>
+        <Toast
+            open={toastOpen}
+            severity={toastSeverity}
+            message={toastMessage}
+            onClose={handleToastClose}
+        />
+         <Grid item>
+         <Card sx={{ p: 3, pb: 1, mb:3}}>
             <Typography variant='h4' sx={{alignSelf:'center' , textAlign: 'center' , marginBottom: '25px'}}>Mess Timing</Typography>
-            <Grid justifyContent={'center'} alignItems={'center'}>
             {/* Mess Meals */}
-            <TableContainer component={Paper}>
+            <TableContainer >
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow sx={{backgroundColor: "lightgray", boxShadow: "1"}}>
@@ -127,15 +153,20 @@ const AdminTaskPage = () => {
                             type="input"
                             size="small" // Set the size to small
                             value={item.time}
+                            error={item.time === ''}
+                            helperText={item.time === '' ? 'Field cannot be empty' : ''}
                             onChange={(event) => handleMealChange(event, index, 'time')}
                         />
                         </ TableCell>
                         < TableCell>
                         <TextField
+                            // sx={{...rootInputStyles}}
                             id={`cost${index}`}
                             type="input"
                             size="small" // Set the size to small
                             value={item.cost}
+                            error={item.cost === ''}
+                            helperText={item.cost === '' ? 'Field cannot be empty' : ''}
                             onChange={(event) => handleMealChange(event, index, 'cost')}
                         />
                         </ TableCell>
@@ -149,17 +180,18 @@ const AdminTaskPage = () => {
                     variant="contained"
                     onClick={updateMealData}
                     className="MuiButton-root MuiButton-contained"
+                    disabled={!isMealValid()}
                     >
                     Save time
                 </Button>
             </Box>
-            </Grid>
-
-
-        <Box mt={2}>
+        </Card>
+        </Grid>
+        <Grid item>
+        <Card sx={{ p: 3, pb: 1 }}>
             {/* Mess Menu */}
             <Typography variant='h4' sx={{alignSelf:'center' , marginBottom: '25px' , textAlign: 'center'}}>Mess Menu</Typography>
-            <TableContainer component={Paper}>
+            <TableContainer>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow sx={{backgroundColor: "lightgray", boxShadow: "1"}}>
@@ -179,6 +211,8 @@ const AdminTaskPage = () => {
                             type="input"
                             size="small" // Set the size to small
                             value={menu.breakfast}
+                            error={menu.breakfast === ''}
+                            helperText={menu.breakfast === '' ? 'Field cannot be empty' : ''}
                             onChange={(event) => handleMenuInputChange(event, index, 'breakfast')}
                         />
                          
@@ -189,6 +223,8 @@ const AdminTaskPage = () => {
                             type="input"
                             size="small" // Set the size to small
                             value={menu.lunch}
+                            error={menu.lunch === ''}
+                            helperText={menu.lunch === '' ? 'Field cannot be empty' : ''}
                             onChange={(event) => handleMenuInputChange(event, index, 'lunch')}
                         />
                         </TableCell>
@@ -198,6 +234,8 @@ const AdminTaskPage = () => {
                             type="input"
                             size="small" // Set the size to small
                             value={menu.dinner}
+                            error={menu.dinner === ''}
+                            helperText={menu.dinner === '' ? 'Field cannot be empty' : ''}
                             onChange={(event) => handleMenuInputChange(event, index, 'dinner')}
                         />
                         </TableCell>
@@ -206,23 +244,24 @@ const AdminTaskPage = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Box ml={2} my={2} textAlign="right" alignSelf={'right'}>
+            <Box ml={2} mt={2} textAlign="right"  alignSelf={'right'}>
                 <Button
                 variant="contained"
                 onClick={updateMenuData}
                 className="MuiButton-root MuiButton-contained"
                 style={{ marginLeft: 'auto', marginTop: 2}}
+                disabled={!isMenuValid()}
                 >
                 Save Menu
                 </Button>
             </Box>
-        </Box>
-
-            </div>
-          ) : (
-            <div>You're not admin</div>
-          )}
+        </Card>
         </Grid>
+        </Box>
+          ) : (
+            <NotAdmin/>
+          )}
+        </Container>
       );
 }
 

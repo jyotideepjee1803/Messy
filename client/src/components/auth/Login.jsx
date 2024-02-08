@@ -1,74 +1,95 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import * as Yup from 'yup';
+import {useFormik} from 'formik';
+
 import axios, { getAxiosConfig } from '../../utils/axios'
+import {Button, IconButton, InputAdornment, Stack, TextField} from '@mui/material';
+
+import Iconify from '../iconify'
 
 const Login = () => {
     const navigate = useNavigate();
 
-    const [userCredentials, setUserCredentials] = useState({
-        email: "",
-        password : "",
-    })
-    const {email,password} = userCredentials;
+    const [showPassword, setShowPassword] = useState(false);
 
-    const handleInputChange = (prop) => (event) =>{
-        setUserCredentials({
-            ...userCredentials,
-            [prop] : event.target.value,
-        });
-    };
-
-    const handleLogin = async(event)=>{
-        event.preventDefault();
+    const formik = useFormik({
+      initialValues: {
+        email: '',
+        password : '',
+      },
+      validationSchema: Yup.object({
+        email: Yup.string().email('Invalid email address').required('Email is required'),
+        password: Yup.string().required('Password is required'),
+      }),
+      onSubmit: async (values, { setSubmitting, setErrors }) => {
         const config = getAxiosConfig({});
-
-        try{
-            const {data} = await axios.post("/api/user/login", {email,password}, config);
-            localStorage.setItem("loggedInUser",JSON.stringify(data));
-            navigate("/mess");
-        }catch(error){
-            console.log(error);
+  
+        try {
+          const {data} = await axios.post("/api/user/login", values, config);
+          localStorage.setItem("loggedInUser",JSON.stringify(data));
+          navigate("/mess");
+        } catch (error) {
+          console.error(error);
+          setErrors({ submit: 'Login failed. Please try again.' });
+        } finally {
+          setSubmitting(false);
         }
-    }
+      },
+    });
 
     return (
-        <div>
-            <form>
-                <label htmlFor='login_mail'/>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={handleInputChange("email")}
-                    required
-                    autoFocus
-                    name="email"
-                    id="login_mail"
-                    placeholder='Email'
-                />
+        <>
+          <form onSubmit={formik.handleSubmit}>
+          <Stack spacing={3}>
+          <TextField
+            id="email"
+            name="email"
+            label="Email address"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+          />
 
-                <label htmlFor='login_password'/>
-                <input
-                    type="password"
-                    value={password}
-                    onChange={handleInputChange("password")}
-                    required
-                    name="password"
-                    id="login_password"
-                    placeholder='Password'
-                />
+          <TextField
+            id="password"
+            name="password"
+            label="Password"
+            value={formik.values.password}
+            type={showPassword ? 'text' : 'password'}
+            onChange={formik.handleChange}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Stack>
 
-                <button
-                    type="submit"
-                    name='submit_button'
-                    id="login_button"
-                    onClick={handleLogin}
-                >
-                    "Login"
-                </button>
-            </form>
-        </div>
-    )  
+        <Button
+            sx={{ mt: 4 }}
+            fullWidth
+            type="submit"
+            variant="contained"
+            color="inherit"
+            disabled={formik.isSubmitting}
+        >
+          Login
+        </Button>
+        </form>
+        </>
+    );
 }
 
 export default Login

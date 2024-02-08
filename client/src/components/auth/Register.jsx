@@ -1,110 +1,135 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import * as Yup from 'yup';
+import {useFormik} from 'formik';
+
 import axios, { getAxiosConfig } from '../../utils/axios'
+import {Button, IconButton, InputAdornment, Stack, TextField,} from '@mui/material';
+import Iconify from '../iconify';
 
 const Register = () => {
     const navigate = useNavigate();
 
-    const [userCredentials, setUserCredentials] = useState({
-        name : "",
-        email: "",
-        password : "",
-        confirmPassword: "",
-        isAdmin : false,
-    })
-    const {name,email,password,confirmPassword,isAdmin} = userCredentials;
+    const [showPassword, setShowPassword] = useState(false);
+    const [showCnfPassword, setShowCnfPassword] = useState(false);
 
-    const handleInputChange = (prop) => (event) =>{
-        setUserCredentials({
-            ...userCredentials,
-            [prop] : event.target.value,
-        });
-    };
-
-    const handleLogin = async(event)=>{
-        event.preventDefault();
-
-        // Validate email
-        if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-            alert("Please Enter a Valid Email ID");
-            return;
-        }
-    
-        if (password !== confirmPassword) {
-            alert("Passwords Do Not Match");
-            return;
-        }
-
+    const formik = useFormik({
+      initialValues: {
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        isAdmin: false,
+      },
+      validationSchema: Yup.object({
+        name: Yup.string().required('Name is required'),
+        email: Yup.string().email('Invalid email address').required('Email is required'),
+        password: Yup.string().required('Password is required'),
+        confirmPassword: Yup.string()
+          .oneOf([Yup.ref('password'), null], 'Passwords must match')
+          .required('Confirm Password is required'),
+      }),
+      onSubmit: async (values, { setSubmitting, setErrors }) => {
         const config = getAxiosConfig({});
-
-        try{
-            const {data} = await axios.post("/api/user/register", {name,email,password,isAdmin}, config);
-            localStorage.setItem("loggedInUser",JSON.stringify(data));
-            navigate("/mess");
-        }catch(error){
-            console.log(error);
+  
+        try {
+          const { data } = await axios.post('/api/user/register', values, config);
+          localStorage.setItem('loggedInUser', JSON.stringify(data));
+          navigate('/mess');
+        } catch (error) {
+          console.error(error);
+          setErrors({ submit: 'Registration failed. Please try again.' });
+        } finally {
+          setSubmitting(false);
         }
-    }
+      },
+    });
 
     return (
-        <div>
-            <form>
-                <label htmlFor='register_name'/>
-                <input
-                    type="text"
-                    value={name}
-                    onChange={handleInputChange("name")}
-                    required
-                    name="username"
-                    id="register_name"
-                    placeholder='Name'
-                />
+      <>
+        
+        <form onSubmit={formik.handleSubmit}>
+        <Stack spacing={3}>
+          <TextField
+            id="name"
+            name="name"
+            label="Name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
+          />
 
-                <label htmlFor='register_mail'/>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={handleInputChange("email")}
-                    required
-                    autoFocus
-                    name="email"
-                    id="register_mail"
-                    placeholder='Email'
-                />
+          <TextField
+            id="email"
+            name="email"
+            label="Email address"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+          />
 
-                <label htmlFor='register_password'/>
-                <input
-                    type="password"
-                    value={password}
-                    onChange={handleInputChange("password")}
-                    required
-                    name="password"
-                    id="register_password"
-                    placeholder='Password'
-                />
+          <TextField
+            id="password"
+            name="password"
+            label="Password"
+            value={formik.values.password}
+            type={showPassword ? 'text' : 'password'}
+            onChange={formik.handleChange}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                  >
+                    <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
 
-                <label htmlFor='register_confirmPassword'/>
-                <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={handleInputChange("confirmPassword")}
-                    required
-                    name="confirmpassword"
-                    id="register_confirmPassword"
-                    placeholder='Confirm Password'
-                />
+          <TextField
+            id="confirmPassword"
+            name="confirmPassword"
+            label="Confirm Password"
+            value={formik.values.confirmPassword}
+            type={showCnfPassword ? 'text' : 'password'}
+            onChange={formik.handleChange}
+            error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+            helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowCnfPassword(!showCnfPassword)}
+                    edge="end"
+                  >
+                    <Iconify icon={showCnfPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
 
-                <button
-                    type="submit"
-                    name='submit_button'
-                    id="register_button"
-                    onClick={handleLogin}
-                >
-                    "Register"
-                </button>
-            </form>
-        </div>
+          <Button
+            sx={{ mt: 4 }}
+            fullWidth
+            type="submit"
+            variant="contained"
+            color="inherit"
+            disabled={formik.isSubmitting}
+          >
+            Sign Up
+          </Button>
+          </Stack>
+        </form>
+    </>
     )  
 }
 

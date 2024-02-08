@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import axios, {getAxiosConfig} from '../../utils/axios'
-import Table from '../../components/Menu/Table';
-import { Grid, Typography } from '@mui/material';
+import Table from '../../components/table/Table';
+import NotAdmin from './PageComponent/NotAdmin';
 
 const MealCountPage = () => {
 
@@ -25,22 +25,14 @@ const MealCountPage = () => {
     },[])
 
     return (
-        <Grid
-            marginTop={5}
-            container 
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-        >
+        <>
             {loggedInUser.isAdmin ? (
-                <>
-                 <Typography variant='h4' sx={{alignSelf:'center' , textAlign: 'center' , marginBottom: '25px'}}>Total Meals</Typography>
-                <Table data={mealCount}/>
-                </>
+                
+                <Table data={mealCount} title='Total Meals'/>
             ):( 
-                <div>You're not admin</div>
+                <NotAdmin/>
             )}
-        </Grid>
+        </>
     )
 }
 

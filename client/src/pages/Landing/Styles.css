@@ -1,0 +1,90 @@
+/* Styles.css */
+
+/* Resetting some default styles */
+body, h2, p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Styling the navigation */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.messy h2 {
+    font-size: 24px;
+    color: #333; /* Adjust text color */
+}
+
+.lgn {
+    display: flex;
+}
+
+.login-button,
+.signup-button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+}
+
+.login-button:hover,
+.signup-button:hover {
+    background-color: #2980b9;
+}
+
+/* Styling the footer section */
+.footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Styling the middle section */
+.middle {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5%;
+    margin-left: 5%;
+}
+
+/* Styling the "Get started" button */
+.started {
+    background-color: #3498db;
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.started:hover {
+    background-color: #2980b9;
+}
+
+/* Styling the random image */
+.random-image {
+    width: 450px; /* Adjust the width as needed */
+    height: 350px; /* Adjust the height as needed */
+    /* background-image: url('../../components/img1.jpg'); */
+    background-size: cover;
+    background-position: center;
+    border-radius: 5px;
+    margin-right : 5%; /* Move the image to the right */
+    border-radius: 2%;
+}
+
+.yo{
+    margin-top: 1%;
+    display: flex;
+    margin-bottom: 20;
+    justify-content: center;
+    color:rgb(154, 177, 169);
+}
