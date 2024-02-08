@@ -244,7 +244,7 @@ const BuyCouponPage = () => {
                 <Box ml={2} mt={2} textAlign="right" alignSelf={'right'}>
                     <Box py={1} mb={1}><Typography variant='h6'>{`Total cost:  ₹${total}.00`}</Typography></Box>
                     
-                    <Button variant="contained" onClick={handleBuy}>
+                    <Button variant="contained" onClick={handleBuy} disabled={total === 0}>
                         <Typography mr={1}>Buy</Typography> <ShoppingCart/>
                     </Button>
                 </Box>
