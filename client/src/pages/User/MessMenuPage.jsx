@@ -4,11 +4,16 @@ import axios, { getAxiosConfig } from '../../utils/axios';
 import Table from '../../components/table/Table';
 import { Container, Grid, Typography } from '@mui/material';
 import AppWidget from './PageComponent/AppWidget';
+import TableRowsLoader from '../../components/Loaders/TableLoader';
 
 const MessMenuPage = () => {
  
     const [menuData, setMenuData] = useState([]);
     const [mealData, setMealData] = useState([]);
+    const [loadingMenu , setloadingMenu] = useState(false);
+    const [loadingMeal , setloadingMeal] = useState(false);
+    
+
 
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
     const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2};
@@ -24,6 +29,8 @@ const MessMenuPage = () => {
         let data = response.data;
         data.sort((a, b) => {return sortIdx[a.day] - sortIdx[b.day]})
         setMenuData(data);
+        setloadingMenu(false);
+        
 
         } catch (error) {
             console.error('Error fetching menu data : ', error);
@@ -36,16 +43,19 @@ const MessMenuPage = () => {
             let data = response.data;
             data.sort((a,b)=>{return mp[a.mealName] - mp[b.mealName]})
             setMealData(data);
+            setloadingMeal(false);
         }catch(error){
             console.error('Error fetching menu data:', error);
         }
     }
 
     useEffect(()=>{
+        setloadingMenu(true);
         fetchMenuData();
     },[])
 
     useEffect(()=>{
+        setloadingMeal(true);
         fetchMealData();
     },[])
 
@@ -55,21 +65,22 @@ const MessMenuPage = () => {
                 Hi, Welcome back 👋
             </Typography>
             <Grid container justifyContent="center" spacing={3} mb={3}>
-                {
-                    mealData.map((item,index)=>(
-                        <Grid item xs={12} sm={6} md={3}>
-                        <AppWidget
-                            title={item.mealName}
-                            time={item?.time}
-                            color="success"
-                            icon={<img alt="icon" src={`/assets/icons/glass/ic_${item.mealName}.jpg`} />}
-                        />
-                        </Grid>
-                    ))
-                }
+ 
+        {mealData.map((item, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+                <AppWidget
+                    loading = {loadingMeal}
+                    title={item.mealName}
+                    time={item?.time}
+                    color="success"
+                    icon={<img alt="icon" src={`/assets/icons/glass/ic_${item.mealName}.jpg`} />}
+                />
             </Grid>
-       
-            <Table data={menuData} title='Mess Menu'/>
+        ))}
+    
+</Grid>
+        <Table data={menuData} loading={loadingMenu} title='Mess Menu' />
+
         </Container>
     )
 }

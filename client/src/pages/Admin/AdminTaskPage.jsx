@@ -19,10 +19,14 @@ import {
 } from '@mui/material';
 import Toast from '../../components/Toast/index';
 import NotAdmin from './PageComponent/NotAdmin';
+import TableRowsLoader from '../../components/Loaders/TableLoader';
+
     
 const AdminTaskPage = () => {
     const [menuData, setMenuData] = useState([]);
     const [mealData, setMealData] = useState([]);
+    const [loadingMenu , setloadingMenu] = useState(false);
+    const [loadingMeal , setloadingMeal] = useState(false);
     
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
@@ -69,6 +73,8 @@ const AdminTaskPage = () => {
         let data = response.data;
         data.sort((a,b)=> {return sortIdx[a.day] - sortIdx[b.day]})
         setMenuData(data);
+        setloadingMenu(false);
+       
 
         } catch (error) {
             console.error('Error fetching menu data : ', error);
@@ -86,8 +92,10 @@ const AdminTaskPage = () => {
     }
 
     useEffect(() => {
+        setloadingMenu(true);
         fetchMenuData();
     }, []);
+   
 
     const handleMealChange = (event,index,prop) =>{
         const newMeal = [...mealData];
@@ -101,7 +109,9 @@ const AdminTaskPage = () => {
             const response = await axios.get('api/user/getmeal', config);
             let data = response.data;
             data.sort((a,b)=>{return mp[a.mealName] - mp[b.mealName]})
-            setMealData(data);
+             setMealData(data);
+             setloadingMeal(false);
+            
         }catch(error){
             console.error('Error fetching menu data:', error);
         }
@@ -117,6 +127,7 @@ const AdminTaskPage = () => {
     }
 
     useEffect(()=>{
+        setloadingMeal(true);
         fetchMealData();
     },[])
 
@@ -144,7 +155,10 @@ const AdminTaskPage = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {mealData.map((item, index) => (
+                {loadingMeal == true ?(
+                    <TableRowsLoader rowsNum={3} />
+                ) : 
+                    (mealData.map((item, index) => (
                     < TableRow key={index}>
                         < TableCell>{item.mealName}</ TableCell>
                         < TableCell>
@@ -171,7 +185,7 @@ const AdminTaskPage = () => {
                         />
                         </ TableCell>
                     </ TableRow>
-                    ))}
+                    )))}
                 </TableBody>
                 </Table> 
             </TableContainer>
@@ -202,7 +216,10 @@ const AdminTaskPage = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {menuData.map((menu, index) => (
+                { (loadingMenu === true)  ? 
+                ( <TableRowsLoader rowsNum={7} />)
+                :(
+                  menuData.map((menu, index) => (
                       <TableRow key={index}>
                         <TableCell>{menu.day}</TableCell>
                         <TableCell>
@@ -240,7 +257,8 @@ const AdminTaskPage = () => {
                         />
                         </TableCell>
                       </TableRow>
-                  ))}
+                  ))
+                )}
                 </TableBody>
               </Table>
             </TableContainer>

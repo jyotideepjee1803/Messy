@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import axios, { getAxiosConfig } from '../../utils/axios';
 import Table from '../../components/table/Table';
+import TableRowsLoader from '../../components/Loaders/TableLoader';
 
 const MyCoupon = () => {
 
@@ -11,6 +12,8 @@ const MyCoupon = () => {
         [false, false, false, false, false, false, false], // Lunch
         [false, false, false, false, false, false, false]  // Dinner
     ]);
+    const [loadingMenu , setloadingMenu] = useState(false);
+    const [loadingTaken, setLoadingTaken] = useState(false);
 
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
@@ -20,12 +23,14 @@ const MyCoupon = () => {
         try{
             const couponRes = await axios.post('api/user/getcoupon', {email : loggedInUser.email}, config);
             if(couponRes != null) setCoupon(couponRes.data.week);
+            setLoadingTaken(false);
         }catch(error){
             console.error('Error fetching data:', error);
         }
     }
 
     useEffect(()=>{
+        setLoadingTaken(true)
         fetchCoupon();
     },[])
 
@@ -38,6 +43,7 @@ const MyCoupon = () => {
         let data = response.data;
         data.sort((a, b) => {return sortIdx[a.day] - sortIdx[b.day]})
         setMenuData(data);
+        setloadingMenu(false);
 
         } catch (error) {
             console.error('Error fetching menu data : ', error);
@@ -45,11 +51,12 @@ const MyCoupon = () => {
     };
 
     useEffect(()=>{
+        setloadingMenu(true);
         fetchMenuData();
     },[])
 
-    return (
-        <Table data={menuData} taken={coupon} title='My Coupon'/>
+    return (   
+        <Table data={menuData} taken={coupon} loading={loadingMenu == true || loadingTaken == true} title='My Coupon' />
     )
 }
 
