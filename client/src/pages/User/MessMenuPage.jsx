@@ -4,7 +4,6 @@ import axios, { getAxiosConfig } from '../../utils/axios';
 import Table from '../../components/table/Table';
 import { Container, Grid, Typography } from '@mui/material';
 import AppWidget from './PageComponent/AppWidget';
-import TableRowsLoader from '../../components/Loaders/TableLoader';
 
 const MessMenuPage = () => {
  

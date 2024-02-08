@@ -62,7 +62,11 @@ export const LandingPage = () => {
             </Box>
             
             <Box>
-                <Box  sx={{alignItems: 'center', display:'flex', flexDirection:'row', justifyContent: 'space-between', marginBottom:10}}>
+                <Box sx={{
+                    alignItems: 'center', 
+                    display:'flex', 
+                    flexDirection:'row', 
+                }}>
                     <motion.div 
                         variants={fadeIn('right', 0.1)}
                         initial='hidden'
@@ -85,9 +89,7 @@ export const LandingPage = () => {
                     whileInView={'show'}
                     viewport={{ once: false, amount: 0.1 }}
                     className='random-image'>
-                        <Box alignItems='center' justifyContent='center'>
-                            <img src="/assets/illustrations/illustration_payment.png" height={500} width={500} alt='mess'/>
-                        </Box>
+                        
                     </motion.div>
                 </Box>
 

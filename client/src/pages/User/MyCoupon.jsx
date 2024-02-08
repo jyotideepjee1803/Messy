@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import axios, { getAxiosConfig } from '../../utils/axios';
 import Table from '../../components/table/Table';
 import { Grid } from '@mui/material';
-import TableRowsLoader from '../../components/Loaders/TableLoader';
 
 const MyCoupon = () => {
 
@@ -63,7 +62,7 @@ const MyCoupon = () => {
             justifyContent="center"
             pb={5}
         >
-        <Table data={menuData} taken={coupon} loading={loadingMenu == true || loadingTaken == true} title='My Coupon' />
+        <Table data={menuData} taken={coupon} loading={loadingMenu === true || loadingTaken === true} title='My Coupon' />
         </Grid>
     )
 }
