@@ -4,6 +4,7 @@ import axios, { getAxiosConfig } from '../../utils/axios';
 import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import {ShoppingCart} from '@mui/icons-material/';
 import Toast from '../../components/Toast';
+import TableRowsLoader from '../../components/Loaders/TableLoader';
 
 import AlreadyBought from './PageComponent/AlreadyBought';
 
@@ -14,6 +15,7 @@ const BuyCouponPage = () => {
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastSeverity, setToastSeverity] = useState('success');
+    const[loadingMenu , setloadingMenu] = useState(false);
 
     const handleToastOpen = (message, severity) => {
         setToastMessage(message);
@@ -59,6 +61,7 @@ const BuyCouponPage = () => {
         let data = response.data;
         data.sort((a,b)=>{return sortIdx[a.day] - sortIdx[b.day]})
         setMenuData(data);
+        setloadingMenu(false);
         
         } catch (error) {
         console.error('Error fetching menu data:', error);
@@ -92,6 +95,7 @@ const BuyCouponPage = () => {
     },[])
 
     useEffect(() => {
+        setloadingMenu(true);
         fetchMenuData();
     }, []);
 
@@ -204,30 +208,35 @@ const BuyCouponPage = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {menuData.map((rowData, index) => (
-                        <TableRow key={index}>
-                            <TableCell>{rowData.day}</TableCell>
-                            <TableCell
-                            sx={{ cursor: 'pointer', backgroundColor: selectedItems[0]?.[index] && "#ceface" }}
-                            onClick={() => handleCheckboxChange(0, index)}
-                            >
-                            {rowData.breakfast}
-                            </TableCell>
-                            <TableCell
-                            sx={{ cursor: 'pointer', backgroundColor: selectedItems[1]?.[index] && "#ceface" }}
-                            onClick={() => handleCheckboxChange(1, index)}
-                            >
-                            {rowData.lunch}
-                            </TableCell>
-                            <TableCell
-                            sx={{ cursor: 'pointer', backgroundColor: selectedItems[2]?.[index] && "#ceface" }}
-                            onClick={() => handleCheckboxChange(2, index)}
-                            >
-                            {rowData.dinner}
-                            </TableCell>
-                        </TableRow>
-                        ))}
-                    </TableBody>
+    {loadingMenu == true ? (
+        <TableRowsLoader rowsNum={8} />
+    ) : (
+        menuData.map((rowData, index) => (
+            <TableRow key={index}>
+                <TableCell>{rowData.day}</TableCell>
+                <TableCell
+                    sx={{ cursor: 'pointer', backgroundColor: selectedItems[0]?.[index] && "#ceface" }}
+                    onClick={() => handleCheckboxChange(0, index)}
+                >
+                    {rowData.breakfast}
+                </TableCell>
+                <TableCell
+                    sx={{ cursor: 'pointer', backgroundColor: selectedItems[1]?.[index] && "#ceface" }}
+                    onClick={() => handleCheckboxChange(1, index)}
+                >
+                    {rowData.lunch}
+                </TableCell>
+                <TableCell
+                    sx={{ cursor: 'pointer', backgroundColor: selectedItems[2]?.[index] && "#ceface" }}
+                    onClick={() => handleCheckboxChange(2, index)}
+                >
+                    {rowData.dinner}
+                </TableCell>
+            </TableRow>
+        ))
+    )}
+</TableBody>
+
                     </Table>
                 </TableContainer>
                 </Box>

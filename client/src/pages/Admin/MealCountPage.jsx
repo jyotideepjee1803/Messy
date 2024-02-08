@@ -11,33 +11,37 @@ const MealCountPage = () => {
     const config = getAxiosConfig({ loggedInUser });
 
     const [mealCount, setMealCount] = useState([]);
+    const [loadingMeal , setloadingMeal] = useState(false);
 
     const fetchMealCount = async () => {      
         try {
         const response = await axios.get('api/admin/totalmeal', config);
         setMealCount(response.data)
+        setloadingMeal(false);
         } catch (error) {
             console.error('Error fetching menu data : ', error);
         }
     };
 
     useEffect(()=>{
+        setloadingMeal(true);
         fetchMealCount();
     },[])
 
     return (
         <>
+            <Grid 
+            marginTop={2}
+            alignItems="center"
+            justifyContent="center"
+            pb={5}
+        >
             {loggedInUser.isAdmin ? (
-                <Grid 
-                marginTop={2}
-                alignItems="center"
-                justifyContent="center"
-                >
-                    <Table data={mealCount} title='Total Meals'/>
-                </Grid>
+             <Table data={mealCount} loading={loadingMeal} title='Total Meals'/>
             ):( 
                 <NotAdmin/>
             )}
+            </Grid>
         </>
     )
 }
