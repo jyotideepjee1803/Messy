@@ -77,7 +77,7 @@ const AdminTaskPage = () => {
        
 
         } catch (error) {
-            console.error('Error fetching menu data : ', error);
+            handleToastOpen('Error fetching menu data : ', error);
         }
     };
 
@@ -113,7 +113,7 @@ const AdminTaskPage = () => {
              setloadingMeal(false);
             
         }catch(error){
-            console.error('Error fetching menu data:', error);
+            handleToastOpen('Error fetching menu data:', error);
         }
     }
 
