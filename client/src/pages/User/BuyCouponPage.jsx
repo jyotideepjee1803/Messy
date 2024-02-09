@@ -16,6 +16,7 @@ const BuyCouponPage = () => {
     const [toastMessage, setToastMessage] = useState('');
     const [toastSeverity, setToastSeverity] = useState('success');
     const[loadingMenu , setloadingMenu] = useState(false);
+    const [bought, setBought] = useState(false);
 
     const handleToastOpen = (message, severity) => {
         setToastMessage(message);
@@ -121,6 +122,7 @@ const BuyCouponPage = () => {
         const resp = await axios.post('/api/user/paymentStatus', data, config);
         if(resp.data){
             handleToastOpen('Coupon Bought', 'success');
+            setBought(true);
         }
         else{
             handleToastOpen('Transaction Failed', 'error');
@@ -180,7 +182,7 @@ const BuyCouponPage = () => {
 
     return (
         <>
-        {!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) >=5) || coupon.taken===false) ? 
+        {!bought && (!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) >=5) || coupon.taken===false)) ? 
         (
         <Grid 
             marginTop={5}
