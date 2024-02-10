@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect} from 'react';
 import axios, { getAxiosConfig } from '../../utils/axios';
-import { Box, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Button, Grid, CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import {ShoppingCart} from '@mui/icons-material/';
 import Toast from '../../components/Toast';
 import TableRowsLoader from '../../components/Loaders/TableLoader';
@@ -180,107 +180,91 @@ const BuyCouponPage = () => {
         setTotal(totalCost);
     };
 
-    return (
-        <>
-        {!bought && (!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) >=5) || coupon.taken===false)) ? 
-        (
-        <Grid 
-            marginTop={5}
-            container 
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-        >
-            <Toast
-                open={toastOpen}
-                severity={toastSeverity}
-                message={toastMessage}
-                onClose={handleToastClose}
-            />
-            <Box sx={{backgroundColor:'white', borderRadius:1, padding:3, boxShadow:1}}>
-                <Box>
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow sx={{ backgroundColor: "lightgray", boxShadow: "1" }}>
-                        <TableCell>Day</TableCell>
-                        <TableCell>{`Breakfast (Rs. ${mealCost.breakfast})`}</TableCell>
-                        <TableCell>{`Lunch (Rs. ${mealCost.lunch})`}</TableCell>
-                        <TableCell>{`Dinner (Rs. ${mealCost.dinner})`}</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-    {loadingMenu == true ? (
-        <TableRowsLoader rowsNum={8} />
+     return(
+        loadingMenu ? (
+        <CircularProgress
+            size={70}
+            sx={{
+              position: "fixed",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              zIndex: 2
+            }}
+          /> // Show loading indicator while data is being fetched
     ) : (
-        menuData.map((rowData, index) => (
-            <TableRow key={index}>
-                <TableCell>{rowData.day}</TableCell>
-                <TableCell
-                    sx={{ cursor: 'pointer', backgroundColor: selectedItems[0]?.[index] && "#ceface" }}
-                    onClick={() => handleCheckboxChange(0, index)}
+        <>
+            {!bought && (!coupon || ((coupon.taken===true && getDayDifference(currentDateTime, coupon.updatedAt) >=5) || coupon.taken===false)) ?
+            (
+                <Grid 
+                    marginTop={5}
+                    container 
+                    alignItems="center"
+                    justifyContent="center"
+                    flexDirection="column"
                 >
-                    {rowData.breakfast}
-                </TableCell>
-                <TableCell
-                    sx={{ cursor: 'pointer', backgroundColor: selectedItems[1]?.[index] && "#ceface" }}
-                    onClick={() => handleCheckboxChange(1, index)}
-                >
-                    {rowData.lunch}
-                </TableCell>
-                <TableCell
-                    sx={{ cursor: 'pointer', backgroundColor: selectedItems[2]?.[index] && "#ceface" }}
-                    onClick={() => handleCheckboxChange(2, index)}
-                >
-                    {rowData.dinner}
-                </TableCell>
-            </TableRow>
-        ))
-    )}
-</TableBody>
-
-                    </Table>
-                </TableContainer>
-                </Box>
-                
-                <Box ml={2} mt={2} textAlign="right" alignSelf={'right'}>
-                    <Box py={1} mb={1}><Typography variant='h6'>{`Total cost:  ₹${total}.00`}</Typography></Box>
-                    
-                    <Button variant="contained" onClick={handleBuy} disabled={total === 0}>
-                        <Typography mr={1}>Buy</Typography> <ShoppingCart/>
-                    </Button>
-                </Box>
-            </Box>
-            </Grid>
+                    <Toast
+                        open={toastOpen}
+                        severity={toastSeverity}
+                        message={toastMessage}
+                        onClose={handleToastClose}
+                    />
+                    <Box sx={{backgroundColor:'white', borderRadius:1, padding:3, boxShadow:1}}>
+                        <Box>
+                            <TableContainer component={Paper}>
+                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                    <TableHead>
+                                        <TableRow sx={{ backgroundColor: "lightgray", boxShadow: "1" }}>
+                                            <TableCell>Day</TableCell>
+                                            <TableCell>{`Breakfast (Rs. ${mealCost.breakfast})`}</TableCell>
+                                            <TableCell>{`Lunch (Rs. ${mealCost.lunch})`}</TableCell>
+                                            <TableCell>{`Dinner (Rs. ${mealCost.dinner})`}</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {menuData.map((rowData, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>{rowData.day}</TableCell>
+                                                <TableCell
+                                                    sx={{ cursor: 'pointer', backgroundColor: selectedItems[0]?.[index] && "#ceface" }}
+                                                    onClick={() => handleCheckboxChange(0, index)}
+                                                >
+                                                    {rowData.breakfast}
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={{ cursor: 'pointer', backgroundColor: selectedItems[1]?.[index] && "#ceface" }}
+                                                    onClick={() => handleCheckboxChange(1, index)}
+                                                >
+                                                    {rowData.lunch}
+                                                </TableCell>
+                                                <TableCell
+                                                    sx={{ cursor: 'pointer', backgroundColor: selectedItems[2]?.[index] && "#ceface" }}
+                                                    onClick={() => handleCheckboxChange(2, index)}
+                                                >
+                                                    {rowData.dinner}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Box>
+                        
+                        <Box ml={2} mt={2} textAlign="right" alignSelf={'right'}>
+                            <Box py={1} mb={1}><Typography variant='h6'>{`Total cost:  ₹${total}.00`}</Typography></Box>
+                            
+                            <Button variant="contained" onClick={handleBuy} disabled={total === 0}>
+                                <Typography mr={1}>Buy</Typography> <ShoppingCart/>
+                            </Button>
+                        </Box>
+                    </Box>
+                </Grid>
             ) 
             : (
-                // <Card sx={{ maxWidth: 345 }}>
-                // <CardActionArea>
-                //     <CardMedia
-                //     component="img"
-                //     image={PaymentImg}
-                //     alt="green iguana"
-                //     />
-                //     <CardContent>
-                //     <Typography gutterBottom variant="h5" component="div">
-                //         Already Bought
-                //     </Typography>
-                //     <Typography variant="body2" color="text.secondary">
-                //         You have already bought coupon for this week. Visit the purchase page later to buy coupon for next week.
-                //         You can visit the My Coupon section to see your coupons.
-                //     </Typography>
-                //     </CardContent>
-                // </CardActionArea>
-                // <CardActions>
-                //     <Button size="small" color="primary" onClick={()=>{navigate('/mycoupon')}}>
-                //         My Coupon
-                //     </Button>
-                // </CardActions>
-                // </Card>
                 <AlreadyBought/>
             )}
         </>
-    );
+    ))
 };
 
 export default BuyCouponPage;
