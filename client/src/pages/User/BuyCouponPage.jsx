@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect} from 'react';
 import axios, { getAxiosConfig } from '../../utils/axios';
+
 import { Box, Button, CircularProgress, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+
 import {ShoppingCart} from '@mui/icons-material/';
 import Toast from '../../components/Toast';
 
@@ -184,6 +186,7 @@ const BuyCouponPage = () => {
     };
 
     return(
+
         loadingMenu || loadingCoupon ? (
         <CircularProgress
             size={70}
