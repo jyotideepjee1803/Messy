@@ -1,7 +1,7 @@
 import { Card, CardActionArea, CardMedia, Stack, Typography } from '@mui/material';
 import React from 'react'
 
-const FeatureCard = ({title, subtitle, sx, ...other}) => {
+const FeatureCard = ({title, subtitle, src, sx, ...other}) => {
     return (
         <Card
           component={Stack}
@@ -16,7 +16,7 @@ const FeatureCard = ({title, subtitle, sx, ...other}) => {
           <CardActionArea>
             <CardMedia
               component="img"
-              image="/assets/illustrations/illustration_payment.png"
+              image={src}
               alt="green iguana"
             />
             <Stack spacing={0.5}>

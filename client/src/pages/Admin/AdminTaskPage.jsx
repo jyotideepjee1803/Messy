@@ -78,6 +78,7 @@ const AdminTaskPage = () => {
 
         } catch (error) {
             handleToastOpen('Error fetching menu data : ', error);
+            setloadingMeal(false);
         }
     };
 
@@ -114,6 +115,7 @@ const AdminTaskPage = () => {
             
         }catch(error){
             handleToastOpen('Error fetching menu data:', error);
+            setloadingMeal(false);
         }
     }
 
@@ -155,7 +157,7 @@ const AdminTaskPage = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                {loadingMeal == true ?(
+                {loadingMeal === true ?(
                     <TableRowsLoader rowsNum={3} />
                 ) : 
                     (mealData.map((item, index) => (
