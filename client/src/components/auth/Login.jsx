@@ -32,6 +32,7 @@ const Login = () => {
           navigate("/mess");
         } catch (error) {
           console.error(error);
+          
           setErrors({ submit: 'Login failed. Please try again.' });
         } finally {
           setSubmitting(false);

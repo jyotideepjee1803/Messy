@@ -61,7 +61,7 @@ const MyCoupon = () => {
             alignItems="center"
             justifyContent="center"
             pb={5}
-        >
+        >
         <Table data={menuData} taken={coupon} loading={loadingMenu === true} title='My Coupon' />
         </Grid>
     )
