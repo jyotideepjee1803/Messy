@@ -4,7 +4,6 @@ import axios, { getAxiosConfig } from '../../utils/axios';
 import { Box, Button, Grid, CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import {ShoppingCart} from '@mui/icons-material/';
 import Toast from '../../components/Toast';
-import TableRowsLoader from '../../components/Loaders/TableLoader';
 
 import AlreadyBought from './PageComponent/AlreadyBought';
 
@@ -15,7 +14,9 @@ const BuyCouponPage = () => {
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastSeverity, setToastSeverity] = useState('success');
-    const[loadingMenu , setloadingMenu] = useState(false);
+    const [loadingMenu , setloadingMenu] = useState(false);
+    const [loadingCoupon, setLoadingCoupon] = useState(false);
+
     const [bought, setBought] = useState(false);
 
     const handleToastOpen = (message, severity) => {
@@ -73,6 +74,7 @@ const BuyCouponPage = () => {
         try{
             const couponRes = await axios.post('api/user/getcoupon', {email : loggedInUser.email}, config);
             setCoupon(couponRes.data);
+            setLoadingCoupon(false);
         }catch(error){
             console.error('Error fetching data:', error);
         }
@@ -92,6 +94,7 @@ const BuyCouponPage = () => {
     }
 
     useEffect(()=>{
+        setLoadingCoupon(true);
         fetchCoupon();
     },[])
 
@@ -181,7 +184,7 @@ const BuyCouponPage = () => {
     };
 
      return(
-        loadingMenu ? (
+        loadingMenu || loadingCoupon ? (
         <CircularProgress
             size={70}
             sx={{
