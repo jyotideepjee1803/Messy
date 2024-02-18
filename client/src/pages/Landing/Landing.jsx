@@ -39,14 +39,13 @@ export const LandingPage = () => {
                 justifyContent : 'space-between',
                 // position: 'fixed',
                 // p: (theme) => ({ xs: theme.spacing(2, 2, 0), sm: theme.spacing(3, 3, 0) }),
-                px : 3
+                pl:3
             }}
             >
                 <Logo />
                 <Box
                     sx={{
                         py: 2,
-                        px: 2.5,
                         display: 'flex',
                         alignItems: 'center',
                         alignSelf : 'flex-end'
@@ -66,6 +65,7 @@ export const LandingPage = () => {
                     alignItems: 'center', 
                     display:'flex', 
                     flexDirection:'row', 
+                    justifyContent:'space-between'
                 }}>
                     <motion.div 
                         variants={fadeIn('right', 0.1)}
@@ -80,16 +80,6 @@ export const LandingPage = () => {
                             </Typography>
                             <Button variant="contained" color="primary" sx={{maxWidth:200, height:50}} onClick={()=>navigate('/register')}> Get started</Button>
                         </Box>
-                    </motion.div>
-
-                   
-                    <motion.div
-                    variants={fadeIn('left', 0.3)}
-                    initial='hidden'
-                    whileInView={'show'}
-                    viewport={{ once: false, amount: 0.1 }}
-                    className='random-image'>
-                        
                     </motion.div>
                 </Box>
 

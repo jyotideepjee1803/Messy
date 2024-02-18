@@ -17,6 +17,7 @@ const Feature = () => {
             }),
             marginTop:20,
             py: 4,
+            px: 3,
         }}
         textAlign='center'
         >
@@ -29,14 +30,14 @@ const Feature = () => {
                 <Typography color='white' variant='h2' mb={4}>Features</Typography>
             </motion.div>
             <Grid container justifyContent="center" spacing={3} mb={3}>
-                {featData.map(item => (
+                {featData.map(item => (  
                     <Grid item xs={12} sm={6} md={3}>
                     <FeatureCard
                         title={item.title}
                         subtitle={item.subtitle}
                         src = {item.src}
                     />
-                    </Grid> 
+                    </Grid>
                 ))}
                 {/* <Grid item xs={12} sm={6} md={3}>
                 <FeatureCard
