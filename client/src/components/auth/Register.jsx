@@ -6,13 +6,28 @@ import {useFormik} from 'formik';
 
 import axios, { getAxiosConfig } from '../../utils/axios'
 import {Button, IconButton, InputAdornment, Stack, TextField,} from '@mui/material';
+import Toast from '../Toast';
 import Iconify from '../iconify';
 
 const Register = () => {
     const navigate = useNavigate();
 
+    const [toastOpen, setToastOpen] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastSeverity, setToastSeverity] = useState('success');
+
     const [showPassword, setShowPassword] = useState(false);
     const [showCnfPassword, setShowCnfPassword] = useState(false);
+
+    const handleToastOpen = (message, severity) => {
+      setToastMessage(message);
+      setToastSeverity(severity);
+      setToastOpen(true);
+    };
+  
+    const handleToastClose = () => {
+        setToastOpen(false);
+    };
 
     const formik = useFormik({
       initialValues: {
@@ -38,7 +53,8 @@ const Register = () => {
           localStorage.setItem('loggedInUser', JSON.stringify(data));
           navigate('/mess');
         } catch (error) {
-          console.error(error);
+          console.log(error);
+          handleToastOpen(error.response?.data?.message,'error');
           setErrors({ submit: 'Registration failed. Please try again.' });
         } finally {
           setSubmitting(false);
@@ -48,7 +64,12 @@ const Register = () => {
 
     return (
       <>
-        
+        <Toast
+              open={toastOpen}
+              severity={toastSeverity}
+              message={toastMessage}
+              onClose={handleToastClose}
+        />
         <form onSubmit={formik.handleSubmit}>
         <Stack spacing={3}>
           <TextField
