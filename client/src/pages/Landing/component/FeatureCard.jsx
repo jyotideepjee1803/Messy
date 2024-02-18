@@ -17,7 +17,8 @@ const FeatureCard = ({title, subtitle, src, sx, ...other}) => {
             <CardMedia
               component="img"
               image={src}
-              alt="green iguana"
+              alt="card image"
+              height={400}
             />
             <Stack spacing={0.5}>
               <Typography variant="h4">{title}</Typography>
