@@ -88,3 +88,17 @@ body, h2, p {
     justify-content: center;
     color:rgb(154, 177, 169);
 }
+
+.frame{
+    -webkit-box-shadow: -1px 20px 68px -10px rgba(0,0,0,0.42);
+    -moz-box-shadow: -1px 20px 68px -10px rgba(0,0,0,0.42);
+    box-shadow: -1px 20px 68px -10px rgba(0,0,0,0.42);
+    border-radius: 20px;
+    overflow-x: hidden;
+}
+@media screen and (max-width: 800px) {
+    .landingImage{
+        display: none;
+        background-size: contain;
+    }
+}

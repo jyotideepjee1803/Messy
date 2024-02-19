@@ -65,7 +65,7 @@ export const LandingPage = () => {
                     alignItems: 'center', 
                     display:'flex', 
                     flexDirection:'row', 
-                    justifyContent:'space-between'
+                    // justifyContent:'space-between'
                 }}>
                     <motion.div 
                         variants={fadeIn('right', 0.1)}
@@ -81,6 +81,10 @@ export const LandingPage = () => {
                             <Button variant="contained" color="primary" sx={{maxWidth:200, height:50}} onClick={()=>navigate('/register')}> Get started</Button>
                         </Box>
                     </motion.div>
+                    <Box ml={5} className='landingImage'>
+                        <img height={500} src='assets/illustrations/illustration_phone.png' alt='phone' style={{position:'absolute', marginTop:130}}/>
+                        <img className='frame' height={500} src='assets/illustrations/illustration_pc.png' alt='phone' style={{marginTop:30}}/>
+                    </Box>
                 </Box>
 
                 <Feature/>
