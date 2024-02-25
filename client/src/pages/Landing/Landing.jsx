@@ -82,8 +82,8 @@ export const LandingPage = () => {
                         </Box>
                     </motion.div>
                     <Box ml={5} mr={5} className='landingImage'>
-                        <img height={500} src='assets/illustrations/illustration_phone.png' alt='phone' style={{position:'absolute', marginTop:130}}/>
-                        <img className='frame' height={500} src='assets/illustrations/illustration_pc.png' alt='phone' style={{marginTop:30, marginLeft:40}}/>
+                        <img height={500} src='assets/illustrations/illustration_phone.png' alt='phone' style={{position:'absolute', marginTop:130}} loading='lazy'/>
+                        <img className='frame' height={500} src='assets/illustrations/illustration_pc.png' alt='phone' style={{marginTop:30, marginLeft:40}} loading='lazy'/>
                     </Box>
                 </Box>
 
