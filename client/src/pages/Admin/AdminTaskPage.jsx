@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react'
 import axios,{getAxiosConfig} from '../../utils/axios'
+import { LocalizationProvider, MobileTimePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import {
   Table,
@@ -16,6 +19,10 @@ import {
   Box,
   Card,
   Container,
+  OutlinedInput,
+  InputAdornment,
+  InputLabel,
+  FormControl,
 } from '@mui/material';
 import Toast from '../../components/Toast/index';
 import NotAdmin from './PageComponent/NotAdmin';
@@ -49,7 +56,7 @@ const AdminTaskPage = () => {
 
     const isMealValid = () => {
         // Check if any field is empty
-        return mealData.every(field => (field.time !== '' && field.cost  !== ''));
+        return mealData.every(field => (field.time !== '' && (field.cost !== '' || field.cost > 0)));
     };
 
     const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2}
@@ -98,9 +105,18 @@ const AdminTaskPage = () => {
     }, []);
    
 
-    const handleMealChange = (event,index,prop) =>{
+    const handleMealCostChange = (event,index) =>{
+        console.log(event.target.value)
         const newMeal = [...mealData];
-        newMeal[index][prop] = event.target.value;
+        newMeal[index]['cost'] = event.target.value;
+
+        setMealData(newMeal);
+    }
+
+    const handleMealTimeChange = (time,index) =>{
+        console.log(time.$d)
+        const newMeal = [...mealData];
+        newMeal[index]['time'] = time;
 
         setMealData(newMeal);
     }
@@ -164,18 +180,26 @@ const AdminTaskPage = () => {
                     < TableRow key={index}>
                         < TableCell>{item.mealName}</ TableCell>
                         < TableCell>
-                        <TextField
+                        {/* <TextField
                             id={`time${index}`}
                             type="input"
                             size="small" // Set the size to small
                             value={item.time}
                             error={item.time === ''}
                             helperText={item.time === '' ? 'Field cannot be empty' : ''}
-                            onChange={(event) => handleMealChange(event, index, 'time')}
+                            onChange={(event) => handleMealTimeChange(event, index, 'time')}
+                        /> */}
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <MobileTimePicker
+                            id={`time${index}`}
+                            size="small" // Set the size to small
+                            defaultValue={dayjs(item.time)}
+                            onChange={(time) => handleMealTimeChange(time, index)}
                         />
+                        </LocalizationProvider>
                         </ TableCell>
                         < TableCell>
-                        <TextField
+                        {/* <TextField
                             // sx={{...rootInputStyles}}
                             id={`cost${index}`}
                             type="input"
@@ -183,8 +207,18 @@ const AdminTaskPage = () => {
                             value={item.cost}
                             error={item.cost === ''}
                             helperText={item.cost === '' ? 'Field cannot be empty' : ''}
-                            onChange={(event) => handleMealChange(event, index, 'cost')}
-                        />
+                            // onChange={(event) => handleMealTimeChange(event, index, 'cost')}
+                        /> */}
+                        <FormControl sx={{ m: 1 }} error={item.cost === '' || item.cost <= 0}>
+                            <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+                            <OutlinedInput
+                                id="outlined-adornment-amount"
+                                startAdornment={<InputAdornment position="start">₹</InputAdornment>}
+                                label="Amount"
+                                value={item.cost}
+                                onChange={(event) => handleMealCostChange(event, index)}
+                            />
+                        </FormControl>
                         </ TableCell>
                     </ TableRow>
                     )))}
