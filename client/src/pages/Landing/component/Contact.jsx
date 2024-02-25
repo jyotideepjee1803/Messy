@@ -3,16 +3,30 @@ import { motion } from "framer-motion";
 import { fadeIn } from './variant';
 import "./Contact.css";
 import { Box, Button, Card, Stack, TextField, Typography } from '@mui/material';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const Contact = () => {
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      email: '',
+      message: ''
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required('Name is required'),
+      email: Yup.string().email('Invalid email address').required('Email is required'),
+      message: Yup.string().required('Message is required')
+    }),
+    onSubmit: (values) => {
+      const { name, email, message } = values;
+      const mailtoLink = `mailto:b121030@iiit-bh.ac.in?subject=Message from ${name}&body=${message}%0D%0A`;
+      window.location.href = mailtoLink;
+    }
+  });
+
   const handleSubmit = () => {
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
-
-    const mailtoLink = `mailto:b121030@iiit-bh.ac.in?subject=Message from ${name}&body=${message}%0D%0A`;
-
-    window.location.href = mailtoLink;
+    formik.handleSubmit();
   };
 
   return (
@@ -40,39 +54,51 @@ const Contact = () => {
               whileInView={'show'}
               viewport={{ once: false, amount: 0.3 }}
             >
-            <Stack spacing={3}>
-              <TextField
-                id="name"
-                name="name"
-                label="Name"           
-              />
+            <form onSubmit={formik.handleSubmit}>
+              <Stack spacing={3}>
+                <TextField
+                  id="name"
+                  name="name"
+                  label="Name"
+                  value={formik.values.name}
+                  onChange={formik.handleChange}
+                  error={formik.touched.name && Boolean(formik.errors.name)}
+                  helperText={formik.touched.name && formik.errors.name}
+                />
 
-              <TextField
-                id="email"
-                name="email"
-                label="Email address"
-              />
+                <TextField
+                  id="email"
+                  name="email"
+                  label="Email address"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email && formik.errors.email}
+                />
 
-              <TextField
-                id="message"
-                name="message"
-                label="Message"
-                multiline
-                rows={4}
-              />
+                <TextField
+                  id="message"
+                  name="message"
+                  label="Message"
+                  multiline
+                  rows={4}
+                  value={formik.values.message}
+                  onChange={formik.handleChange}
+                  error={formik.touched.message && Boolean(formik.errors.message)}
+                  helperText={formik.touched.message && formik.errors.message}
+                />
+              </Stack>
 
-            </Stack>
-
-            <Button
-                sx={{ mt: 4 }}
-                fullWidth
-                type="button"
-                variant="contained"
-                color="inherit"
-                onClick={handleSubmit}
-            >
-              Send
-            </Button>
+              <Button
+                  sx={{ mt: 4 }}
+                  fullWidth
+                  type="submit"
+                  variant="contained"
+                  color="inherit"
+              >
+                Send
+              </Button>
+            </form>
             </motion.div>
         </Card>
       </Stack>
