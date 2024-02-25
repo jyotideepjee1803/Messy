@@ -9,6 +9,14 @@ import { Skeleton } from '@mui/material';
 // ----------------------------------------------------------------------
 
 export default function AppWidget({ loading, title, time, icon, color = 'primary', sx, ...other }) {
+
+  const date = new Date(time);
+  let istTime = date.toLocaleTimeString("en-US", {
+    timeZone: "Asia/Kolkata"
+  })
+  const amPm = istTime.slice(-2);
+  istTime = istTime.split(':').slice(0, 2).join(':');
+
   return (
     <Card
       component={Stack}
@@ -25,7 +33,7 @@ export default function AppWidget({ loading, title, time, icon, color = 'primary
       {!loading ? (icon && <Box sx={{ width: 64, height: 64, borderRadius: 4}}>{icon}</Box>) : <Skeleton animation="wave" variant="circular" width={64} height={64} />}
 
       <Stack spacing={0.5}>
-        {!loading ? (<Typography variant="h4">{time}</Typography> ) : <Skeleton animation="wave" variant="rectangular" width={100} height={40} />}
+        {!loading ? (<Typography variant="h4">{`${istTime} ${amPm}`}</Typography> ) : <Skeleton animation="wave" variant="rectangular" width={100} height={40} />}
 
         {!loading ? (
           <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
