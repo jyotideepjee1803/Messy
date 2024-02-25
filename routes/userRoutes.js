@@ -5,6 +5,7 @@ import { getCouponData, getMealData, getWeekMenu } from "../controller/dataContr
 import { protect } from "../middleware/authMiddleware.js";
 import { initiatePayment, paymentStatus } from "../controller/paymentController.js";
 
+
 const router = Router();
 
 router.post("/register",registerUser);

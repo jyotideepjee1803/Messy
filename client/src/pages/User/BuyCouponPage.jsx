@@ -38,6 +38,7 @@ const BuyCouponPage = () => {
     });
     const [total , setTotal] = useState(0);
 
+  
     var date = new Date();
     var currentDateTime = date.toISOString(); 
 

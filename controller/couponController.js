@@ -1,5 +1,6 @@
 import CouponModel from "../models/coupon.js";
 
+
 const couponValidity = async(req,res)=>{
     const {email, day, mealType} = req.body;
     const student = await CouponModel.findOne({email});
