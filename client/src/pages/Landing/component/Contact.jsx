@@ -5,32 +5,17 @@ import "./Contact.css";
 import { Box, Button, Card, Stack, TextField, Typography } from '@mui/material';
 
 const Contact = () => {
-  return (
-    // <div className="contact-container">
-    //   <div className="contact-content">
-    //     <motion.div
-    //       variants={fadeIn('right', 0.3)}
-    //       initial='hidden'
-    //       whileInView={'show'}
-    //       viewport={{ once: false, amount: 0.3 }}        
-    //      className="contact-text">
-    //       <h4>Get in touch</h4>
-    //     </motion.div>
-    //     {/* form */}
-    //     <motion.form 
-    //      variants={fadeIn('left', 0.3)}
-    //       initial='hidden'
-    //       whileInView={'show'}
-    //       viewport={{ once: false, amount: 0.3 }}
-    //     className="contact-form">
-    //       <input type='text' placeholder='Your name' />
-    //       <input type='email' placeholder='Your email' />
-    //       <textarea placeholder='Your message/If you came this far Say HI !'></textarea>
-    //       <a href="mailto:b121030@iiit-bh.ac.in" class="button">Send</a>
+  const handleSubmit = () => {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
 
-    //     </motion.form>
-    //   </div>
-    // </div>
+    const mailtoLink = `mailto:b121030@iiit-bh.ac.in?subject=Message from ${name}&body=${message}%0D%0A`;
+
+    window.location.href = mailtoLink;
+  };
+
+  return (
     <Box alignItems='center' justifyContent='center'>
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }} my={4}>
         <motion.div
@@ -81,9 +66,10 @@ const Contact = () => {
             <Button
                 sx={{ mt: 4 }}
                 fullWidth
-                type="submit"
+                type="button"
                 variant="contained"
                 color="inherit"
+                onClick={handleSubmit}
             >
               Send
             </Button>

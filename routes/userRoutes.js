@@ -15,9 +15,6 @@ router.get("/getmeal" , protect, getMealData);
 router.post("/getcoupon", protect, getCouponData);
 router.post("/buyCoupon", protect, couponPurchase);
 router.post("/validCoupon", protect, couponValidity);
-router.post("/pay", protect, payment);
-router.post("/pay/success", protect, verify);
-
 
 router.post("/initiatePayment",protect, initiatePayment);
 router.post("/paymentStatus", protect, paymentStatus);

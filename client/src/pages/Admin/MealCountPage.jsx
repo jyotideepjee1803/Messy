@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios, {getAxiosConfig} from '../../utils/axios'
 import Table from '../../components/table/Table';
 import NotAdmin from './PageComponent/NotAdmin';
+import { Grid } from '@mui/material';
 
 const MealCountPage = () => {
 
@@ -10,28 +11,37 @@ const MealCountPage = () => {
     const config = getAxiosConfig({ loggedInUser });
 
     const [mealCount, setMealCount] = useState([]);
+    const [loadingMeal , setloadingMeal] = useState(false);
 
     const fetchMealCount = async () => {      
         try {
         const response = await axios.get('api/admin/totalmeal', config);
         setMealCount(response.data)
+        setloadingMeal(false);
         } catch (error) {
             console.error('Error fetching menu data : ', error);
         }
     };
 
     useEffect(()=>{
+        setloadingMeal(true);
         fetchMealCount();
     },[])
 
     return (
         <>
+            <Grid 
+            marginTop={2}
+            alignItems="center"
+            justifyContent="center"
+            pb={5}
+        >
             {loggedInUser.isAdmin ? (
-                
-                <Table data={mealCount} title='Total Meals'/>
+             <Table data={mealCount} loading={loadingMeal} title='Total Meals'/>
             ):( 
                 <NotAdmin/>
             )}
+            </Grid>
         </>
     )
 }

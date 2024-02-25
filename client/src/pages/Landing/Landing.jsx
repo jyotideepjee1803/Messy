@@ -39,14 +39,13 @@ export const LandingPage = () => {
                 justifyContent : 'space-between',
                 // position: 'fixed',
                 // p: (theme) => ({ xs: theme.spacing(2, 2, 0), sm: theme.spacing(3, 3, 0) }),
-                px : 3
+                pl:3
             }}
             >
                 <Logo />
                 <Box
                     sx={{
                         py: 2,
-                        px: 2.5,
                         display: 'flex',
                         alignItems: 'center',
                         alignSelf : 'flex-end'
@@ -62,7 +61,12 @@ export const LandingPage = () => {
             </Box>
             
             <Box>
-                <Box  sx={{alignItems: 'center', display:'flex', flexDirection:'row', justifyContent: 'space-between', marginBottom:10}}>
+                <Box sx={{
+                    alignItems: 'center', 
+                    display:'flex', 
+                    flexDirection:'row', 
+                    // justifyContent:'space-between'
+                }}>
                     <motion.div 
                         variants={fadeIn('right', 0.1)}
                         initial='hidden'
@@ -77,18 +81,10 @@ export const LandingPage = () => {
                             <Button variant="contained" color="primary" sx={{maxWidth:200, height:50}} onClick={()=>navigate('/register')}> Get started</Button>
                         </Box>
                     </motion.div>
-
-                   
-                    <motion.div
-                    variants={fadeIn('left', 0.3)}
-                    initial='hidden'
-                    whileInView={'show'}
-                    viewport={{ once: false, amount: 0.1 }}
-                    className='random-image'>
-                        <Box alignItems='center' justifyContent='center'>
-                            <img src="/assets/illustrations/illustration_payment.png" height={500} width={500} alt='mess'/>
-                        </Box>
-                    </motion.div>
+                    <Box ml={5} mr={5} className='landingImage'>
+                        <img height={500} src='assets/illustrations/illustration_phone.png' alt='phone' style={{position:'absolute', marginTop:130}}/>
+                        <img className='frame' height={500} src='assets/illustrations/illustration_pc.png' alt='phone' style={{marginTop:30, marginLeft:40}}/>
+                    </Box>
                 </Box>
 
                 <Feature/>

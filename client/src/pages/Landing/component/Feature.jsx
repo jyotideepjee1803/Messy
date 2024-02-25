@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { bgGradient } from '../../../theme/css'
 import { Box, Grid, Typography, alpha } from '@mui/material';
 import FeatureCard from './FeatureCard';
+import { featData } from './FeatureData';
 
 const Feature = () => {
 
@@ -15,7 +16,8 @@ const Feature = () => {
             imgUrl: '/assets/background/overlay_4.jpg',
             }),
             marginTop:20,
-            py: 4
+            py: 4,
+            px: 3,
         }}
         textAlign='center'
         >
@@ -28,7 +30,16 @@ const Feature = () => {
                 <Typography color='white' variant='h2' mb={4}>Features</Typography>
             </motion.div>
             <Grid container justifyContent="center" spacing={3} mb={3}>
-                <Grid item xs={12} sm={6} md={3}>
+                {featData.map(item => (  
+                    <Grid item xs={12} sm={6} md={3}>
+                    <FeatureCard
+                        title={item.title}
+                        subtitle={item.subtitle}
+                        src = {item.src}
+                    />
+                    </Grid>
+                ))}
+                {/* <Grid item xs={12} sm={6} md={3}>
                 <FeatureCard
                     title={'Meal planning'}
                     subtitle={'Efficiently schedule and manage meals'}
@@ -45,7 +56,7 @@ const Feature = () => {
                     title={'Meal planning'}
                     subtitle={'Efficiently schedule and manage meals'}
                 />
-                </Grid> 
+                </Grid>  */}
             </Grid>
         </Box>
     )
