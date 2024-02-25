@@ -10,6 +10,14 @@ Welcome to Messy, the MERN stack Mess Coupon Management System designed specific
 - **Razorpay payment**: Integrated Razorpay payment gateway to facilitate online purchase of coupons on the platform.
 - **Mobile Responsive**: Designed to be responsive and accessible on various devices.
 
+## Dummy Credentials
+- Admin
+  - Email : admin@gmail.com Password : admin@1234
+- Student
+  - Student : student@gmail.com Password : student@1234
+
+Feel free to create new account and explore our application
+
 ## Installation
 
 To run Messy locally, follow these steps:
