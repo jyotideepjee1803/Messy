@@ -12,9 +12,11 @@ Welcome to Messy, the MERN stack Mess Coupon Management System designed specific
 
 ## Dummy Credentials
 - Admin
-  - Email : admin@gmail.com Password : admin@1234
+  - Email : admin@gmail.com
+  - Password : admin@1234
 - Student
-  - Student : student@gmail.com Password : student@1234
+  - Email : student@gmail.com
+  -  Password : student@1234
 
 Feel free to create new account and explore our application
 
