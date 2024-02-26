@@ -22,10 +22,24 @@ const totalMealCount = async(req,res)=>{
         [0, 0, 0, 0, 0, 0, 0]  // Dinner
         ];
     
+    var date = new Date();
+    var currentDateTime = date.toISOString(); 
+
+    const getDayDifference = (dateString1, dateString2) => {
+        const date1 = new Date(dateString1);
+        const date2 = new Date(dateString2);
+
+        const timeDifference = Math.abs(date2.getTime() - date1.getTime());
+
+        const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+    
+        return daysDifference;
+    }
+    
     allCoupons.forEach(coupon => {
         for(let i=0;i<3;i++){
             for(let j=0;j<7;j++){
-                if(coupon.week[i][j] == true) toMake[i][j]++;
+                if(coupon.week[i][j] == true && getDayDifference(currentDateTime, coupon.updatedAt) <= 7) toMake[i][j]++;
             }
         }
     });
