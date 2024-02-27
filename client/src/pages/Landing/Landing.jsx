@@ -6,6 +6,7 @@ import "./Styles.css";
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../components/logo';
 import { Box, Button, Typography} from '@mui/material';
+import ProgressiveImage from 'react-progressive-graceful-image';
 import Feature from './component/Feature';
 
 export const LandingPage = () => {
@@ -82,7 +83,18 @@ export const LandingPage = () => {
                         </Box>
                     </motion.div>
                     <Box ml={5} mr={5} className='landingImage'>
-                        <img height={500} src='assets/illustrations/illustration_phone.png' alt='phone' style={{position:'absolute', marginTop:130}}/>
+                        {/* <img height={500} src='assets/illustrations/illustration_mobile.png' alt='phone' style={{position:'absolute', marginTop:130}}/> */}
+                        <ProgressiveImage src='assets/illustrations/illustration_mobile.png' placeholder='assets/illustrations/illustration_mobile.jpg'>
+                            {(src,loading)=>(
+                                <img
+                                className={`image${loading ? "loading" : "loaded"}`}
+                                src={src}
+                                height={500}
+                                style={{position:'absolute', marginTop:130}}
+                                alt=''
+                                />
+                            )}
+                        </ProgressiveImage>
                         <img className='frame' height={500} src='assets/illustrations/illustration_pc.jpg' alt='phone' style={{marginTop:30, marginLeft:40}}/>
                     </Box>
                 </Box>
