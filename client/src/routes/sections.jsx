@@ -4,6 +4,7 @@ import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 // import DashboardLayout from 'src/layouts/dashboard';
 import DashboardLayout from '../layouts/dashboard';
 import { LandingPage } from '../pages/Landing/Landing';
+import AppLoader from '../components/Loaders/AppLoader';
 
 export const IndexPage = lazy(() => import('../pages/User/MessMenuPage'));
 export const BuyCoupon = lazy(() => import('../pages/User/BuyCouponPage'));
@@ -21,7 +22,9 @@ export default function Router() {
     {
       element: (
         <DashboardLayout>
-          <Suspense>
+          <Suspense fallback={
+            <AppLoader/>
+          }>
             <Outlet />
           </Suspense>
         </DashboardLayout>
@@ -41,24 +44,35 @@ export default function Router() {
       ],
     },
     {
-      path: '/',
-      element: <LandingPage/>
-    },
-    {
-      path: 'login',
-      element: <LoginPage />,
-    },
-    {
-      path: 'register',
-      element: <RegisterPage/>
-    },
-    {
-      path: '404',
-      element: <Page404 />,
-    },
-    {
-      path: '*',
-      element: <Navigate to="/404" replace />,
+      element: (
+          <Suspense fallback={
+            <AppLoader/>
+          }>
+            <Outlet />
+          </Suspense>
+      ),
+      children:[
+        {
+          path: '/',
+          element: <LandingPage/>
+        },
+        {
+          path: 'login',
+          element: <LoginPage />,
+        },
+        {
+          path: 'register',
+          element: <RegisterPage/>
+        },
+        {
+          path: '404',
+          element: <Page404 />,
+        },
+        {
+          path: '*',
+          element: <Navigate to="/404" replace />,
+        },    
+      ]
     },
   ]);
 
