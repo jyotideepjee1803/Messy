@@ -4,6 +4,7 @@ import axios, { getAxiosConfig } from '../../utils/axios';
 import Table from '../../components/table/Table';
 import { Container, Grid, Typography } from '@mui/material';
 import AppWidget from './PageComponent/AppWidget';
+import AppLoader from '../../components/Loaders/AppLoader';
 
 const MessMenuPage = () => {
  
@@ -59,29 +60,32 @@ const MessMenuPage = () => {
     },[])
 
     return (
+        <>
+        {loadingMeal || loadingMenu ? <AppLoader/> : 
         <Container maxWidth="xl">
             <Typography variant="h4" sx={{ mb: 5 }}>
                 Hi, Welcome back 👋
             </Typography>
             <Grid container justifyContent="center" spacing={3} mb={3}>
  
-        {mealData.map((item, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-                <AppWidget
-                    loading = {loadingMeal}
-                    title={item.mealName}
-                    time={item?.time}
-                    color="success"
-                    icon={<img alt="icon" src={`/assets/icons/glass/ic_${item.mealName}.jpg`} />}
-                />
-            </Grid>
-        ))}
+            {mealData.map((item, index) => (
+                <Grid item xs={12} sm={6} md={3} key={index}>
+                    <AppWidget
+                        loading = {loadingMeal}
+                        title={item.mealName}
+                        time={item?.time}
+                        color="success"
+                        icon={<img alt="icon" src={`/assets/icons/glass/ic_${item.mealName}.jpg`} />}
+                    />
+                </Grid>
+            ))}
     
-</Grid>
-        <Table data={menuData} loading={loadingMenu} title='Mess Menu' />
+            </Grid>
+            <Table data={menuData} loading={loadingMenu} title='Mess Menu' />
 
         </Container>
-    )
-}
+    }
+    </>
+)}
 
 export default MessMenuPage

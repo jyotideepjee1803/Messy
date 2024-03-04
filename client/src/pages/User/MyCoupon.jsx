@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios, { getAxiosConfig } from '../../utils/axios';
 import Table from '../../components/table/Table';
 import { Grid } from '@mui/material';
+import AppLoader from '../../components/Loaders/AppLoader';
 
 const MyCoupon = () => {
 
@@ -53,14 +54,18 @@ const MyCoupon = () => {
     },[])
 
     return (   
+        <>
+        {loadingMenu ? <AppLoader/> : 
         <Grid 
             marginTop={2}
             alignItems="center"
             justifyContent="center"
             pb={5}
         >
-        <Table data={menuData} taken={coupon} loading={loadingMenu === true} title='My Coupon' />
+        <Table data={menuData} taken={coupon} title='My Coupon' />
         </Grid>
+        }
+        </>
     )
 }
 

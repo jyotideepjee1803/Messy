@@ -17,10 +17,17 @@ export const Page404 = lazy(() => import('../pages/NotFoundPage'));
 
 // ----------------------------------------------------------------------
 
+const ProtectedRoute = ({element}) => {
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  const isAuthenticated = (user && (Date.now() < parseInt(user?.expiryTime)));
+  return isAuthenticated ? element : <Navigate to="/login" replace/>;
+}
+
 export default function Router() {
   const routes = useRoutes([
     {
       element: (
+        <ProtectedRoute element={
         <DashboardLayout>
           <Suspense fallback={
             <AppLoader/>
@@ -28,6 +35,7 @@ export default function Router() {
             <Outlet />
           </Suspense>
         </DashboardLayout>
+        }/>
       ),
       children: [
         { path: 'mess', element: <IndexPage />, index: true },

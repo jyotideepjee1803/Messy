@@ -180,15 +180,6 @@ const AdminTaskPage = () => {
                     < TableRow key={index}>
                         < TableCell>{item.mealName}</ TableCell>
                         < TableCell>
-                        {/* <TextField
-                            id={`time${index}`}
-                            type="input"
-                            size="small" // Set the size to small
-                            value={item.time}
-                            error={item.time === ''}
-                            helperText={item.time === '' ? 'Field cannot be empty' : ''}
-                            onChange={(event) => handleMealTimeChange(event, index, 'time')}
-                        /> */}
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <MobileTimePicker
                             id={`time${index}`}
@@ -199,16 +190,6 @@ const AdminTaskPage = () => {
                         </LocalizationProvider>
                         </ TableCell>
                         < TableCell>
-                        {/* <TextField
-                            // sx={{...rootInputStyles}}
-                            id={`cost${index}`}
-                            type="input"
-                            size="small" // Set the size to small
-                            value={item.cost}
-                            error={item.cost === ''}
-                            helperText={item.cost === '' ? 'Field cannot be empty' : ''}
-                            // onChange={(event) => handleMealTimeChange(event, index, 'cost')}
-                        /> */}
                         <FormControl sx={{ m: 1 }} error={item.cost === '' || item.cost <= 0}>
                             <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
                             <OutlinedInput
@@ -232,7 +213,7 @@ const AdminTaskPage = () => {
                     className="MuiButton-root MuiButton-contained"
                     disabled={!isMealValid()}
                     >
-                    Save time
+                    Save
                 </Button>
             </Box>
         </Card>
