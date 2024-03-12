@@ -9,7 +9,7 @@ const sendEmail = async(email, subject, payload, template)=>{
             service: "gmail",
             auth : {
                 user : 'jyotideepjee@gmail.com',
-                pass : 'dhwafgcevszuotao',
+                pass : process.env.EMAIL_PASSWORD,
             }
         })
         // console.log(transporter);
