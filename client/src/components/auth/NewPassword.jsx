@@ -1,15 +1,14 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import {useFormik} from 'formik';
 
 import axios, { getAxiosConfig } from '../../utils/axios'
-import {Button, IconButton, InputAdornment, Link, Stack, TextField} from '@mui/material';
+import {Button, IconButton, InputAdornment, Stack, TextField} from '@mui/material';
 import Toast from '../Toast';
-import Iconify from '../iconify'
+import Iconify from '../iconify';
 
-const Login = () => {
+const NewPassword = ({token, userId}) => {
     const navigate = useNavigate();
 
     const [toastOpen, setToastOpen] = useState(false);
@@ -17,6 +16,7 @@ const Login = () => {
     const [toastSeverity, setToastSeverity] = useState('success');
 
     const [showPassword, setShowPassword] = useState(false);
+    const [showCnfPassword, setShowCnfPassword] = useState(false);
 
     const handleToastOpen = (message, severity) => {
       setToastMessage(message);
@@ -30,23 +30,27 @@ const Login = () => {
 
     const formik = useFormik({
       initialValues: {
-        email: '',
-        password : '',
+        password: '',
+        confirmPassword: '',
       },
       validationSchema: Yup.object({
-        email: Yup.string().email('Invalid email address').required('Email is required'),
         password: Yup.string().required('Password is required'),
+        confirmPassword: Yup.string()
+          .oneOf([Yup.ref('password'), null], 'Passwords must match')
+          .required('Confirm Password is required'),
       }),
       onSubmit: async (values, { setSubmitting, setErrors }) => {
         const config = getAxiosConfig({});
-  
+
+        const {password} = values
         try {
-          const {data} = await axios.post("/api/user/login", values, config);
-          localStorage.setItem("loggedInUser",JSON.stringify(data));
-          navigate("/mess");
+          await axios.post('/api/user/resetPassword', {userId,token,password}, config);
+          handleToastOpen('Password updated', 'success');
+          navigate('/login');
         } catch (error) {
+          console.log(error);
           handleToastOpen(error.response?.data?.message,'error');
-          setErrors({ submit: 'Login failed. Please try again.' });
+          setErrors({ submit: 'Password generation failed. Please try again.' });
         } finally {
           setSubmitting(false);
         }
@@ -54,25 +58,15 @@ const Login = () => {
     });
 
     return (
-        <>
-          <Toast
+      <>
+        <Toast
               open={toastOpen}
               severity={toastSeverity}
               message={toastMessage}
               onClose={handleToastClose}
-          />
-          <form onSubmit={formik.handleSubmit}>
-          <Stack spacing={3}>
-          <TextField
-            id="email"
-            name="email"
-            label="Email address"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-          />
-
+        />
+        <form onSubmit={formik.handleSubmit}>
+        <Stack spacing={3}>
           <TextField
             id="password"
             name="password"
@@ -95,25 +89,44 @@ const Login = () => {
               ),
             }}
           />
-        </Stack>
-        <Stack alignItems="flex-end" mt={1}>
-            <Link href="/reset-password" variant="body2" color='inherit'>
-              Forgot password?
-            </Link>
-        </Stack>
-        <Button
+
+          <TextField
+            id="confirmPassword"
+            name="confirmPassword"
+            label="Confirm Password"
+            value={formik.values.confirmPassword}
+            type={showCnfPassword ? 'text' : 'password'}
+            onChange={formik.handleChange}
+            error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+            helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowCnfPassword(!showCnfPassword)}
+                    edge="end"
+                  >
+                    <Iconify icon={showCnfPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Button
             sx={{ mt: 4 }}
             fullWidth
             type="submit"
             variant="contained"
             color="inherit"
             disabled={formik.isSubmitting}
-        >
-          Login
-        </Button>
+          >
+            Update-password
+          </Button>
+          </Stack>
         </form>
-        </>
+    </>
     );
 }
 
-export default Login
+export default NewPassword;

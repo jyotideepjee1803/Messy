@@ -11,6 +11,8 @@ export const BuyCoupon = lazy(() => import('../pages/User/BuyCouponPage'));
 export const MyCoupon = lazy(() => import('../pages/User/MyCoupon'));
 export const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
 export const RegisterPage = lazy(() => import('../pages/Auth/RegisterPage'));
+export const ResetPasswordPage = lazy(() => import('../pages/Auth/ResetPassword'));
+export const NewPasswordPage = lazy(()=>import('../pages/Auth/NewPasswordPage'))
 export const AdminPage = lazy(() => import('../pages/Admin/AdminTaskPage'));
 export const InventoryPage = lazy(() => import('../pages/Admin/MealCountPage'));
 export const Page404 = lazy(() => import('../pages/NotFoundPage'));
@@ -71,6 +73,14 @@ export default function Router() {
         {
           path: 'register',
           element: <RegisterPage/>
+        },
+        {
+          path: 'reset-password',
+          element: <ResetPasswordPage/>
+        },
+        {
+          path : 'new-password',
+          element: <NewPasswordPage/>
         },
         {
           path: '404',

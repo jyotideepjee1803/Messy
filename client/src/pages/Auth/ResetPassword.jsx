@@ -1,12 +1,9 @@
-import React from 'react'
-import Login from '../../components/auth/Login'
-import { Box, Card, Link, Stack, Typography, alpha, useTheme } from '@mui/material'
+import { Box, Card, Grid, Link, Stack, Typography, alpha, useTheme } from '@mui/material'
 import {bgGradient} from '../../theme/css';
 import Logo from '../../components/logo/logo';
-
-
-const LoginPage = () => {
-    const theme = useTheme();
+import Reset from '../../components/auth/Reset';
+const ResetPassword = () => {
+  const theme = useTheme();
     return (
       <Box
       sx={{
@@ -33,13 +30,7 @@ const LoginPage = () => {
             maxWidth: 420,
           }}
         >
-          <Typography variant="h4">Sign in to Messy</Typography>
-          <Typography sx={{ mt: 2, mb: 5}}>
-              {"Don't have an account?"}
-              <Link href="/register" color='inherit'>
-                {"Sign Up"}
-              </Link>
-          </Typography>
+          <Typography variant="h4" mb={3}>Forgot your password?</Typography>
 
           {/* <Typography variant="body2" sx={{ mt: 2, mb: 5}}>
             Don’t have an account?
@@ -47,13 +38,23 @@ const LoginPage = () => {
               Get started
             </Link>
           </Typography> */}
-
-          <Login/>
+          <Typography sx={{ color: "text.secondary", mb: 5 }}>
+            Please enter the email address associated with your account and We
+            will email you a link to reset your password.
+          </Typography>
+          <Reset/>
+          <Grid container mt={2}>
+            <Grid item xs>
+              <Link href="/login" variant="body2" color='inherit'>
+                Return to sign in
+              </Link>
+            </Grid>
+          </Grid>
         </Card>
       </Stack>
     </Box>
 
-    )
-}
-
-export default LoginPage
+    );
+};
+  
+export default ResetPassword;

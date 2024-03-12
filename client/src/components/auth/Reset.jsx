@@ -1,22 +1,17 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import * as Yup from 'yup';
 import {useFormik} from 'formik';
 
 import axios, { getAxiosConfig } from '../../utils/axios'
-import {Button, IconButton, InputAdornment, Link, Stack, TextField} from '@mui/material';
+import {Button, Stack, TextField} from '@mui/material';
 import Toast from '../Toast';
-import Iconify from '../iconify'
 
-const Login = () => {
-    const navigate = useNavigate();
+const Reset = () => {
 
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastSeverity, setToastSeverity] = useState('success');
-
-    const [showPassword, setShowPassword] = useState(false);
 
     const handleToastOpen = (message, severity) => {
       setToastMessage(message);
@@ -31,22 +26,20 @@ const Login = () => {
     const formik = useFormik({
       initialValues: {
         email: '',
-        password : '',
       },
       validationSchema: Yup.object({
         email: Yup.string().email('Invalid email address').required('Email is required'),
-        password: Yup.string().required('Password is required'),
       }),
       onSubmit: async (values, { setSubmitting, setErrors }) => {
         const config = getAxiosConfig({});
   
         try {
-          const {data} = await axios.post("/api/user/login", values, config);
-          localStorage.setItem("loggedInUser",JSON.stringify(data));
-          navigate("/mess");
+          const {data} = await axios.post("/api/user/requestResetPassword", values, config);
+          handleToastOpen('Request Sent', 'success');
+          console.log(data)
         } catch (error) {
           handleToastOpen(error.response?.data?.message,'error');
-          setErrors({ submit: 'Login failed. Please try again.' });
+          setErrors({ submit: 'Request failed. Please try again.' });
         } finally {
           setSubmitting(false);
         }
@@ -73,34 +66,8 @@ const Login = () => {
             helperText={formik.touched.email && formik.errors.email}
           />
 
-          <TextField
-            id="password"
-            name="password"
-            label="Password"
-            value={formik.values.password}
-            type={showPassword ? 'text' : 'password'}
-            onChange={formik.handleChange}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
         </Stack>
-        <Stack alignItems="flex-end" mt={1}>
-            <Link href="/reset-password" variant="body2" color='inherit'>
-              Forgot password?
-            </Link>
-        </Stack>
+
         <Button
             sx={{ mt: 4 }}
             fullWidth
@@ -109,11 +76,11 @@ const Login = () => {
             color="inherit"
             disabled={formik.isSubmitting}
         >
-          Login
+          Send Request
         </Button>
         </form>
         </>
     );
 }
 
-export default Login
+export default Reset;

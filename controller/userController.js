@@ -1,6 +1,11 @@
 import asyncHandler from "express-async-handler";
 import UserModel from "../models/user.js";
 import generateToken from "../utils/generateToken.js";
+import sendEmail from "../utils/email/sendMail.js";
+import Token from "../models/token.js";
+import bcrypt from "bcryptjs";
+const clientURL = process.env.CLIENT_URL;
+import { resetTemplate } from "../utils/email/template/resetPassword.js";
 
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password, isAdmin } = req.body;
@@ -62,5 +67,82 @@ const authenticateUser = asyncHandler(async (req, res) => {
       throw new Error("Invalid Email or Password");
     }
 });
+
+const requestPasswordReset = asyncHandler(async(req,res)=>{
+  const {email} = req.body;
+  const user = await UserModel.findOne({email});
+  if(!user){
+    res.status(401);
+    throw new Error("User doesn't exist");
+  }
+
+  let token = await Token.findOne({ userId: user._id });
+  if (token) await token.deleteOne();
+
+  let resetToken = generateToken(user._id);
+  const salt = await bcrypt.genSalt();
+  const hash = await bcrypt.hash(resetToken, Number(salt));
+
+  await new Token({
+    userId: user._id,
+    token: hash,
+    createdAt: Date.now(),
+  }).save();
+
+  const link = `${clientURL}new-password?token=${resetToken}&id=${user._id}`;
+  sendEmail(
+    user.email,
+    'Password Reset Request',
+    {
+      name : user.name,
+      link,
+    },
+    resetTemplate(user.name,link)
+  );
   
-export {registerUser, authenticateUser};
+  return res.json({link});
+});
+
+const resetPassword = asyncHandler(async(req,res)=>{
+  const {userId, token, password} = req.body;
+  let passwordResetToken = await Token.findOne({ userId });
+
+  if (!passwordResetToken) {
+    res.status(401);
+    throw new Error("Invalid or expired password reset token");
+  }
+
+  // console.log(passwordResetToken.token, token);
+
+  const isValid = await bcrypt.compare(token, passwordResetToken.token);
+
+  if (!isValid) {
+    res.status(401);
+    throw new Error("Invalid or expired password reset token");
+  }
+
+  const salt = await bcrypt.genSalt();
+  const hash = await bcrypt.hash(password, Number(salt));
+
+  await UserModel.updateOne(
+    { _id: userId },
+    { $set: { password: hash } },
+    { new: true }
+  );
+
+  const user = await UserModel.findById({ _id: userId });
+
+  // sendEmail(
+  //   user.email,
+  //   "Password Reset Successfully",
+  //   {
+  //     name: user.name,
+  //   },
+  //   "Your password was reset"
+  // );
+
+  await passwordResetToken.deleteOne();
+  return res.status(200).json({ message: "Password reset was successful" });
+});
+  
+export {registerUser, authenticateUser, requestPasswordReset, resetPassword};
