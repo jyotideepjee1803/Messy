@@ -5,7 +5,7 @@ import path from "path";
 
 const sendEmail = async(email, subject, payload, template)=>{
     console.log( process.env.FROM_EMAIL)
-    try{
+    // try{
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth : {
@@ -38,10 +38,10 @@ const sendEmail = async(email, subject, payload, template)=>{
             })
         })
 
-        return res.status(200).json({
-            success : true,
-            message : "Link sent"
-        });
+        // return res.status(200).json({
+        //     success : true,
+        //     message : "Link sent"
+        // });
         // await transporter.sendMail({
         //     from: 'jyotideepjee@gmail.com',
         //     to: email,
@@ -66,9 +66,9 @@ const sendEmail = async(email, subject, payload, template)=>{
         //     })
         // })
 
-    }catch(error){
-        return error;
-    }
+    // }catch(error){
+    //     return error;
+    // }
 }
 
 export default sendEmail;
