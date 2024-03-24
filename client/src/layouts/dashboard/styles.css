@@ -1,0 +1,9 @@
+.custom-scrollbar {
+    height: 1px;
+  }
+  
+.custom-scrollbar .simplebar-content {
+    height: 1px;
+    display: flex;
+    flex-direction: column;
+}

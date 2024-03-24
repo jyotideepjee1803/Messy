@@ -1,0 +1,79 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react'
+import axios, { getAxiosConfig } from '../../utils/axios';
+import Table from '../../components/table/Table';
+import { Grid } from '@mui/material';
+import AppLoader from '../../components/Loaders/AppLoader';
+import { AxiosRequestConfig } from 'axios';
+
+interface MenuData {
+    day : string;
+    breakfast : string;
+    lunch : string;
+    dinner : string;
+}
+const MyCoupon = () => {
+
+    const [menuData, setMenuData] = useState<MenuData[]>([]);
+    const [coupon, setCoupon] = useState([
+        [false, false, false, false, false, false, false], // Breakfast
+        [false, false, false, false, false, false, false], // Lunch
+        [false, false, false, false, false, false, false]  // Dinner
+    ]);
+    const [loadingMenu , setloadingMenu] = useState(false);
+
+    const sortIdx: Record<string,number> = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") as string);
+    const config = getAxiosConfig({ loggedInUser });
+
+    const fetchCoupon = async()=>{
+        try{
+            const couponRes = await axios.post('api/user/getcoupon', {email : loggedInUser.email}, config as AxiosRequestConfig);
+            if(couponRes != null) setCoupon(couponRes.data.week);
+        }catch(error){
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    useEffect(()=>{
+        fetchCoupon();
+    },[])
+
+
+    const fetchMenuData = async () => {      
+        try {
+        const response = await axios.get('api/user/getmenu', config as AxiosRequestConfig);
+
+        //sort according to day name : 
+        let data: MenuData[] = response.data;
+        data.sort((a, b) => {return sortIdx[a.day] - sortIdx[b.day]})
+        setMenuData(data);
+        setloadingMenu(false);
+
+        } catch (error) {
+            console.error('Error fetching menu data : ', error);
+        }
+    };
+
+    useEffect(()=>{
+        setloadingMenu(true);
+        fetchMenuData();
+    },[])
+
+    return (   
+        <>
+        {loadingMenu ? <AppLoader/> : 
+        <Grid 
+            marginTop={2}
+            alignItems="center"
+            justifyContent="center"
+            pb={5}
+        >
+        <Table data={menuData} taken={coupon} title='My Coupon' />
+        </Grid>
+        }
+        </>
+    )
+}
+
+export default MyCoupon;
