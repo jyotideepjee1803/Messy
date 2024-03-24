@@ -9,18 +9,13 @@ const App = () => {
 
     return (
       <ThemeProvider>
-        {/* <Scrollbar
+        <Scrollbar
           sx={{
             height: 1,
-            '& .simplebar-content': {
-              height: 1,
-              display: 'flex',
-              flexDirection: 'column',
-            },
           }}
-        > */}
+        >
           <Router />
-        {/* </Scrollbar> */}
+        </Scrollbar>
       </ThemeProvider>
     );
 }

@@ -23,4 +23,9 @@ export const StyledScrollbar = styled(SimpleBar)(({ theme }) => ({
   '& .simplebar-mask': {
     zIndex: 'inherit',
   },
+  '& .simplebar-content': {
+    height: 1,
+    display: 'flex',
+    flexDirection: 'column',
+  },
 }));

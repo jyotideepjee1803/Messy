@@ -1,6 +1,4 @@
 import { useEffect } from 'react';
-import PropTypes from 'prop-types';
-
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
@@ -8,6 +6,7 @@ import Avatar from '@mui/material/Avatar';
 import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
+import PropTypes from 'prop-types';
 
 import { usePathname } from '../../routes/hooks/use-pathname';
 import RouterLink from '../../routes/components/router-link';
@@ -20,19 +19,21 @@ import Scrollbar from '../../components/scrollbar/scrollbar';
 import { NAV } from './config-layout';
 import navConfig, { AdminNavConfig } from './config-navigation';
 
-// ----------------------------------------------------------------------
+interface NavProps {
+  openNav?: boolean;
+  onCloseNav?: () => void;
+}
 
-export default function Nav({ openNav, onCloseNav }) {
+export default function Nav({ openNav, onCloseNav }: NavProps) {
   const pathname = usePathname();
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser") as string);
   const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
     if (openNav) {
-      onCloseNav();
+      onCloseNav && onCloseNav();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [pathname, openNav, onCloseNav]);
 
   const renderAccount = (
     <Box
@@ -66,8 +67,8 @@ export default function Nav({ openNav, onCloseNav }) {
       {navConfig.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
-      {loggedInUser.isAdmin && AdminNavConfig.map((item)=>(
-        <NavItem key={item.title} item={item}/>
+      {loggedInUser.isAdmin && AdminNavConfig.map((item) => (
+        <NavItem key={item.title} item={item} />
       ))}
     </Stack>
   );
@@ -76,11 +77,6 @@ export default function Nav({ openNav, onCloseNav }) {
     <Scrollbar
       sx={{
         height: 1,
-        '& .simplebar-content': {
-          height: 1,
-          display: 'flex',
-          flexDirection: 'column',
-        },
       }}
     >
       <Logo sx={{ mt: 3, ml: 4 }} />
@@ -113,7 +109,7 @@ export default function Nav({ openNav, onCloseNav }) {
         </Box>
       ) : (
         <Drawer
-          open={openNav}
+          open={openNav || false}
           onClose={onCloseNav}
           PaperProps={{
             sx: {
@@ -133,11 +129,16 @@ Nav.propTypes = {
   onCloseNav: PropTypes.func,
 };
 
-// ----------------------------------------------------------------------
+interface NavItemProps {
+  item: {
+    path: string;
+    title: string;
+    icon: React.ReactNode;
+  };
+}
 
-function NavItem({ item }) {
+function NavItem({ item }: NavItemProps) {
   const pathname = usePathname();
-
   const active = item.path === pathname;
 
   return (
@@ -153,7 +154,7 @@ function NavItem({ item }) {
         fontWeight: 'fontWeightMedium',
         ...(active && {
           color: 'primary.main',
-          fontWeight: 'fontWeightSemiBold',
+          fontWeight: 600,
           bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
           '&:hover': {
             bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
@@ -169,7 +170,3 @@ function NavItem({ item }) {
     </ListItemButton>
   );
 }
-
-NavItem.propTypes = {
-  item: PropTypes.object,
-};
