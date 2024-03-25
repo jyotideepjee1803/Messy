@@ -21,6 +21,11 @@ const navConfig = [
     title: 'My Coupon',
     path: '/mycoupon',
     icon: icon('ic_user'),
+  },
+  {
+    title: 'Feedback',
+    path: '/feedback',
+    icon: icon('ic_blog'),
   }
 ]
 const AdminNavConfig=[

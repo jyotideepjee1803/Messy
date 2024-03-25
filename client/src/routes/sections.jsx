@@ -9,6 +9,7 @@ import AppLoader from '../components/Loaders/AppLoader';
 export const IndexPage = lazy(() => import('../pages/User/MessMenuPage'));
 export const BuyCoupon = lazy(() => import('../pages/User/BuyCouponPage'));
 export const MyCoupon = lazy(() => import('../pages/User/MyCoupon'));
+export const Feedback = lazy(()=> import('../pages/User/FeedbackPage'));
 export const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
 export const RegisterPage = lazy(() => import('../pages/Auth/RegisterPage'));
 export const ResetPasswordPage = lazy(() => import('../pages/Auth/ResetPassword'));
@@ -43,6 +44,7 @@ export default function Router() {
         { path: 'mess', element: <IndexPage />, index: true },
         { path: 'buycoupon', element: <BuyCoupon /> },
         { path: 'mycoupon', element: <MyCoupon /> },
+        { path: 'feedback', element: <Feedback />},
         {
           path: 'admin',
           element: <AdminPage />,
