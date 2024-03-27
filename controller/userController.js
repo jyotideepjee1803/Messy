@@ -6,6 +6,7 @@ import Token from "../models/token.js";
 import bcrypt from "bcryptjs";
 const clientURL = process.env.CLIENT_URL;
 import { resetTemplate } from "../utils/email/template/resetPassword.js";
+import { Resend } from "resend";
 
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password, isAdmin } = req.body;
@@ -71,6 +72,9 @@ const authenticateUser = asyncHandler(async (req, res) => {
 const requestPasswordReset = asyncHandler(async(req,res)=>{
   const {email} = req.body;
   const user = await UserModel.findOne({email});
+
+  const resend = new Resend(process.env.RESEND_KEY);
+
   if(!user){
     res.status(401);
     throw new Error("User doesn't exist");
@@ -90,16 +94,26 @@ const requestPasswordReset = asyncHandler(async(req,res)=>{
   }).save();
 
   const link = `${clientURL}new-password?token=${resetToken}&id=${user._id}`;
-  sendEmail(
-    user.email,
-    'Password Reset Request',
-    {
-      name : user.name,
-      link,
-    },
-    resetTemplate(user.name,link)
-  );
-  
+  // sendEmail(
+  //   user.email,
+  //   'Password Reset Request',
+  //   {
+  //     name : user.name,
+  //     link,
+  //   },
+  //   resetTemplate(user.name,link)
+  // );
+  try{
+  const data = await resend.emails.send({
+    from: 'onboarding@resend.dev',
+    to: user.email,
+    subject: 'Password Reset Request',
+    html: resetTemplate(user.name,link)
+  });
+  console.log(data);
+  }catch(error){
+    console.log(error);
+  }
   return res.json({link});
 });
 

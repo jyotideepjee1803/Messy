@@ -40,7 +40,7 @@ const FeedbackPage = () => {
         handleToastOpen('Feedback sent','success');
         setMessage('');    
     } catch (error) {
-        handleToastOpen(error.response?.data?.message,'error');
+        handleToastOpen(error,'error');
     } 
     finally {
         setSubmitting(false);
