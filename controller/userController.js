@@ -105,7 +105,7 @@ const requestPasswordReset = asyncHandler(async(req,res)=>{
   // );
   try{
   const data = await resend.emails.send({
-    from: 'onboarding@resend.dev',
+    from: 'MessAdmin@resend.dev',
     to: user.email,
     subject: 'Password Reset Request',
     html: resetTemplate(user.name,link)
