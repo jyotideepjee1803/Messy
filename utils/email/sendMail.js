@@ -19,54 +19,6 @@ const sendEmail = async(email, subject, payload, template)=>{
                 pass : process.env.EMAIL_PASSWORD,
             }
         }).sendMail(options)
-        // console.log(transporter);
-        // const source = fs.readFileSync(path.join(__dirname, template), "utf8");
-        // const compiledTemplate = Handlebars.compile(source);
-    
-        // 
-        // console.log(options);
-        //email send : 
-        // await new Promise((resolve, reject)=>{
-        //     transporter.sendMail(options, (error, info)=>{
-        //         if(error){
-        //             // console.log(error)
-        //             reject(error);
-        //         }
-        //         else{
-        //             // console.log(info)
-        //             resolve(info);
-        //         }
-        //     })
-        // })
-
-        // return res.status(200).json({
-        //     success : true,
-        //     message : "Link sent"
-        // });
-        // await transporter.sendMail({
-        //     from: 'jyotideepjee@gmail.com',
-        //     to: email,
-        //     subject : subject,
-        //     html : template,
-        // })
-
-        // await new Promise((resolve, reject)=>{
-        //     transporter.sendMail({
-        //         from: 'jyotideepjee@gmail.com',
-        //         to: email,
-        //         subject : subject,
-        //         html : template,
-        //     },(err, info)=>{
-        //         if(err){
-        //             reject(err);
-        //             return err;
-        //         }
-        //         else{
-
-        //         }
-        //     })
-        // })
-
     }catch(error){
         return error;
     }

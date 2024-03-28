@@ -1,4 +1,3 @@
-// Assuming you have a User model
 import mongoose from 'mongoose';
 
 const TokenSchema = new mongoose.Schema({

@@ -146,15 +146,6 @@ const resetPassword = asyncHandler(async(req,res)=>{
 
   const user = await UserModel.findById({ _id: userId });
 
-  // sendEmail(
-  //   user.email,
-  //   "Password Reset Successfully",
-  //   {
-  //     name: user.name,
-  //   },
-  //   "Your password was reset"
-  // );
-
   await passwordResetToken.deleteOne();
   return res.status(200).json({ message: "Password reset was successful" });
 });

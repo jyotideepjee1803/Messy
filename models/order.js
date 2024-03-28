@@ -1,4 +1,3 @@
-// Assuming you have a User model
 import mongoose from 'mongoose';
 
 const OrderSchema = new mongoose.Schema({
