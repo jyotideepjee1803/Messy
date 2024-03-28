@@ -4,7 +4,6 @@ import fs from "fs";
 import path from "path";
 
 const sendEmail = async(email, subject, payload, template)=>{
-    // console.log( process.env.FROM_EMAIL)
     const options = {
         from: 'jyotideepjee@gmail.com',
         to: email,

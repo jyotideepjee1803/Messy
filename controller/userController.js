@@ -104,15 +104,15 @@ const requestPasswordReset = asyncHandler(async(req,res)=>{
   //   resetTemplate(user.name,link)
   // );
   try{
-  const data = await resend.emails.send({
-    from: 'MessAdmin@resend.dev',
-    to: user.email,
-    subject: 'Password Reset Request',
-    html: resetTemplate(user.name,link)
-  });
-  console.log(data);
+    const data = await resend.emails.send({
+      from: 'MessAdmin@resend.dev',
+      to: user.email,
+      subject: 'Password Reset Request',
+      html: resetTemplate(user.name,link)
+    });
   }catch(error){
-    console.log(error);
+    res.status(500);
+    throw new Error("Error sending email")
   }
   return res.json({link});
 });
@@ -125,9 +125,6 @@ const resetPassword = asyncHandler(async(req,res)=>{
     res.status(401);
     throw new Error("Invalid or expired password reset token");
   }
-
-  // console.log(passwordResetToken.token, token);
-
   const isValid = await bcrypt.compare(token, passwordResetToken.token);
 
   if (!isValid) {

@@ -4,10 +4,8 @@ import CouponModel from "../models/coupon.js";
 const couponValidity = async(req,res)=>{
     const {email, day, mealType} = req.body;
     const student = await CouponModel.findOne({email});
-    //console.log(student.week);
     let fl = false;
     if(student && student.week[mealType][day] == true){
-        console.log(student.week[mealType][day]);
         fl = true;
     }   
     
