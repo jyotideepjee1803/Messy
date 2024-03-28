@@ -36,7 +36,6 @@ const Reset = () => {
         try {
           const {data} = await axios.post("/api/user/requestResetPassword", values, config);
           handleToastOpen('Request Sent', 'success');
-          console.log(data)
         } catch (error) {
           handleToastOpen(error.response?.data?.message,'error');
           setErrors({ submit: 'Request failed. Please try again.' });

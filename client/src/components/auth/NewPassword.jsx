@@ -48,7 +48,6 @@ const NewPassword = ({token, userId}) => {
           handleToastOpen('Password updated', 'success');
           navigate('/login');
         } catch (error) {
-          console.log(error);
           handleToastOpen(error.response?.data?.message,'error');
           setErrors({ submit: 'Password generation failed. Please try again.' });
         } finally {

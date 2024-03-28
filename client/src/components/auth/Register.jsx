@@ -53,7 +53,6 @@ const Register = () => {
           localStorage.setItem('loggedInUser', JSON.stringify(data));
           navigate('/mess');
         } catch (error) {
-          console.log(error);
           handleToastOpen(error.response?.data?.message,'error');
           setErrors({ submit: 'Registration failed. Please try again.' });
         } finally {

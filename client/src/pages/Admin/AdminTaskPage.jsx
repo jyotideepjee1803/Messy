@@ -96,7 +96,6 @@ const AdminTaskPage = () => {
         }catch(error){
             handleToastOpen('Error saving changes. Please try again.', 'error');
         }
-        // console.log({menuData});
     }
 
     useEffect(() => {
@@ -106,7 +105,6 @@ const AdminTaskPage = () => {
    
 
     const handleMealCostChange = (event,index) =>{
-        console.log(event.target.value)
         const newMeal = [...mealData];
         newMeal[index]['cost'] = event.target.value;
 
@@ -114,7 +112,6 @@ const AdminTaskPage = () => {
     }
 
     const handleMealTimeChange = (time,index) =>{
-        console.log(time.$d)
         const newMeal = [...mealData];
         newMeal[index]['time'] = time;
 

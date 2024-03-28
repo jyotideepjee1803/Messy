@@ -85,7 +85,6 @@ const BuyCouponPage = () => {
 
     const check = async()=>{
         const response = await axios.get("api/user/getmeal" , config);
-        // console.log(res);
         const breakfastCost = response.data.find(meal => meal.mealName === 'breakfast').cost;
         const lunchCost = response.data.find(meal => meal.mealName === 'lunch').cost;
         const dinnerCost = response.data.find(meal => meal.mealName === 'dinner').cost;
