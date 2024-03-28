@@ -111,8 +111,7 @@ const requestPasswordReset = asyncHandler(async(req,res)=>{
       html: resetTemplate(user.name,link)
     });
   }catch(error){
-    res.status(500);
-    throw new Error("Error sending email")
+    console.log(error);
   }
   return res.json({link});
 });
@@ -125,6 +124,9 @@ const resetPassword = asyncHandler(async(req,res)=>{
     res.status(401);
     throw new Error("Invalid or expired password reset token");
   }
+
+  // console.log(passwordResetToken.token, token);
+
   const isValid = await bcrypt.compare(token, passwordResetToken.token);
 
   if (!isValid) {
