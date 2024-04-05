@@ -1,6 +1,7 @@
 import { Day } from "../models/day.js";
 import { Meal } from "../models/meal.js";
 import Coupon from "../models/coupon.js";
+import Notice from "../models/notices.js";
 
 const setMealCostTime = async(req,res)=>{
     const data = req.body.mealData;
@@ -18,4 +19,12 @@ const setMenu = async(req,res)=>{
     res.send(response);
 }
 
-export {setMealCostTime, setMenu};
+const pushNotice = async(req,res)=>{
+    const {subject, body} = req.body;
+    const newNotice = {subject, body};
+    const response = await Notice.create(newNotice);
+
+    res.send(response);
+}
+
+export {setMealCostTime, setMenu, pushNotice};

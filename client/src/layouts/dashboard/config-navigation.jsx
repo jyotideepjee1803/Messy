@@ -23,10 +23,15 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
+    title : 'Notices',
+    path: '/notices',
+    icon: icon('ic_bell'),
+  },
+  {
     title: 'Feedback',
     path: '/feedback',
     icon: icon('ic_blog'),
-  }
+  },
 ]
 const AdminNavConfig=[
   {
@@ -39,7 +44,11 @@ const AdminNavConfig=[
     path : "/inventory",
     icon: icon('ic_blog'),
   },
-  
+  {
+    title: 'Compose Notice',
+    path : '/compose',
+    icon : icon('ic_note'),
+  }
 ];
 
 export {AdminNavConfig};

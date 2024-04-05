@@ -1,6 +1,7 @@
 import CouponModel from "../models/coupon.js";
 import { Day } from "../models/day.js";
 import { Meal } from "../models/meal.js";
+import Notice from "../models/notices.js";
 
 const getWeekMenu = async(req,res)=>{
     //complete menu : 
@@ -19,4 +20,9 @@ const getCouponData = async(req,res)=>{
     res.json(coupon);
 }
 
-export {getWeekMenu,getMealData,getCouponData};
+const getNotices = async(req,res)=>{
+    const AllNotices = await Notice.find({}).select({_id : 0});
+    res.send(AllNotices);
+}
+    
+export {getWeekMenu,getMealData,getCouponData,getNotices};
