@@ -1,39 +1,81 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react'
+import React, { useRef } from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react'
+import { alpha } from '@mui/material/styles';
 import {Box, Container, Card, CardHeader, Table, TableBody, TableCell, TableContainer, TableRow, Paper, Typography, TablePagination } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import axios, { getAxiosConfig } from '../../utils/axios';
 import TableRowsLoader from '../../components/Loaders/TableLoader';
-// import TableRowsLoader from '../../components/Loaders/TableLoader';
 
 function Row({ subject, body }) {
     const [open, setOpen] = useState(false);
-  
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const descriptionElementRef = useRef(null);
+    useEffect(() => {
+      if (open) {
+        const { current: descriptionElement } = descriptionElementRef;
+        if (descriptionElement !== null) {
+          descriptionElement.focus();
+        }
+      }
+    }, [open]);
+    
     return (
       <>
         <TableRow>
-          <TableCell onClick={() => setOpen(!open)} style={{cursor : 'pointer'}}>
+          <TableCell 
+            onClick={() => setOpen(!open)} 
+            sx={{
+              cursor:'pointer',
+              bgcolor: (theme) => alpha(theme.palette.grey[0], 0.08),
+              '&:hover': {
+                bgcolor: (theme) => alpha(theme.palette.grey[500], 0.16),
+              },
+            }}
+          >
             <Typography variant="h6">{subject}</Typography>
-            {!open ? 
-                <Typography variant="body1">
+            <Typography variant="body1">
                     {body.slice(0, 200)} 
                     {
                         body.length > 200 &&
                         <Typography 
                           variant="span" 
-                          color="primary" 
                           onClick={() => setOpen(!open)} 
                           style={{ fontWeight: 'normal', transition: 'font-weight 0.3s' }}
                           onMouseEnter={(e) => e.target.style.fontWeight = 'bold'}
                           onMouseLeave={(e) => e.target.style.fontWeight = 'normal'}
                         >
-                           ... more
+                           ...
                         </Typography>
                     }
-                </Typography> :
-                <Typography variant="body1">{body}</Typography>
-            }
+            </Typography>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                scroll='paper'
+                aria-labelledby="scroll-dialog-title"
+                aria-describedby="scroll-dialog-description"
+                fullWidth={true}
+              >
+                <DialogTitle id="scroll-dialog-title">{subject}</DialogTitle>
+                <DialogContent dividers={true}>
+                  <DialogContentText
+                    id="scroll-dialog-description"
+                    ref={descriptionElementRef}
+                    tabIndex={-1}
+                  >
+                  {body}
+                </DialogContentText>
+              </DialogContent>
+            </Dialog>
           </TableCell>
         </TableRow>
       </>
