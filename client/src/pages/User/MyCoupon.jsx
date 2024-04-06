@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import axios, { getAxiosConfig } from '../../utils/axios';
 import Table from '../../components/table/Table';
 import { Grid } from '@mui/material';
 import AppLoader from '../../components/Loaders/AppLoader';
+import { AppContext } from '../../context/AppProvider';
 
 const MyCoupon = () => {
 
@@ -16,7 +17,7 @@ const MyCoupon = () => {
     const [loadingMenu , setloadingMenu] = useState(false);
 
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const {loggedInUser} = useContext(AppContext)
     const config = getAxiosConfig({ loggedInUser });
 
     const fetchCoupon = async()=>{

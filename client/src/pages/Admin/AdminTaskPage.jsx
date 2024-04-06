@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import axios,{getAxiosConfig} from '../../utils/axios'
 import { LocalizationProvider, MobileTimePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
@@ -27,6 +27,7 @@ import {
 import Toast from '../../components/Toast/index';
 import NotAdmin from './PageComponent/NotAdmin';
 import TableRowsLoader from '../../components/Loaders/TableLoader';
+import { AppContext } from '../../context/AppProvider';
 
     
 const AdminTaskPage = () => {
@@ -62,7 +63,7 @@ const AdminTaskPage = () => {
     const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2}
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
 
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const {loggedInUser} = useContext(AppContext);
     const config = getAxiosConfig({ loggedInUser });
 
     const handleMenuInputChange = (event, day, mealType) => {

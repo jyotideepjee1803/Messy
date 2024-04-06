@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useContext} from 'react';
 import axios, { getAxiosConfig } from '../../utils/axios';
 
 import { Box, Button, CircularProgress, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
@@ -8,6 +8,7 @@ import {ShoppingCart} from '@mui/icons-material/';
 import Toast from '../../components/Toast';
 
 import AlreadyBought from './PageComponent/AlreadyBought';
+import { AppContext } from '../../context/AppProvider';
 
 const BuyCouponPage = () => {
  
@@ -55,7 +56,7 @@ const BuyCouponPage = () => {
 
     const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2}
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const {loggedInUser} = useContext(AppContext)
     const config = getAxiosConfig({ loggedInUser });
 
     const fetchMenuData = async () => {      

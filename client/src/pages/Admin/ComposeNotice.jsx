@@ -1,9 +1,10 @@
-import React,{useState} from 'react'
+import React,{useContext, useState} from 'react'
 import { TextField, Button, Box, Card, CardHeader,  } from '@mui/material';
 import axios, { getAxiosConfig } from '../../utils/axios';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import Toast from '../../components/Toast';
+import { AppContext } from '../../context/AppProvider';
 
 const ComposeNotice = () => {
     const [toastOpen, setToastOpen] = useState(false);
@@ -21,6 +22,9 @@ const ComposeNotice = () => {
         setToastOpen(false);
     };
 
+    const {loggedInUser} = useContext(AppContext)
+    const config = getAxiosConfig({ loggedInUser });
+
     const formik = useFormik({
       initialValues: {
         subject: '',
@@ -32,8 +36,6 @@ const ComposeNotice = () => {
         body : Yup.string().required('Body is required'),
       }),
       onSubmit: async (values, { setSubmitting, setErrors , resetForm }) => {
-        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-        const config = getAxiosConfig({ loggedInUser });
         try {
           await axios.post('/api/admin/notice', values, config);
           handleToastOpen('Notice sent','success')

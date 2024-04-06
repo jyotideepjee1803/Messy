@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../../../context/AppProvider';
 
 // ----------------------------------------------------------------------
 
@@ -17,7 +18,7 @@ export default function AccountPopover() {
 
   const navigate = useNavigate();
 
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  const {loggedInUser} = useContext(AppContext)
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);

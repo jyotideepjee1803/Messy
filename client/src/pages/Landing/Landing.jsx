@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Logo from '../../components/logo';
 import { Box, Button, Typography} from '@mui/material';
 import Feature from './component/Feature';
+import StickyScroll from './component/StickyScroll';
 
 export const LandingPage = () => {
     const navigate = useNavigate();
@@ -86,12 +87,14 @@ export const LandingPage = () => {
                         <img className='frame' height={500} src='assets/illustrations/illustration_pc.jpg' alt='phone' style={{marginTop:30, marginLeft:40}}/>
                     </Box>
                 </Box>
-
-                <Feature/>
-                <div ref={targetRef}>
-                    <Contact/>
-                </div>
             </Box>
+            
+            <Feature/>
+            <StickyScroll/>        
+            <div ref={targetRef}>
+                <Contact/>
+            </div>
+        
             <div className='yo'>
                  <p>&copy;2024 <span>| Developed by JYOTI and Mridul</span></p>
             </div>

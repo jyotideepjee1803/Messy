@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useRef } from 'react'
+import React, { useContext, useRef } from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react'
 import { alpha } from '@mui/material/styles';
@@ -10,6 +10,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios, { getAxiosConfig } from '../../utils/axios';
 import TableRowsLoader from '../../components/Loaders/TableLoader';
+import { AppContext } from '../../context/AppProvider';
 
 function Row({ subject, body }) {
     const [open, setOpen] = useState(false);
@@ -86,7 +87,7 @@ const NoticeBoard = () => {
     const [notices, setNotices] = useState([]);
     const [loadingNotice , setloadingNotice] = useState(false);
   
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const {loggedInUser} = useContext(AppContext)
     const config = getAxiosConfig({ loggedInUser });
 
     const [page, setPage] = useState(0);

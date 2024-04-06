@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
@@ -20,12 +20,13 @@ import Scrollbar from '../../components/scrollbar';
 
 import { NAV } from './config-layout';
 import navConfig, { AdminNavConfig } from './config-navigation';
+import { AppContext } from '../../context/AppProvider';
 
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  const {loggedInUser} = useContext(AppContext)
   const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
