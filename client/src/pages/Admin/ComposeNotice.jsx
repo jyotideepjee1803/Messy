@@ -1,11 +1,21 @@
-import React,{useState} from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React,{useEffect, useState} from 'react'
 import { TextField, Button, Box, Card, CardHeader,  } from '@mui/material';
 import axios, { getAxiosConfig } from '../../utils/axios';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import Toast from '../../components/Toast';
 
+import {io} from "socket.io-client"
+import { useDispatch, useSelector } from "react-redux";
+import { setClientSocket, selectAppState, setSocketConnected} from '../../store/AppSlice';
+
+// const SOCKET_ENDPOINT = process.env.REACT_APP_SERVER_BASE_URL;
+
 const ComposeNotice = () => {
+    const {clientSocket, isSocketConnected} = useSelector(selectAppState);
+    // const dispatch = useDispatch();
+
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastSeverity, setToastSeverity] = useState('success');
@@ -21,6 +31,27 @@ const ComposeNotice = () => {
         setToastOpen(false);
     };
 
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const config = getAxiosConfig({ loggedInUser });
+
+    // useEffect(()=>{
+    //     dispatch(
+    //         setClientSocket(io(SOCKET_ENDPOINT, {transports:["websocket"]}))
+    //     )
+    // },[]);
+
+    // useEffect(() => {
+    //   if (!clientSocket) return;
+  
+    //   if (!isSocketConnected && clientSocket) {
+    //     clientSocket.emit("init user", loggedInUser?._id);
+    //     clientSocket.on("user_connected", () => {
+    //       // console.log("socket connected");
+    //       dispatch(setSocketConnected(true));
+    //     });
+    //   }
+    // });
+
     const formik = useFormik({
       initialValues: {
         subject: '',
@@ -32,10 +63,10 @@ const ComposeNotice = () => {
         body : Yup.string().required('Body is required'),
       }),
       onSubmit: async (values, { setSubmitting, setErrors , resetForm }) => {
-        const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-        const config = getAxiosConfig({ loggedInUser });
         try {
-          await axios.post('/api/admin/notice', values, config);
+          const {data} = await axios.post('/api/admin/notice', values, config);
+          console.log(data);
+          if (isSocketConnected) clientSocket?.emit("sendNotification", {senderId:loggedInUser._id, content : data});
           handleToastOpen('Notice sent','success')
         } catch (error) {
           handleToastOpen(error.response?.data?.message,'error');
