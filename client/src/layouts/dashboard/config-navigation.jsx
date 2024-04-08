@@ -25,7 +25,7 @@ const navConfig = [
   {
     title : 'Notices',
     path: '/notices',
-    icon: icon('ic_bell'),
+    icon: icon('ic_notice'),
   },
   {
     title: 'Feedback',

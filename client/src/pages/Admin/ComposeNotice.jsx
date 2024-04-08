@@ -1,20 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React,{useEffect, useState} from 'react'
+import React,{useState} from 'react'
 import { TextField, Button, Box, Card, CardHeader,  } from '@mui/material';
 import axios, { getAxiosConfig } from '../../utils/axios';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import Toast from '../../components/Toast';
 
-import {io} from "socket.io-client"
-import { useDispatch, useSelector } from "react-redux";
-import { setClientSocket, selectAppState, setSocketConnected} from '../../store/AppSlice';
-
-// const SOCKET_ENDPOINT = process.env.REACT_APP_SERVER_BASE_URL;
+import { useSelector } from "react-redux";
+import {selectAppState} from '../../store/AppSlice';
 
 const ComposeNotice = () => {
     const {clientSocket, isSocketConnected} = useSelector(selectAppState);
-    // const dispatch = useDispatch();
 
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
@@ -33,24 +29,6 @@ const ComposeNotice = () => {
 
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
     const config = getAxiosConfig({ loggedInUser });
-
-    // useEffect(()=>{
-    //     dispatch(
-    //         setClientSocket(io(SOCKET_ENDPOINT, {transports:["websocket"]}))
-    //     )
-    // },[]);
-
-    // useEffect(() => {
-    //   if (!clientSocket) return;
-  
-    //   if (!isSocketConnected && clientSocket) {
-    //     clientSocket.emit("init user", loggedInUser?._id);
-    //     clientSocket.on("user_connected", () => {
-    //       // console.log("socket connected");
-    //       dispatch(setSocketConnected(true));
-    //     });
-    //   }
-    // });
 
     const formik = useFormik({
       initialValues: {

@@ -167,7 +167,7 @@ const removeSeenNotifs = asyncHandler(async(req,res)=>{
     const userId = req.params.id;
     const {notificationId} = req.body
 
-    const response = await UserModel.updateOne({_id: userId},{$pull:{notifications : {_id : notificationId}}});
+    const response = await UserModel.updateOne({_id: userId},{$pull:{notifications : notificationId}});
     res.status(200).json(response);
   }catch(error){
     res.status(500)

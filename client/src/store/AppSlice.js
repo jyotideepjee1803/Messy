@@ -8,6 +8,7 @@ const AppSlice = createSlice({
         clientSocket : null,
         isSocketConnected : false,
         newNotifications : [],
+        fetchNotices : true,
     },
 
     reducers:{
@@ -22,11 +23,14 @@ const AppSlice = createSlice({
         },
         setNewNotifications: (state,action)=>{
             state.newNotifications = action.payload;
+        },
+        setFetchNotices : (state,action)=>{
+            state.fetchNotices = action.payload;
         }
     }
 });
 
-export const {setClientSocket, setSocketConnected, setNewNotifications, setLoggedInUser} = AppSlice.actions;
+export const {setClientSocket, setSocketConnected, setNewNotifications, setLoggedInUser, setFetchNotices} = AppSlice.actions;
 export const selectAppState = (state) => state.AppData;
 
 export default AppSlice.reducer;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import {useNavigate} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { set, sub } from 'date-fns';
 
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -14,11 +14,10 @@ import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
-
+import { alpha,useTheme } from '@mui/material/styles';
 import { fToNow } from '../../../utils/format-time';
 
 import Iconify from '../../../components/iconify/iconify';
-import Scrollbar from '../../../components/scrollbar';
 
 import { useDispatch,useSelector } from "react-redux";
 import { setNewNotifications,selectAppState } from '../../../store/AppSlice';
@@ -27,7 +26,8 @@ import axios, { getAxiosConfig } from '../../../utils/axios';
 // ----------------------------------------------------------------------
 
 export default function NotificationsPopover() {
-    
+    const navigate = useNavigate();
+    const theme = useTheme();
     const {newNotifications} = useSelector(selectAppState);
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
     const config = getAxiosConfig({loggedInUser});
@@ -35,7 +35,12 @@ export default function NotificationsPopover() {
     const dispatch = useDispatch();
     // const [notifications, setNotifications] = useState(newNotifications);
     const totalUnRead = newNotifications.length;
-
+    const data = [...newNotifications]
+    data.sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return dateB - dateA;
+    });
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
@@ -67,14 +72,16 @@ export default function NotificationsPopover() {
       notifications : userNotifs
     }
     // console.log(updatedUser);
-    await axios.put(`/api/user/${loggedInUser._id}/notifications/seen`,{notificationId: notification._id},config)
+    const res = await axios.put(`/api/user/${loggedInUser._id}/notifications/seen`,{notificationId: notification._id},config)
+    console.log(res);
     persistUpdatedUser(updatedUser);
+    navigate(`/notices/${notification._id}`);
   }
 
   return (
     <>
       <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen}>
-        <Badge badgeContent={totalUnRead} color="error">
+        <Badge badgeContent={totalUnRead} color="primary">
           <Iconify width={24} icon="solar:bell-bing-bold-duotone" />
         </Badge>
       </IconButton>
@@ -112,15 +119,28 @@ export default function NotificationsPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
+        <Box sx={{ height: { xs: 340, sm: 'auto' }, 
+            maxHeight : 400,
+            overflowY : 'scroll',
+            '&::-webkit-scrollbar': {
+              width: '6px',
+            },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: '#f1f1f1',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: alpha(theme.palette.grey[600], 0.48),
+              borderRadius: '6px',
+            }, 
+        }}>
           <List
             disablePadding
           >
-            {newNotifications.map((notification,index) => (
+            {data.map((notification,index) => (
               <NotificationItem key={index} notification={notification} markAsRead={handleMarkOneAsRead}/>
             ))}
           </List>
-        </Scrollbar>
+        </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
       </Popover>

@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 // ----------------------------------------------------------------------
 import {io} from "socket.io-client"
 import { useDispatch, useSelector } from "react-redux";
-import { setClientSocket, selectAppState, setSocketConnected, setNewNotifications, setLoggedInUser } from '../../store/AppSlice';
+import { setClientSocket, selectAppState, setSocketConnected, setNewNotifications} from '../../store/AppSlice';
 import axios, { getAxiosConfig } from '../../utils/axios';
 
 const SOCKET_ENDPOINT = process.env.REACT_APP_SERVER_BASE_URL;
