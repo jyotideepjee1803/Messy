@@ -12,29 +12,55 @@ import { useEffect } from 'react';
 // ----------------------------------------------------------------------
 import {io} from "socket.io-client"
 import { useDispatch, useSelector } from "react-redux";
-import { setClientSocket, selectAppState, setSocketConnected, setNewNotifications } from '../../store/AppSlice';
+import { setClientSocket, selectAppState, setSocketConnected, setNewNotifications, setLoggedInUser } from '../../store/AppSlice';
+import axios, { getAxiosConfig } from '../../utils/axios';
 
 const SOCKET_ENDPOINT = process.env.REACT_APP_SERVER_BASE_URL;
 
 export default function DashboardLayout({ children }) {
   const [openNav, setOpenNav] = useState(false);
-  
+
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  const config = getAxiosConfig({loggedInUser});
+
   const {clientSocket, isSocketConnected, newNotifications} = useSelector(selectAppState);
   const dispatch = useDispatch();
 
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  // console.log(loggedInUser);
+
+  const persistUpdatedUser = (updatedUser) => {
+    // localStorage persists updated user even after page refresh
+    localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
+    // dispatch(setLoggedInUser(updatedUser));
+  };
+
+  const fetchNotifs = async()=>{
+    const unseenNotifs = await Promise.all(loggedInUser.notifications.map(async(id)=>{
+      const notice = await axios.get(`/api/user/getnotice/${id}`,config);
+      return notice.data;
+    }))
+    dispatch(setNewNotifications(unseenNotifs));
+  }
+
+  // const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
   useEffect(()=>{
       dispatch(
           setClientSocket(io(SOCKET_ENDPOINT, {transports:["websocket"]}))
       )
+      fetchNotifs();
   },[]);
 
     const newNotificationHandler = () =>{
         clientSocket.off("recieveNotification")
         .on("recieveNotification", (content) => {
-          console.log(content);
+          // console.log(content);
           dispatch(setNewNotifications([...newNotifications, content]))
-        //    console.log(notif);
+          const updatedUser = {
+            ...loggedInUser,
+            notifications : [...loggedInUser.notifications,content._id]
+          }
+          console.log(updatedUser);
+          persistUpdatedUser(updatedUser);
         });
     }
 

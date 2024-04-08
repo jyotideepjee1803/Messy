@@ -22,56 +22,16 @@ import Scrollbar from '../../../components/scrollbar';
 
 import { useDispatch,useSelector } from "react-redux";
 import { setNewNotifications,selectAppState } from '../../../store/AppSlice';
+import axios, { getAxiosConfig } from '../../../utils/axios';
 
 // ----------------------------------------------------------------------
-
-const NOTIFICATIONS = [
-  {
-    title: 'Your order is placed',
-    description: 'waiting for shipping',
-    avatar: null,
-    type: 'order_placed',
-    createdAt: set(new Date(), { hours: 10, minutes: 30 }),
-    seen: true,
-  },
-  {
-    title: 'You have new message',
-    description: 'answered to your comment on the Minimal',
-    avatar: null,
-    type: 'friend_interactive',
-    createdAt: sub(new Date(), { hours: 3, minutes: 30 }),
-    seen: true,
-  },
-  {
-    title: 'You have new message',
-    description: '5 unread messages',
-    avatar: null,
-    type: 'chat_message',
-    createdAt: sub(new Date(), { days: 1, hours: 3, minutes: 30 }),
-    seen: false,
-  },
-  {
-    title: 'You have new mail',
-    description: 'sent from Guido Padberg',
-    avatar: null,
-    type: 'mail',
-    createdAt: sub(new Date(), { days: 2, hours: 3, minutes: 30 }),
-    seen: false,
-  },
-  {
-    title: 'Delivery processing',
-    description: 'Your order is being shipped',
-    avatar: null,
-    type: 'order_shipped',
-    createdAt: sub(new Date(), { days: 3, hours: 3, minutes: 30 }),
-    seen: false,
-  },
-];
 
 export default function NotificationsPopover() {
     
     const {newNotifications} = useSelector(selectAppState);
-    console.log(newNotifications);
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const config = getAxiosConfig({loggedInUser});
+
     const dispatch = useDispatch();
     // const [notifications, setNotifications] = useState(newNotifications);
     const totalUnRead = newNotifications.length;
@@ -89,6 +49,27 @@ export default function NotificationsPopover() {
   const handleMarkAllAsRead = () => {
     dispatch(setNewNotifications([]));
   };
+
+  const persistUpdatedUser = (updatedUser) => {
+    // localStorage persists updated user even after page refresh
+    localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
+    // dispatch(setLoggedInUser(updatedUser));
+  };
+
+  const handleMarkOneAsRead = async(notification) =>{
+    const updatedNotifs = newNotifications.filter((item) => item._id !== notification._id)
+    dispatch(setNewNotifications(updatedNotifs));
+
+    const userNotifs = loggedInUser.notifications.filter((item) => item !== notification._id);
+
+    const updatedUser = {
+      ...loggedInUser,
+      notifications : userNotifs
+    }
+    // console.log(updatedUser);
+    await axios.put(`/api/user/${loggedInUser._id}/notifications/seen`,{notificationId: notification._id},config)
+    persistUpdatedUser(updatedUser);
+  }
 
   return (
     <>
@@ -136,7 +117,7 @@ export default function NotificationsPopover() {
             disablePadding
           >
             {newNotifications.map((notification,index) => (
-              <NotificationItem key={index} notification={notification} />
+              <NotificationItem key={index} notification={notification} markAsRead={handleMarkOneAsRead}/>
             ))}
           </List>
         </Scrollbar>
@@ -161,7 +142,7 @@ NotificationItem.propTypes = {
   }),
 };
 
-function NotificationItem({ notification }) {
+function NotificationItem({ notification, markAsRead}) {
   const { avatar, title } = renderContent(notification);
 
   return (
@@ -173,6 +154,9 @@ function NotificationItem({ notification }) {
         ...(notification.seen && {
           bgcolor: 'action.selected',
         }),
+      }}
+      onClick={()=>{
+        markAsRead(notification)
       }}
     >
       <ListItemAvatar>

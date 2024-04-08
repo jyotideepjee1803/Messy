@@ -8,9 +8,12 @@ import axios, { getAxiosConfig } from '../../utils/axios'
 import {Button, IconButton, InputAdornment, Link, Stack, TextField} from '@mui/material';
 import Toast from '../Toast';
 import Iconify from '../iconify'
+import { setLoggedInUser, setNewNotifications } from '../../store/AppSlice';
+import {useDispatch} from "react-redux";
 
 const Login = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [toastOpen, setToastOpen] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
