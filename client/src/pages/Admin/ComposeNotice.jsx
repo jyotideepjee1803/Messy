@@ -8,6 +8,7 @@ import Toast from '../../components/Toast';
 
 import { useSelector } from "react-redux";
 import {selectAppState} from '../../store/AppSlice';
+import Scrollbar from '../../components/scrollbar';
 
 const ComposeNotice = () => {
     const {clientSocket, isSocketConnected} = useSelector(selectAppState);
@@ -63,8 +64,17 @@ const ComposeNotice = () => {
             message={toastMessage}
             onClose={handleToastClose}
         />
-        
         <Card sx={{p:1}}>
+        <Scrollbar
+          sx={{
+            height: 1,
+            '& .simplebar-content': {
+              height: 1,
+              display: 'flex',
+              flexDirection: 'column',
+            },
+          }}
+        >
         <CardHeader title='Compose Notice'/>
         <Box sx={{ p: 3, pb: 1, mb:2}}>
         <form onSubmit={formik.handleSubmit}>
@@ -83,7 +93,7 @@ const ComposeNotice = () => {
             multiline
             id="body"
             name='body'
-            rows={10}
+            rows={5}
             placeholder='Body'
             variant="standard"
             value={formik.values.body}
@@ -102,6 +112,7 @@ const ComposeNotice = () => {
         </Box>
         </form>
         </Box>
+        </Scrollbar>
         </Card>
     </>
     )
