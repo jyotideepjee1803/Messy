@@ -12,8 +12,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import axios, { getAxiosConfig } from '../../utils/axios';
 import TableRowsLoader from '../../components/Loaders/TableLoader';
 import { useSearchParams } from 'react-router-dom';
+import Iconify from '../../components/iconify/iconify';
+import { fToNow } from '../../utils/format-time';
 
-function Row({_id,subject, body}) {
+function Row({_id,subject, body, createdAt}) {
     const [open, setOpen] = useState(false);
 
     const handleClose = () => {
@@ -31,7 +33,6 @@ function Row({_id,subject, body}) {
     }, [open]);
     
     return (
-      <>
         <TableRow id={_id}>
           <TableCell 
             onClick={() => setOpen(!open)} 
@@ -41,8 +42,12 @@ function Row({_id,subject, body}) {
               '&:hover': {
                 bgcolor: (theme) => alpha(theme.palette.grey[500], 0.16),
               },
+              display: 'flex', // Set display to flex
+              justifyContent: 'space-between', // Space items horizontally
+              alignItems: 'flex-start' // Align items vertically
             }}
           >
+            <Box>
             <Typography variant="h6">{subject}</Typography>
             <Typography variant="body1">
                     {body.slice(0, 200)} 
@@ -58,6 +63,19 @@ function Row({_id,subject, body}) {
                            ...
                         </Typography>
                     }
+            </Typography>
+            </Box>
+            <Typography
+              variant="caption"
+              sx={{
+                mt: 0.5,
+                display: 'flex',
+                alignItems: 'center',
+                color: 'text.disabled',
+              }}
+            >
+              <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />
+                {fToNow(createdAt)}
             </Typography>
             <Dialog
                 open={open}
@@ -80,7 +98,6 @@ function Row({_id,subject, body}) {
             </Dialog>
           </TableCell>
         </TableRow>
-      </>
     );
   }
   
@@ -88,8 +105,8 @@ const NoticeBoard = () => {
     const {id} = useSearchParams();
     // const [pageIndex, setPageIndex] = useState(0);
     // const [rowIndex, setRowIndex] = useState(0);
-    const noticeRef = useRef(null);
-    const tableRef = useRef(null);
+    // const noticeRef = useRef(null);
+    // const tableRef = useRef(null);
     const theme = useTheme();
     
     const [notices, setNotices] = useState([]);
@@ -136,24 +153,44 @@ const NoticeBoard = () => {
         fetchNotices();
     },[])
 
-    console.log(noticeRef.current);
-    useEffect(()=>{
-      const index = notices.findIndex(item => item._id === id);
-      if(index !== -1){
-        // const newPage = Math.floor(index/rowsPerPage);
-        // const newRow = index%rowsPerPage;
-        // setPageIndex(newPage);
-        // setRowIndex(newRow);
+    // console.log(noticeRef.current);
+    // useEffect(()=>{
+    //   const index = notices.findIndex(item => item._id === id);
+    //   if(index !== -1){
+    //     // const newPage = Math.floor(index/rowsPerPage);
+    //     // const newRow = index%rowsPerPage;
+    //     // setPageIndex(newPage);
+    //     // setRowIndex(newRow);
 
-        // if(noticeRef.current){
-        //   noticeRef.current.scrollIntoView({behavior: 'smooth'});
-        // }
-        if(tableRef.current){
-          const rowOffset=tableRef.current.rows[index].offsetTop;
-          window.scrollTo({top:rowOffset, behavior:'smooth'})
-        }
+    //     // if(noticeRef.current){
+    //     //   noticeRef.current.scrollIntoView({behavior: 'smooth'});
+    //     // }
+    //     if(tableRef.current){
+    //       const rowOffset=tableRef.current.rows[index].offsetTop;
+    //       window.scrollTo({top:rowOffset, behavior:'smooth'})
+    //     }
+    //   }
+    // },[id,notices]);
+    const scrollToRow = (selectedId) => {
+      // if (tableRef.current) {
+      //   const rows = tableRef.current.getElementsByTagName('tr');
+      //   for (let i = 0; i < rows.length; i++) {
+      //     if (rows[i].getAttribute('data-id') === selectedId) {
+      //       rows[i].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      //       break;
+      //     }
+      //   }
+      // }
+
+      const row = document.getElementById(`${selectedId}`);
+      if(row){
+        row.scrollIntoView({behavior : 'smooth', block:'nearest'});
       }
-    },[id,notices]);
+    };
+
+    useEffect(()=>{
+      scrollToRow(id)
+    },[id])
 
     return (
         <Container maxWidth="xl">
@@ -181,7 +218,7 @@ const NoticeBoard = () => {
                         ) : 
                         (
                           <>
-                          <Table ref={tableRef}>
+                          <Table>
                               <TableBody>
                                 {  notices.map((row, index) => (
                                     <Row key={index} {...row}/>

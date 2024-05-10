@@ -37,8 +37,8 @@ export default function NotificationsPopover() {
     const totalUnRead = newNotifications.length;
     const data = [...newNotifications]
     data.sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
+      const dateA = new Date(a?.createdAt);
+      const dateB = new Date(b?.createdAt);
       return dateB - dateA;
     });
   const [open, setOpen] = useState(null);
@@ -195,7 +195,7 @@ function NotificationItem({ notification, markAsRead}) {
             }}
           >
             <Iconify icon="eva:clock-outline" sx={{ mr: 0.5, width: 16, height: 16 }} />
-            {fToNow(notification.createdAt)}
+            {fToNow(notification?.createdAt)}
           </Typography>
         }
       />
