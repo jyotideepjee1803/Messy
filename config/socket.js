@@ -12,7 +12,6 @@ const configureSocketEvents = (server) =>{
         socket.on("init_user", (userId) => {
           socket.join('singleRoom');
           socket.emit(`user_connected`);
-          console.log("user initialized: ", userId);
         });
 
         socket.on("join", (roomId) => {
@@ -20,20 +19,8 @@ const configureSocketEvents = (server) =>{
             console.log(`User joined room : ${roomId}`);
         })
 
-        socket.on("sendNotification", async({senderId, content}) => {
-
-            console.log(senderId, content);
-            const allUsers = await userModel.find({});
-
-            // await Promise.all(
-            //     allUsers.map(async(user)=>{
-            //         if(user._id !== senderId){
-            //             console.log(`sent to ${user._id}`);
-            //             socket.to(user._id).emit("recieveNotification", content);
-            //         }
-            //     })
-            // )
-            io.to('singleRoom').emit("recieveNotification", content)
+        socket.on("sendNotification", async({content}) => {
+            socket.broadcast.emit("recieveNotification", content)
         })
 
         socket.on("disconnect", ()=>{
