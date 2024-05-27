@@ -7,7 +7,8 @@ import { Box, Button, CircularProgress, Grid, Paper, Table, TableBody, TableCell
 import {ShoppingCart} from '@mui/icons-material/';
 import Toast from '../../components/Toast';
 
-import AlreadyBought from './PageComponent/AlreadyBought';
+import AlertCard from './PageComponent/AlertCard';
+import { mycoupon } from '../../utils/alerts';
 
 const BuyCouponPage = () => {
  
@@ -267,7 +268,8 @@ const BuyCouponPage = () => {
                 </Grid>
             ) 
             : (
-                <AlreadyBought/>
+                <AlertCard title={mycoupon.title} subtitle={mycoupon.subtitle} redir={mycoupon.redir} img={mycoupon.img} buttonText={mycoupon.buttonText}/>
+
             )}
         </>
     )

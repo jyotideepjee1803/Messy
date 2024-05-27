@@ -6,14 +6,24 @@ import { Container, Grid, Typography } from '@mui/material';
 import AppWidget from './PageComponent/AppWidget';
 import AppLoader from '../../components/Loaders/AppLoader';
 
+// import {io} from "socket.io-client"
+// import { useDispatch, useSelector } from "react-redux";
+// import { setClientSocket, selectAppState, setSocketConnected, setNewNotifications } from '../../store/AppSlice';
+
+// const SOCKET_ENDPOINT = process.env.REACT_APP_SERVER_BASE_URL;
+
 const MessMenuPage = () => {
- 
+    // const {clientSocket, isSocketConnected, newNotifications} = useSelector(selectAppState);
+    // const dispatch = useDispatch();
+
     const [menuData, setMenuData] = useState([]);
     const [mealData, setMealData] = useState([]);
     const [loadingMenu , setloadingMenu] = useState(false);
     const [loadingMeal , setloadingMeal] = useState(false);
     
-
+    const [notif, setNotif] = useState("some");
+    // const [socket, setSocket] = useState(null);
+    // const apiUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
     const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2};
@@ -58,6 +68,47 @@ const MessMenuPage = () => {
         setloadingMeal(true);
         fetchMealData();
     },[])
+
+    // useEffect(() => {
+    //     const newSocket = io(`${apiUrl}`);
+    //     setSocket(newSocket);
+    //     console.log("Socket connected.")
+    // }, [apiUrl]);
+
+    // useEffect(() => {
+
+    //     if (loggedInUser) {
+    //       socket?.emit("init_user", loggedInUser?._id);
+    //     }
+    // }, [socket, loggedInUser]);
+
+    // useEffect(()=>{
+    //     dispatch(
+    //         setClientSocket(io(SOCKET_ENDPOINT, {transports:["websocket"]}))
+    //     )
+    // },[]);
+
+    // const newNotificationHandler = () =>{
+    //     clientSocket.off("recieveNotification")
+    //     .on("recieveNotification", (content) => {
+    //        console.log(content);
+    //        setNewNotifications([...newNotifications, content])
+    //     //    console.log(notif);
+    //     });
+    // }
+
+    // useEffect(() => {
+    //     if (!clientSocket) return;
+    
+    //     if (!isSocketConnected && clientSocket) {
+    //       clientSocket.emit("init_user", loggedInUser?._id);
+    //       clientSocket.on("user_connected", () => {
+    //         // console.log("socket connected");
+    //         dispatch(setSocketConnected(true));
+    //       });
+    //     }
+    //     newNotificationHandler();
+    //   });
 
     return (
         <>

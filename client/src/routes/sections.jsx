@@ -9,6 +9,7 @@ import AppLoader from '../components/Loaders/AppLoader';
 export const IndexPage = lazy(() => import('../pages/User/MessMenuPage'));
 export const BuyCoupon = lazy(() => import('../pages/User/BuyCouponPage'));
 export const MyCoupon = lazy(() => import('../pages/User/MyCoupon'));
+export const Notices = lazy(()=>import('../pages/User/Notices'));
 export const Feedback = lazy(()=> import('../pages/User/FeedbackPage'));
 export const LoginPage = lazy(() => import('../pages/Auth/LoginPage'));
 export const RegisterPage = lazy(() => import('../pages/Auth/RegisterPage'));
@@ -16,6 +17,7 @@ export const ResetPasswordPage = lazy(() => import('../pages/Auth/ResetPassword'
 export const NewPasswordPage = lazy(()=>import('../pages/Auth/NewPasswordPage'))
 export const AdminPage = lazy(() => import('../pages/Admin/AdminTaskPage'));
 export const InventoryPage = lazy(() => import('../pages/Admin/MealCountPage'));
+export const ComposePage = lazy(() => import('../pages/Admin/ComposeNotice'));
 export const Page404 = lazy(() => import('../pages/NotFoundPage'));
 
 // ----------------------------------------------------------------------
@@ -45,6 +47,8 @@ export default function Router() {
         { path: 'buycoupon', element: <BuyCoupon /> },
         { path: 'mycoupon', element: <MyCoupon /> },
         { path: 'feedback', element: <Feedback />},
+        { path: 'notices', element: <Notices/>},
+        { path: 'notices/:id', element:<Notices/>},
         {
           path: 'admin',
           element: <AdminPage />,
@@ -53,6 +57,10 @@ export default function Router() {
           path: 'inventory',
           element: <InventoryPage />,
         },
+        {
+          path: 'compose',
+          element : <ComposePage/>
+        }
       ],
     },
     {

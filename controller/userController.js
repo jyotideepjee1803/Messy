@@ -61,6 +61,7 @@ const authenticateUser = asyncHandler(async (req, res) => {
         isAdmin : user.isAdmin,
         token: generateToken(user._id),
         /* Expire session after 15 days */
+        notifications : user.notifications,
         expiryTime: Date.now() + 15 * 24 * 60 * 60 * 1000,
       });
     } else {
@@ -148,5 +149,29 @@ const resetPassword = asyncHandler(async(req,res)=>{
   await passwordResetToken.deleteOne();
   return res.status(200).json({ message: "Password reset was successful" });
 });
-  
-export {registerUser, authenticateUser, requestPasswordReset, resetPassword};
+
+const getUnseenNotifs = asyncHandler(async(req,res)=>{
+  try{
+    const userId = req.params.id;
+    const user = await UserModel.findById({_id : userId});
+
+    res.status(200).json(user.notifications);
+  }catch(error){
+    res.status(500)
+    throw new Error("Error retrieving notifications");
+  }
+})
+
+const removeSeenNotifs = asyncHandler(async(req,res)=>{
+  try{
+    const userId = req.params.id;
+    const {notificationId} = req.body
+
+    const response = await UserModel.updateOne({_id: userId},{$pull:{notifications : notificationId}});
+    res.status(200).json(response);
+  }catch(error){
+    res.status(500)
+    throw new Error("Error updating notifications");
+  }
+})
+export {registerUser, authenticateUser, requestPasswordReset, resetPassword, getUnseenNotifs, removeSeenNotifs};

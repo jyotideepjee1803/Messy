@@ -4,6 +4,8 @@ import axios, { getAxiosConfig } from '../../utils/axios';
 import Table from '../../components/table/Table';
 import { Grid } from '@mui/material';
 import AppLoader from '../../components/Loaders/AppLoader';
+import AlertCard from './PageComponent/AlertCard';
+import { buycoupon } from '../../utils/alerts';
 
 const MyCoupon = () => {
 
@@ -13,6 +15,7 @@ const MyCoupon = () => {
         [false, false, false, false, false, false, false], // Lunch
         [false, false, false, false, false, false, false]  // Dinner
     ]);
+    const [bought,setBought] = useState(false);
     const [loadingMenu , setloadingMenu] = useState(false);
 
     const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
@@ -22,7 +25,10 @@ const MyCoupon = () => {
     const fetchCoupon = async()=>{
         try{
             const couponRes = await axios.post('api/user/getcoupon', {email : loggedInUser.email}, config);
-            if(couponRes != null) setCoupon(couponRes.data.week);
+            if(couponRes.data != null) {
+                setCoupon(couponRes.data.week);
+                setBought(true);
+            }
         }catch(error){
             console.error('Error fetching data:', error);
         }
@@ -53,17 +59,21 @@ const MyCoupon = () => {
         fetchMenuData();
     },[])
 
-    return (   
+        return (   
         <>
         {loadingMenu ? <AppLoader/> : 
-        <Grid 
-            marginTop={2}
-            alignItems="center"
-            justifyContent="center"
-            pb={5}
-        >
-        <Table data={menuData} taken={coupon} title='My Coupon' />
-        </Grid>
+            bought ? (
+                <Grid 
+                    marginTop={2}
+                    alignItems="center"
+                    justifyContent="center"
+                    pb={5}
+                >
+                    <Table data={menuData} taken={coupon} title='My Coupon' />
+                </Grid>
+            ) : (
+                <AlertCard title={buycoupon.title} subtitle={buycoupon.subtitle} redir={buycoupon.redir} img={buycoupon.img} buttonText={buycoupon.buttonText}/>
+            )
         }
         </>
     )

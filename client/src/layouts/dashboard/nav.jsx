@@ -8,6 +8,7 @@ import Avatar from '@mui/material/Avatar';
 import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import ListItemButton from '@mui/material/ListItemButton';
+import Divider from '@mui/material/Divider';
 
 import { usePathname } from '../../routes/hooks';
 import { RouterLink } from '../../routes/components';
@@ -66,6 +67,7 @@ export default function Nav({ openNav, onCloseNav }) {
       {navConfig.map((item) => (
         (loggedInUser.isAdmin && item.title === 'Feedback') ? <></> : <NavItem key={item.title} item={item} />
       ))}
+      <Divider/>
       {loggedInUser.isAdmin && AdminNavConfig.map((item)=>(
         <NavItem key={item.title} item={item}/>
       ))}
