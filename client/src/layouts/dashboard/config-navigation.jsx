@@ -27,11 +27,11 @@ const navConfig = [
     path: '/notices',
     icon: icon('ic_notice'),
   },
-  {
-    title: 'Feedback',
-    path: '/feedback',
-    icon: icon('ic_blog'),
-  },
+  // {
+  //   title: 'Feedback',
+  //   path: '/feedback',
+  //   icon: icon('ic_blog'),
+  // },
 ]
 const AdminNavConfig=[
   {

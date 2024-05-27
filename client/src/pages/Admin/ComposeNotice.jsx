@@ -44,7 +44,6 @@ const ComposeNotice = () => {
       onSubmit: async (values, { setSubmitting, setErrors , resetForm }) => {
         try {
           const {data} = await axios.post('/api/admin/notice', values, config);
-          console.log(data);
           if (isSocketConnected) clientSocket?.emit("sendNotification", {senderId:loggedInUser._id, content : data});
           handleToastOpen('Notice sent','success')
         } catch (error) {

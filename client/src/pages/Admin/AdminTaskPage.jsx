@@ -23,11 +23,11 @@ import {
   InputAdornment,
   InputLabel,
   FormControl,
+  styled,
 } from '@mui/material';
 import Toast from '../../components/Toast/index';
 import NotAdmin from './PageComponent/NotAdmin';
 import TableRowsLoader from '../../components/Loaders/TableLoader';
-
     
 const AdminTaskPage = () => {
     const [menuData, setMenuData] = useState([]);
@@ -56,7 +56,7 @@ const AdminTaskPage = () => {
 
     const isMealValid = () => {
         // Check if any field is empty
-        return mealData.every(field => (field.time !== '' && (field.cost !== '' || field.cost > 0)));
+        return mealData.every(field => (field.time !== '' && (!isNaN(field.cost) && field.cost > 0)));
     };
 
     const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2}
@@ -102,7 +102,18 @@ const AdminTaskPage = () => {
         setloadingMenu(true);
         fetchMenuData();
     }, []);
-   
+
+    const handleIncrement = (index)=>{
+        const newMeal = [...mealData];
+        newMeal[index]['cost']++;
+        setMealData(newMeal)
+    }
+
+    const handleDecrement = (index)=>{
+        const newMeal = [...mealData];
+        if(newMeal[index]['cost'] > 0) newMeal[index]['cost']--;
+        setMealData(newMeal)
+    }
 
     const handleMealCostChange = (event,index) =>{
         const newMeal = [...mealData];
@@ -146,6 +157,39 @@ const AdminTaskPage = () => {
         fetchMealData();
     },[])
 
+    const StyledStepperButton = styled('button')(
+        ({ theme }) => `
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.875rem;
+        box-sizing: border-box;
+        border: 1px solid;
+        border-color: #E5EAF2;
+        padding: 0;
+        color: inherit;
+        background-color: #F3F6F9;
+      
+        &:hover {
+            cursor: pointer;
+            color: #007FFF;
+            border-color: #0072E5;
+        }
+      
+        &:focus-visible {
+          outline: 0;
+        }
+      
+        &.increment {
+          grid-area: increment;
+        }
+      
+        &.decrement {
+          grid-area: decrement;
+        }
+      `,
+      );
+      
     return (
         <Container maxWidth="xl">
         {loggedInUser.isAdmin ? (
@@ -194,8 +238,29 @@ const AdminTaskPage = () => {
                                 startAdornment={<InputAdornment position="start">₹</InputAdornment>}
                                 label="Amount"
                                 value={item.cost}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <Box style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+                                        <StyledStepperButton className="increment"
+                                            onClick={() => handleIncrement(index)}
+                                            style={{borderTopLeftRadius:'4px',borderTopRightRadius:'4px'}}
+                                            aria-label="increment"
+                                        >
+                                            ▴
+                                        </StyledStepperButton>
+                                        <StyledStepperButton className="decrement"
+                                            onClick={() => handleDecrement(index)}
+                                            style={{borderBottomLeftRadius:'4px',borderBottomRightRadius:'4px'}}
+                                            aria-label="decrement"
+                                        >
+                                            ▾
+                                        </StyledStepperButton>
+                                        </Box>
+                                    </InputAdornment>
+                                }
                                 onChange={(event) => handleMealCostChange(event, index)}
                             />
+                            {/* <NumberInput value={item.cost} onChange={(event) => handleMealCostChange(event, index)}/> */}
                         </FormControl>
                         </ TableCell>
                     </ TableRow>

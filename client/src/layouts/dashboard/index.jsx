@@ -9,7 +9,6 @@ import Main from './main';
 import Header from './header';
 import { useEffect } from 'react';
 
-// ----------------------------------------------------------------------
 import {io} from "socket.io-client"
 import { useDispatch, useSelector } from "react-redux";
 import { setClientSocket, selectAppState, setSocketConnected, setNewNotifications} from '../../store/AppSlice';
@@ -26,13 +25,11 @@ export default function DashboardLayout({ children }) {
   const {clientSocket, isSocketConnected, newNotifications} = useSelector(selectAppState);
   const dispatch = useDispatch();
 
-  // console.log(loggedInUser);
 
-  const persistUpdatedUser = (updatedUser) => {
-    // localStorage persists updated user even after page refresh
-    localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
-    // dispatch(setLoggedInUser(updatedUser));
-  };
+  // const persistUpdatedUser = (updatedUser) => {
+  //   // localStorage persists updated user even after page refresh
+  //   localStorage.setItem("loggedInUser", JSON.stringify(updatedUser));
+  // };
 
   const fetchNotifs = async()=>{
     const unseenNotifs = await Promise.all(loggedInUser.notifications.map(async(id)=>{
@@ -53,14 +50,7 @@ export default function DashboardLayout({ children }) {
     const newNotificationHandler = () =>{
         clientSocket.off("recieveNotification")
         .on("recieveNotification", (content) => {
-          // console.log(content);
           dispatch(setNewNotifications([...newNotifications, content]))
-          const updatedUser = {
-            ...loggedInUser,
-            notifications : [...loggedInUser.notifications,content._id]
-          }
-          console.log(updatedUser);
-          persistUpdatedUser(updatedUser);
         });
     }
 
@@ -70,7 +60,6 @@ export default function DashboardLayout({ children }) {
       if (!isSocketConnected && clientSocket) {
         clientSocket.emit("init_user", loggedInUser?._id);
         clientSocket.on("user_connected", () => {
-          // console.log("socket connected");
           dispatch(setSocketConnected(true));
         });
       }

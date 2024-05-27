@@ -22,10 +22,10 @@ export default function AlertCard(props) {
             textAlign: 'center',
             alignItems: 'center',
             flexDirection: 'column',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
           }}
         >
-          <Typography variant="h3" sx={{ mb: 3 }}>
+          <Typography variant="h3" sx={{ mb: 2 }}>
             {props.title}
           </Typography>
 
@@ -33,7 +33,7 @@ export default function AlertCard(props) {
             {props.subtitle}
           </Typography>
 
-            <Card sx={{ maxWidth: 300, maxHeight: 260, mx: 'auto', my: { xs: 5, sm: 10 }, }}>
+            <Card sx={{ maxWidth: 300, maxHeight: 260, mx: 'auto', my: { xs: 3, sm: 8 }, }}>
                  <CardActionArea>
                      <CardMedia
                     component="img"
