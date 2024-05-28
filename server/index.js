@@ -20,6 +20,7 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
+
 // Route handlers
 app.use("/api/user",userRoutes);
 app.use("/api/admin" ,adminRoutes);
@@ -27,9 +28,9 @@ app.use("/api/admin" ,adminRoutes);
 // ====================  Deployment ========================= //
 if (process.env.NODE_ENV === "production") {
   // Establishes the path to our frontend (most important)
-  app.use(express.static(path.join(DIRNAME, "../client/build")));
+  app.use(express.static(path.join(DIRNAME, "/client/build")));
   app.get("*", (req, res) =>
-    res.sendFile(path.join(DIRNAME, "../client/build/index.html"))
+    res.sendFile(path.resolve(DIRNAME, "client", "build", "index.html"))
   );
 }
 // ====================  Deployment ========================= //
