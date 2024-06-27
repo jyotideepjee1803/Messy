@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import axios, { getAxiosConfig } from '../../utils/axios';
 import Table from '../../components/table/Table';
 import { Container, Grid, Typography } from '@mui/material';
@@ -18,10 +18,8 @@ const MessMenuPage = () => {
 
     const [menuData, setMenuData] = useState([]);
     const [mealData, setMealData] = useState([]);
-    const [loadingMenu , setloadingMenu] = useState(false);
-    const [loadingMeal , setloadingMeal] = useState(false);
-    
-    const [notif, setNotif] = useState("some");
+    const [loading , setLoading] = useState(false);
+    // const [notif, setNotif] = useState("some");
     // const [socket, setSocket] = useState(null);
     // const apiUrl = process.env.REACT_APP_SERVER_BASE_URL;
 
@@ -33,41 +31,44 @@ const MessMenuPage = () => {
 
     const fetchMenuData = async () => {      
         try {
-        const response = await axios.get('api/user/getmenu', config);
-
-        //sort according to day name : 
-        let data = response.data;
-        data.sort((a, b) => {return sortIdx[a.day] - sortIdx[b.day]})
-        setMenuData(data);
-        setloadingMenu(false);
-        
-
+            const response = await axios.get('api/user/getmenu', config);
+            return response.data;
         } catch (error) {
-            console.error('Error fetching menu data : ', error);
+            console.error('Error fetching menu data:', error);
+            return [];
         }
     };
 
-    const fetchMealData = async()=>{
-        try{
+    const fetchMealData = async () => {
+        try {
             const response = await axios.get('api/user/getmeal', config);
-            let data = response.data;
-            data.sort((a,b)=>{return mp[a.mealName] - mp[b.mealName]})
-            setMealData(data);
-            setloadingMeal(false);
-        }catch(error){
-            console.error('Error fetching menu data:', error);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching meal data:', error);
+            return [];
         }
     }
 
-    useEffect(()=>{
-        setloadingMenu(true);
-        fetchMenuData();
-    },[])
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            const [menuResponse, mealResponse] = await Promise.all([fetchMenuData(), fetchMealData()]);
+            setMenuData(menuResponse);
+            setMealData(mealResponse);
+            setLoading(false);
+        };
 
-    useEffect(()=>{
-        setloadingMeal(true);
-        fetchMealData();
-    },[])
+        fetchData();
+    }, []);
+
+    const sortedMenuData = useMemo(() => {
+        return menuData.sort((a, b) => sortIdx[a.day] - sortIdx[b.day]);
+    }, [menuData, sortIdx]);
+
+    const sortedMealData = useMemo(() => {
+        return mealData.sort((a, b) => mp[a.mealName] - mp[b.mealName]);
+    }, [mealData, mp]);
+
 
     // useEffect(() => {
     //     const newSocket = io(`${apiUrl}`);
@@ -109,20 +110,19 @@ const MessMenuPage = () => {
     //     }
     //     newNotificationHandler();
     //   });
-
+    console.log(sortedMenuData);
     return (
         <>
-        {loadingMeal || loadingMenu ? <AppLoader/> : 
+        {loading ? <AppLoader/> : 
         <Container maxWidth="xl">
             <Typography variant="h4" sx={{ mb: 5 }}>
                 Hi, Welcome back 👋
             </Typography>
             <Grid container justifyContent="center" spacing={3} mb={3}>
  
-            {mealData.map((item, index) => (
+            {sortedMealData.map((item, index) => (
                 <Grid item xs={12} sm={6} md={3} key={index}>
                     <AppWidget
-                        loading = {loadingMeal}
                         title={item.mealName}
                         time={item?.time}
                         color="success"
@@ -132,7 +132,7 @@ const MessMenuPage = () => {
             ))}
     
             </Grid>
-            <Table data={menuData} loading={loadingMenu} title='Mess Menu' />
+            <Table data={sortedMenuData} title='Mess Menu' />
 
         </Container>
     }
