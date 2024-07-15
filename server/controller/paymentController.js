@@ -26,7 +26,6 @@ const paymentStatus = async(req,res)=>{
     const pay = validatePaymentVerification({order_id:razorpay_order_id, payment_id:razorpay_payment_id}, razorpay_signature, process.env.RAZORPAY_SECRET_KEY);
     if(pay){
         const order = await PaymentModel.findOne({orderId : razorpay_order_id});
-        await CouponModel.createIndexes({ "createdAt": 1 }, { expireAfterSeconds: 20 });
         const d = await CouponModel.updateOne({email : req.user?.email}, {$set : {week : order.selected,taken : true}}, { upsert: true });
     }
 
