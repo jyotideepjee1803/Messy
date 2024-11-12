@@ -111,9 +111,9 @@ const AdminTaskPage = () => {
         setMealData(newMeal);
     }
 
-    const handleMealTimeChange = (time,index) =>{
+    const handleMealTimeChange = (time,index,timeIndex) =>{
         const newMeal = [...mealData];
-        newMeal[index]['time'] = time;
+        newMeal[index][timeIndex] = time;
 
         setMealData(newMeal);
     }
@@ -173,33 +173,65 @@ const AdminTaskPage = () => {
                 {loadingMeal === true ?(
                     <TableRowsLoader rowsNum={3} />
                 ) : 
-                    (mealData.map((item, index) => (
+                (mealData.map((item, index) => (
                     < TableRow key={index}>
-                        < TableCell>{item.mealName}</ TableCell>
-                        < TableCell>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <MobileTimePicker
-                            id={`time${index}`}
-                            size="small" // Set the size to small
-                            defaultValue={dayjs(item.time)}
-                            onChange={(time) => handleMealTimeChange(time, index)}
+                    < TableCell>{`${item.mealName.charAt(0).toUpperCase()}${item.mealName.substring(1)}`}</ TableCell>
+                    < TableCell sx={{cursor: 'pointer'}}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <MobileTimePicker
+                        id={`time${index}`}
+                        size="small" // Set the size to small
+                        defaultValue={dayjs(item.startTime)}
+                        label='Start Time'
+                        onChange={(time) => handleMealTimeChange(time, index, 'startTime')}
+                    />
+                    </LocalizationProvider>
+                    </ TableCell>
+                    < TableCell>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <MobileTimePicker
+                        id={`endTime${index}`}
+                        size="small" // Set the size to small
+                        defaultValue={dayjs(item.endTime)}
+                        label='End Time'
+                        onChange={(time) => handleMealTimeChange(time, index, 'endTime')}
+                    />
+                    </LocalizationProvider>
+                    </ TableCell>
+                    < TableCell>
+                    <FormControl sx={{ m: 1 }} error={item.cost === '' || item.cost <= 0}>
+                        <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-amount"
+                            startAdornment={<InputAdornment position="start">₹</InputAdornment>}
+                            label="Amount"
+                            value={item.cost}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <Box style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+                                    <StyledStepperButton className="increment"
+                                        onClick={() => handleIncrement(index)}
+                                        style={{borderTopLeftRadius:'4px',borderTopRightRadius:'4px'}}
+                                        aria-label="increment"
+                                    >
+                                        ▴
+                                    </StyledStepperButton>
+                                    <StyledStepperButton className="decrement"
+                                        onClick={() => handleDecrement(index)}
+                                        style={{borderBottomLeftRadius:'4px',borderBottomRightRadius:'4px'}}
+                                        aria-label="decrement"
+                                    >
+                                        ▾
+                                    </StyledStepperButton>
+                                    </Box>
+                                </InputAdornment>
+                            }
+                            onChange={(event) => handleMealCostChange(event, index)}
                         />
-                        </LocalizationProvider>
-                        </ TableCell>
-                        < TableCell>
-                        <FormControl sx={{ m: 1 }} error={item.cost === '' || item.cost <= 0}>
-                            <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
-                            <OutlinedInput
-                                id="outlined-adornment-amount"
-                                startAdornment={<InputAdornment position="start">₹</InputAdornment>}
-                                label="Amount"
-                                value={item.cost}
-                                onChange={(event) => handleMealCostChange(event, index)}
-                            />
-                        </FormControl>
-                        </ TableCell>
-                    </ TableRow>
-                    )))}
+                    </FormControl>
+                    </ TableCell>
+                </ TableRow>
+                )))}
                 </TableBody>
                 </Table> 
             </TableContainer>

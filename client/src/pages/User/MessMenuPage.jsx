@@ -73,7 +73,7 @@ const MessMenuPage = () => {
                     <AppWidget
                         loading = {loadingMeal}
                         title={item.mealName}
-                        time={item?.time}
+                        time={item?.StartTime}
                         color="success"
                         icon={<img alt="icon" src={`/assets/icons/glass/ic_${item.mealName}.jpg`} />}
                     />
