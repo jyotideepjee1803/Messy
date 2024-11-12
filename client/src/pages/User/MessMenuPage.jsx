@@ -124,7 +124,7 @@ const MessMenuPage = () => {
                 <Grid item xs={12} sm={6} md={3} key={index}>
                     <AppWidget
                         title={item.mealName}
-                        time={item?.time}
+                        time={item?.StartTime}
                         color="success"
                         icon={<img alt="icon" src={`/assets/icons/glass/ic_${item.mealName}.jpg`} />}
                     />
