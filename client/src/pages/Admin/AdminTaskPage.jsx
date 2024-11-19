@@ -209,7 +209,8 @@ const AdminTaskPage = () => {
                 <TableHead>
                     <TableRow sx={{backgroundColor: "lightgray", boxShadow: "1"}}>
                     <TableCell>Meal</TableCell>
-                    <TableCell>Time</TableCell>
+                    <TableCell>Start Time</TableCell>
+                    <TableCell>End Time</TableCell>
                     <TableCell>Cost</TableCell>
                     </TableRow>
                 </TableHead>
@@ -298,12 +299,12 @@ const AdminTaskPage = () => {
             <TableContainer>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
-                  <TableRow sx={{backgroundColor: "lightgray", boxShadow: "1"}}>
+                    <TableRow sx={{backgroundColor: "lightgray", boxShadow: "1"}}>
                     <TableCell>Day</TableCell>
                     <TableCell>Breakfast</TableCell>
                     <TableCell>Lunch</TableCell>
                     <TableCell>Dinner</TableCell>
-                  </TableRow>
+                    </TableRow>
                 </TableHead>
                 <TableBody>
                 { (loadingMenu === true)  ? 
