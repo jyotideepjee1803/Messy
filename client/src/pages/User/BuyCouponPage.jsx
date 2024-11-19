@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useMemo, useCallback} from 'react';
 import axios, { getAxiosConfig } from '../../utils/axios';
 
 import { Box, Button, CircularProgress, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
@@ -7,7 +7,8 @@ import { Box, Button, CircularProgress, Grid, Paper, Table, TableBody, TableCell
 import {ShoppingCart} from '@mui/icons-material/';
 import Toast from '../../components/Toast';
 
-import AlreadyBought from './PageComponent/AlreadyBought';
+import AlertCard from './PageComponent/AlertCard';
+import { mycoupon } from '../../utils/alerts';
 
 const BuyCouponPage = () => {
  
@@ -20,6 +21,19 @@ const BuyCouponPage = () => {
     const [loadingCoupon, setLoadingCoupon] = useState(false);
 
     const [bought, setBought] = useState(false);
+
+    const [selectedItems, setSelectedItems] = useState([
+        [false, false, false, false, false, false, false], // Breakfast
+        [false, false, false, false, false, false, false], // Lunch
+        [false, false, false, false, false, false, false]  // Dinner
+    ]);
+
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const config = useMemo(() => getAxiosConfig({ loggedInUser }), [loggedInUser]);
+
+    const sortIdx = useMemo(() => ({ 'Monday': 0, 'Tuesday': 1, 'Wednesday': 2, 'Thursday': 3, 'Friday': 4, 'Saturday': 5, 'Sunday': 6 }), []);
+    const mp = useMemo(() => ({ 'breakfast': 0, 'lunch': 1, 'dinner': 2 }), []);
+
 
     const handleToastOpen = (message, severity) => {
         setToastMessage(message);
@@ -38,25 +52,15 @@ const BuyCouponPage = () => {
     });
     const [total , setTotal] = useState(0);
 
-  
     var date = new Date();
     var currentDateTime = date.toISOString(); 
 
-    const getDayDifference = (dateString1, dateString2) => {
+    const getDayDifference = useCallback((dateString1, dateString2) => {
         const date1 = new Date(dateString1);
         const date2 = new Date(dateString2);
-
         const timeDifference = Math.abs(date2.getTime() - date1.getTime());
-
-        const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
-    
-        return daysDifference;
-    }
-
-    const mp = {'breakfast' : 0, 'lunch' : 1, 'dinner' : 2}
-    const sortIdx = {'Monday' : 0, 'Tuesday' : 1, 'Wednesday' : 2, 'Thursday' : 3, 'Friday' : 4, 'Saturday' : 5, 'Sunday' : 6};
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    const config = getAxiosConfig({ loggedInUser });
+        return Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+    }, []);
 
     const fetchMenuData = async () => {      
         try {
@@ -83,7 +87,7 @@ const BuyCouponPage = () => {
         }
     }
 
-    const check = async()=>{
+    const check = useCallback(async()=>{
         const response = await axios.get("api/user/getmeal" , config);
         const breakfastCost = response.data.find(meal => meal.mealName === 'breakfast').cost;
         const lunchCost = response.data.find(meal => meal.mealName === 'lunch').cost;
@@ -93,7 +97,7 @@ const BuyCouponPage = () => {
             lunch: lunchCost,
             dinner: dinnerCost
         });
-    }
+    },[config]);
 
     useEffect(()=>{
         setLoadingCoupon(true);
@@ -108,12 +112,6 @@ const BuyCouponPage = () => {
     useEffect(()=>{
         check();
     },[])
-
-    const [selectedItems, setSelectedItems] = useState([
-        [false, false, false, false, false, false, false], // Breakfast
-        [false, false, false, false, false, false, false], // Lunch
-        [false, false, false, false, false, false, false]  // Dinner
-    ]);
 
     const handleCheckboxChange = (mealIndex, dayIndex)=>{
         const newSelected = [...selectedItems];
@@ -267,7 +265,8 @@ const BuyCouponPage = () => {
                 </Grid>
             ) 
             : (
-                <AlreadyBought/>
+                <AlertCard title={mycoupon.title} subtitle={mycoupon.subtitle} redir={mycoupon.redir} img={mycoupon.img} buttonText={mycoupon.buttonText}/>
+
             )}
         </>
     )

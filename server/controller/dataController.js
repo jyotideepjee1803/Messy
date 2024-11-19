@@ -24,5 +24,13 @@ const getNotices = async(req,res)=>{
     const AllNotices = await Notice.find({}).select({_id : 0});
     res.send(AllNotices);
 }
+
+const getNotificationById = async(req,res)=>{
+    const notifId = req.params.id;
+    // console.log(notifId);
+    const notif = await Notice.findById({_id : notifId});
+    // console.log(notif);
+    res.json(notif);
+}
     
-export {getWeekMenu,getMealData,getCouponData,getNotices};
+export {getWeekMenu,getMealData,getCouponData,getNotices,getNotificationById};

@@ -1,6 +1,5 @@
 import { Day } from "../models/day.js";
 import { Meal } from "../models/meal.js";
-import Coupon from "../models/coupon.js";
 import Notice from "../models/notices.js";
 
 const setMealCostTime = async(req,res)=>{

@@ -48,6 +48,7 @@ export default function Router() {
         { path: 'mycoupon', element: <MyCoupon /> },
         { path: 'feedback', element: <Feedback />},
         { path: 'notices', element: <Notices/>},
+        { path: 'notices/:id', element:<Notices/>},
         {
           path: 'admin',
           element: <AdminPage />,

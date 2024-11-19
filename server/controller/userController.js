@@ -61,6 +61,7 @@ const authenticateUser = asyncHandler(async (req, res) => {
         isAdmin : user.isAdmin,
         token: generateToken(user._id),
         /* Expire session after 15 days */
+        notifications : user.notifications,
         expiryTime: Date.now() + 15 * 24 * 60 * 60 * 1000,
       });
     } else {
@@ -72,8 +73,6 @@ const authenticateUser = asyncHandler(async (req, res) => {
 const requestPasswordReset = asyncHandler(async(req,res)=>{
   const {email} = req.body;
   const user = await UserModel.findOne({email});
-
-  const resend = new Resend(process.env.RESEND_KEY);
 
   if(!user){
     res.status(401);
@@ -94,25 +93,15 @@ const requestPasswordReset = asyncHandler(async(req,res)=>{
   }).save();
 
   const link = `${clientURL}new-password?token=${resetToken}&id=${user._id}`;
-  // sendEmail(
-  //   user.email,
-  //   'Password Reset Request',
-  //   {
-  //     name : user.name,
-  //     link,
-  //   },
-  //   resetTemplate(user.name,link)
-  // );
-  try{
-    const data = await resend.emails.send({
-      from: 'MessAdmin@resend.dev',
-      to: user.email,
-      subject: 'Password Reset Request',
-      html: resetTemplate(user.name,link)
-    });
-  }catch(error){
-    console.log(error);
-  }
+  sendEmail(
+    user.email,
+    'Password Reset Request',
+    {
+      name : user.name,
+      link,
+    },
+    resetTemplate(user.name,link)
+  );
   return res.json({link});
 });
 
@@ -148,5 +137,29 @@ const resetPassword = asyncHandler(async(req,res)=>{
   await passwordResetToken.deleteOne();
   return res.status(200).json({ message: "Password reset was successful" });
 });
-  
-export {registerUser, authenticateUser, requestPasswordReset, resetPassword};
+
+const getUnseenNotifs = asyncHandler(async(req,res)=>{
+  try{
+    const userId = req.params.id;
+    const user = await UserModel.findById({_id : userId});
+
+    res.status(200).json(user.notifications);
+  }catch(error){
+    res.status(500)
+    throw new Error("Error retrieving notifications");
+  }
+})
+
+const removeSeenNotifs = asyncHandler(async(req,res)=>{
+  try{
+    const userId = req.params.id;
+    const {notificationId} = req.body
+
+    const response = await UserModel.updateOne({_id: userId},{$pull:{notifications : notificationId}});
+    res.status(200).json(response);
+  }catch(error){
+    res.status(500)
+    throw new Error("Error updating notifications");
+  }
+})
+export {registerUser, authenticateUser, requestPasswordReset, resetPassword, getUnseenNotifs, removeSeenNotifs};

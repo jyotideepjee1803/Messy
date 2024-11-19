@@ -6,6 +6,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import { appErrorHandler, notFoundHandler } from './middleware/errorMiddleware.js';
 import cors from 'cors';
 import path from 'path';
+import configureSocketEvents from './config/socket.js';
 
 const app = express();
 const DIRNAME = path.resolve();
@@ -29,7 +30,7 @@ if (process.env.NODE_ENV === "production") {
   // Establishes the path to our frontend (most important)
   app.use(express.static(path.join(DIRNAME, "/client/build")));
   app.get("*", (req, res) =>
-    res.sendFile(path.join(DIRNAME, "/client/build/index.html"))
+    res.sendFile(path.resolve(DIRNAME, "client", "build", "index.html"))
   );
 }
 // ====================  Deployment ========================= //
@@ -38,6 +39,8 @@ if (process.env.NODE_ENV === "production") {
 app.all('*', notFoundHandler);
 app.use(appErrorHandler);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// configureSocketEvents(server);

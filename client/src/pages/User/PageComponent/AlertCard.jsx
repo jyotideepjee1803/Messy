@@ -8,8 +8,8 @@ import { RouterLink } from '../../../routes/components';
 import { Card, CardActionArea, CardMedia } from '@mui/material';
 // ----------------------------------------------------------------------
 
-export default function AlreadyBought() {
-
+export default function AlertCard(props) {
+    console.log(props);
   return (
     <>
       <Container>
@@ -22,30 +22,29 @@ export default function AlreadyBought() {
             textAlign: 'center',
             alignItems: 'center',
             flexDirection: 'column',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
           }}
         >
-          <Typography variant="h3" sx={{ mb: 3 }}>
-            You've already bought coupon!
+          <Typography variant="h3" sx={{ mb: 2 }}>
+            {props.title}
           </Typography>
 
           <Typography sx={{ color: 'text.secondary' }}>
-          You have already bought coupon for this week. Visit the purchase page later to buy coupon for next week.
-                        You can visit the My Coupon section to see your coupons.
+            {props.subtitle}
           </Typography>
 
-            <Card sx={{ maxWidth: 300, maxHeight: 260, mx: 'auto', my: { xs: 5, sm: 10 }, }}>
+            <Card sx={{ maxWidth: 300, maxHeight: 260, mx: 'auto', my: { xs: 3, sm: 8 }, }}>
                  <CardActionArea>
                      <CardMedia
                     component="img"
-                    image="/assets/illustrations/illustration_payment.png"
+                    image={props.img}
                     alt="green iguana"
                     />
                 </CardActionArea>
             </Card>
 
-          <Button href="/mycoupon" size="large" variant="contained" component={RouterLink}>
-            Go to My Coupon
+          <Button href={props.redir} size="large" variant="contained" component={RouterLink}>
+            {props.buttonText}
           </Button>
         </Box>
       </Container>
